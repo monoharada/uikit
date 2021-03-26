@@ -3450,101 +3450,6 @@
     componentAPI(UIkit);
     instanceAPI(UIkit);
 
-    function Core (UIkit) {
-
-        if (!inBrowser) {
-            return;
-        }
-
-        // throttle 'resize'
-        var pendingResize;
-        var handleResize = function () {
-            if (pendingResize) {
-                return;
-            }
-            pendingResize = true;
-            fastdom.write(function () { return pendingResize = false; });
-            UIkit.update(null, 'resize');
-        };
-
-        on(window, 'load resize', handleResize);
-        on(document, 'loadedmetadata load', handleResize, true);
-
-        if ('ResizeObserver' in window) {
-            (new ResizeObserver(handleResize)).observe(document.documentElement);
-        }
-
-        // throttle `scroll` event (Safari triggers multiple `scroll` events per frame)
-        var pending;
-        on(window, 'scroll', function (e) {
-
-            if (pending) {
-                return;
-            }
-            pending = true;
-            fastdom.write(function () { return pending = false; });
-
-            UIkit.update(null, e.type);
-
-        }, {passive: true, capture: true});
-
-        var started = 0;
-        on(document, 'animationstart', function (ref) {
-            var target = ref.target;
-
-            if ((css(target, 'animationName') || '').match(/^uk-.*(left|right)/)) {
-
-                started++;
-                css(document.documentElement, 'overflowX', 'hidden');
-                setTimeout(function () {
-                    if (!--started) {
-                        css(document.documentElement, 'overflowX', '');
-                    }
-                }, toMs(css(target, 'animationDuration')) + 100);
-            }
-        }, true);
-
-        on(document, pointerDown, function (e) {
-
-            if (!isTouch(e)) {
-                return;
-            }
-
-            // Handle Swipe Gesture
-            var pos = getEventPos(e);
-            var target = 'tagName' in e.target ? e.target : parent(e.target);
-            once(document, (pointerUp + " " + pointerCancel + " scroll"), function (e) {
-
-                var ref = getEventPos(e);
-                var x = ref.x;
-                var y = ref.y;
-
-                // swipe
-                if (e.type !== 'scroll' && target && x && Math.abs(pos.x - x) > 100 || y && Math.abs(pos.y - y) > 100) {
-
-                    setTimeout(function () {
-                        trigger(target, 'swipe');
-                        trigger(target, ("swipe" + (swipeDirection(pos.x, pos.y, x, y))));
-                    });
-
-                }
-
-            });
-
-        }, {passive: true});
-
-    }
-
-    function swipeDirection(x1, y1, x2, y2) {
-        return Math.abs(x1 - x2) >= Math.abs(y1 - y2)
-            ? x1 - x2 > 0
-                ? 'Left'
-                : 'Right'
-            : y1 - y2 > 0
-                ? 'Up'
-                : 'Down';
-    }
-
     function boot (UIkit) {
 
         var connect = UIkit.connect;
@@ -3816,7 +3721,7 @@
         };
     }
 
-    var Accordion = {
+    var accordion = {
 
         mixins: [Class, Togglable],
 
@@ -3961,510 +3866,6 @@
         el && (el.hidden = hide);
     }
 
-    var Position = {
-
-        props: {
-            pos: String,
-            offset: null,
-            flip: Boolean,
-            clsPos: String
-        },
-
-        data: {
-            pos: ("bottom-" + (!isRtl ? 'left' : 'right')),
-            flip: true,
-            offset: false,
-            clsPos: ''
-        },
-
-        computed: {
-
-            pos: function(ref) {
-                var pos = ref.pos;
-
-                return (pos + (!includes(pos, '-') ? '-center' : '')).split('-');
-            },
-
-            dir: function() {
-                return this.pos[0];
-            },
-
-            align: function() {
-                return this.pos[1];
-            }
-
-        },
-
-        methods: {
-
-            positionAt: function(element, target, boundary) {
-
-                removeClasses(element, ((this.clsPos) + "-(top|bottom|left|right)(-[a-z]+)?"));
-
-                var ref = this;
-                var offset$1 = ref.offset;
-                var axis = this.getAxis();
-
-                if (!isNumeric(offset$1)) {
-                    var node = $(offset$1);
-                    offset$1 = node
-                        ? offset(node)[axis === 'x' ? 'left' : 'top'] - offset(target)[axis === 'x' ? 'right' : 'bottom']
-                        : 0;
-                }
-
-                var ref$1 = positionAt(
-                    element,
-                    target,
-                    axis === 'x' ? ((flipPosition(this.dir)) + " " + (this.align)) : ((this.align) + " " + (flipPosition(this.dir))),
-                    axis === 'x' ? ((this.dir) + " " + (this.align)) : ((this.align) + " " + (this.dir)),
-                    axis === 'x' ? ("" + (this.dir === 'left' ? -offset$1 : offset$1)) : (" " + (this.dir === 'top' ? -offset$1 : offset$1)),
-                    null,
-                    this.flip,
-                    boundary
-                ).target;
-                var x = ref$1.x;
-                var y = ref$1.y;
-
-                this.dir = axis === 'x' ? x : y;
-                this.align = axis === 'x' ? y : x;
-
-                toggleClass(element, ((this.clsPos) + "-" + (this.dir) + "-" + (this.align)), this.offset === false);
-
-            },
-
-            getAxis: function() {
-                return this.dir === 'top' || this.dir === 'bottom' ? 'y' : 'x';
-            }
-
-        }
-
-    };
-
-    var active;
-
-    var drop = {
-
-        mixins: [Position, Togglable],
-
-        args: 'pos',
-
-        props: {
-            mode: 'list',
-            toggle: Boolean,
-            boundary: Boolean,
-            boundaryAlign: Boolean,
-            delayShow: Number,
-            delayHide: Number,
-            clsDrop: String
-        },
-
-        data: {
-            mode: ['click', 'hover'],
-            toggle: '- *',
-            boundary: true,
-            boundaryAlign: false,
-            delayShow: 0,
-            delayHide: 800,
-            clsDrop: false,
-            animation: ['uk-animation-fade'],
-            cls: 'uk-open'
-        },
-
-        computed: {
-
-            boundary: function(ref, $el) {
-                var boundary = ref.boundary;
-
-                return boundary === true ? window : query(boundary, $el);
-            },
-
-            clsDrop: function(ref) {
-                var clsDrop = ref.clsDrop;
-
-                return clsDrop || ("uk-" + (this.$options.name));
-            },
-
-            clsPos: function() {
-                return this.clsDrop;
-            }
-
-        },
-
-        created: function() {
-            this.tracker = new MouseTracker();
-        },
-
-        connected: function() {
-
-            addClass(this.$el, this.clsDrop);
-
-            var ref = this.$props;
-            var toggle = ref.toggle;
-            this.toggle = toggle && this.$create('toggle', query(toggle, this.$el), {
-                target: this.$el,
-                mode: this.mode
-            });
-
-        },
-
-        disconnected: function() {
-            if (this.isActive()) {
-                active = null;
-            }
-        },
-
-        events: [
-
-            {
-
-                name: 'click',
-
-                delegate: function() {
-                    return ("." + (this.clsDrop) + "-close");
-                },
-
-                handler: function(e) {
-                    e.preventDefault();
-                    this.hide(false);
-                }
-
-            },
-
-            {
-
-                name: 'click',
-
-                delegate: function() {
-                    return 'a[href^="#"]';
-                },
-
-                handler: function(ref) {
-                    var defaultPrevented = ref.defaultPrevented;
-                    var hash = ref.current.hash;
-
-                    if (!defaultPrevented && hash && !within(hash, this.$el)) {
-                        this.hide(false);
-                    }
-                }
-
-            },
-
-            {
-
-                name: 'beforescroll',
-
-                handler: function() {
-                    this.hide(false);
-                }
-
-            },
-
-            {
-
-                name: 'toggle',
-
-                self: true,
-
-                handler: function(e, toggle) {
-
-                    e.preventDefault();
-
-                    if (this.isToggled()) {
-                        this.hide(false);
-                    } else {
-                        this.show(toggle, false);
-                    }
-                }
-
-            },
-
-            {
-
-                name: 'toggleshow',
-
-                self: true,
-
-                handler: function(e, toggle) {
-                    e.preventDefault();
-                    this.show(toggle);
-                }
-
-            },
-
-            {
-
-                name: 'togglehide',
-
-                self: true,
-
-                handler: function(e) {
-                    e.preventDefault();
-                    this.hide();
-                }
-
-            },
-
-            {
-
-                name: pointerEnter,
-
-                filter: function() {
-                    return includes(this.mode, 'hover');
-                },
-
-                handler: function(e) {
-                    if (!isTouch(e)) {
-                        this.clearTimers();
-                    }
-                }
-
-            },
-
-            {
-
-                name: pointerLeave,
-
-                filter: function() {
-                    return includes(this.mode, 'hover');
-                },
-
-                handler: function(e) {
-                    if (!isTouch(e) && e.relatedTarget) {
-                        this.hide();
-                    }
-                }
-
-            },
-
-            {
-
-                name: 'toggled',
-
-                self: true,
-
-                handler: function(e, toggled) {
-
-                    if (!toggled) {
-                        return;
-                    }
-
-                    this.clearTimers();
-                    this.position();
-                }
-
-            },
-
-            {
-
-                name: 'show',
-
-                self: true,
-
-                handler: function() {
-                    var this$1 = this;
-
-
-                    active = this;
-
-                    this.tracker.init();
-
-                    once(this.$el, 'hide', on(document, pointerDown, function (ref) {
-                            var target = ref.target;
-
-                            return !within(target, this$1.$el) && once(document, (pointerUp + " " + pointerCancel + " scroll"), function (ref) {
-                            var defaultPrevented = ref.defaultPrevented;
-                            var type = ref.type;
-                            var newTarget = ref.target;
-
-                            if (!defaultPrevented && type === pointerUp && target === newTarget && !(this$1.toggle && within(target, this$1.toggle.$el))) {
-                                this$1.hide(false);
-                            }
-                        }, true);
-                    }
-                    ), {self: true});
-
-                    once(this.$el, 'hide', on(document, 'keydown', function (e) {
-                        if (e.keyCode === 27) {
-                            this$1.hide(false);
-                        }
-                    }), {self: true});
-
-                }
-
-            },
-
-            {
-
-                name: 'beforehide',
-
-                self: true,
-
-                handler: function() {
-                    this.clearTimers();
-                }
-
-            },
-
-            {
-
-                name: 'hide',
-
-                handler: function(ref) {
-                    var target = ref.target;
-
-
-                    if (this.$el !== target) {
-                        active = active === null && within(target, this.$el) && this.isToggled() ? this : active;
-                        return;
-                    }
-
-                    active = this.isActive() ? null : active;
-                    this.tracker.cancel();
-                }
-
-            }
-
-        ],
-
-        update: {
-
-            write: function() {
-
-                if (this.isToggled() && !hasClass(this.$el, this.clsEnter)) {
-                    this.position();
-                }
-
-            },
-
-            events: ['resize']
-
-        },
-
-        methods: {
-
-            show: function(toggle, delay) {
-                var this$1 = this;
-                if ( toggle === void 0 ) toggle = this.toggle;
-                if ( delay === void 0 ) delay = true;
-
-
-                if (this.isToggled() && toggle && this.toggle && toggle.$el !== this.toggle.$el) {
-                    this.hide(false);
-                }
-
-                this.toggle = toggle;
-
-                this.clearTimers();
-
-                if (this.isActive()) {
-                    return;
-                }
-
-                if (active) {
-
-                    if (delay && active.isDelaying) {
-                        this.showTimer = setTimeout(this.show, 10);
-                        return;
-                    }
-
-                    var prev;
-                    while (active && prev !== active && !within(this.$el, active.$el)) {
-                        prev = active;
-                        active.hide(false);
-                    }
-
-                }
-
-                this.showTimer = setTimeout(function () { return !this$1.isToggled() && this$1.toggleElement(this$1.$el, true); }, delay && this.delayShow || 0);
-
-            },
-
-            hide: function(delay) {
-                var this$1 = this;
-                if ( delay === void 0 ) delay = true;
-
-
-                var hide = function () { return this$1.toggleElement(this$1.$el, false, false); };
-
-                this.clearTimers();
-
-                this.isDelaying = getPositionedElements(this.$el).some(function (el) { return this$1.tracker.movesTo(el); });
-
-                if (delay && this.isDelaying) {
-                    this.hideTimer = setTimeout(this.hide, 50);
-                } else if (delay && this.delayHide) {
-                    this.hideTimer = setTimeout(hide, this.delayHide);
-                } else {
-                    hide();
-                }
-            },
-
-            clearTimers: function() {
-                clearTimeout(this.showTimer);
-                clearTimeout(this.hideTimer);
-                this.showTimer = null;
-                this.hideTimer = null;
-                this.isDelaying = false;
-            },
-
-            isActive: function() {
-                return active === this;
-            },
-
-            position: function() {
-
-                removeClass(this.$el, ((this.clsDrop) + "-stack"));
-                toggleClass(this.$el, ((this.clsDrop) + "-boundary"), this.boundaryAlign);
-
-                var boundary = offset(this.boundary);
-                var alignTo = this.boundaryAlign ? boundary : offset(this.toggle.$el);
-
-                if (this.align === 'justify') {
-                    var prop = this.getAxis() === 'y' ? 'width' : 'height';
-                    css(this.$el, prop, alignTo[prop]);
-                } else if (this.boundary && this.$el.offsetWidth > Math.max(boundary.right - alignTo.left, alignTo.right - boundary.left)) {
-                    addClass(this.$el, ((this.clsDrop) + "-stack"));
-                }
-
-                this.positionAt(this.$el, this.boundaryAlign ? this.boundary : this.toggle.$el, this.boundary);
-
-            }
-
-        }
-
-    };
-
-    function getPositionedElements(el) {
-        var result = [];
-        apply(el, function (el) { return css(el, 'position') !== 'static' && result.push(el); });
-        return result;
-    }
-
-    // Deprecated
-    var gif = {
-
-        update: {
-
-            read: function(data) {
-
-                var inview = isInView(this.$el);
-
-                if (!inview || data.isInView === inview) {
-                    return false;
-                }
-
-                data.isInView = inview;
-            },
-
-            write: function() {
-                this.$el.src = '' + this.$el.src; // force self-assign
-            },
-
-            events: ['scroll', 'resize']
-        }
-
-    };
-
     // IE 11 fix (min-height on a flex container won't apply to its flex items)
     var FlexBug = isIE ? {
 
@@ -4524,66 +3925,8 @@
 
     } : {};
 
-    var margin = {
-
-        props: {
-            margin: String,
-            firstColumn: Boolean
-        },
-
-        data: {
-            margin: 'uk-margin-small-top',
-            firstColumn: 'uk-first-column'
-        },
-
-        update: {
-
-            read: function() {
-
-                var rows = getRows(this.$el.children);
-
-                return {
-                    rows: rows,
-                    columns: getColumns(rows)
-                };
-            },
-
-            write: function(ref) {
-                var columns = ref.columns;
-                var rows = ref.rows;
-
-                for (var i = 0; i < rows.length; i++) {
-                    for (var j = 0; j < rows[i].length; j++) {
-                        toggleClass(rows[i][j], this.margin, i !== 0);
-                        toggleClass(rows[i][j], this.firstColumn, !!~columns[0].indexOf(rows[i][j]));
-                    }
-                }
-            },
-
-            events: ['resize']
-
-        }
-
-    };
-
     function getRows(items) {
         return sortBy$1(items, 'top', 'bottom');
-    }
-
-    function getColumns(rows) {
-
-        var columns = [];
-
-        for (var i = 0; i < rows.length; i++) {
-            var sorted = sortBy$1(rows[i], 'left', 'right');
-            for (var j = 0; j < sorted.length; j++) {
-                columns[j] = !columns[j] ? sorted[j] : columns[j].concat(sorted[j]);
-            }
-        }
-
-        return isRtl
-            ? columns.reverse()
-            : columns;
     }
 
     function sortBy$1(items, startProp, endProp) {
@@ -4873,7 +4216,7 @@
 
     };
 
-    var active$1 = [];
+    var active = [];
 
     var Modal = {
 
@@ -4952,7 +4295,7 @@
 
                     e.preventDefault();
 
-                    if (this.isToggled() === includes(active$1, this)) {
+                    if (this.isToggled() === includes(active, this)) {
                         this.toggle();
                     }
                 }
@@ -4966,15 +4309,15 @@
 
                 handler: function(e) {
 
-                    if (includes(active$1, this)) {
+                    if (includes(active, this)) {
                         return false;
                     }
 
-                    if (!this.stack && active$1.length) {
-                        Promise.all(active$1.map(function (modal) { return modal.hide(); })).then(this.show);
+                    if (!this.stack && active.length) {
+                        Promise.all(active.map(function (modal) { return modal.hide(); })).then(this.show);
                         e.preventDefault();
                     } else {
-                        active$1.push(this);
+                        active.push(this);
                     }
                 }
 
@@ -4997,7 +4340,7 @@
                     }
 
                     if (this.stack) {
-                        css(this.$el, 'zIndex', toFloat(css(this.$el, 'zIndex')) + active$1.length);
+                        css(this.$el, 'zIndex', toFloat(css(this.$el, 'zIndex')) + active.length);
                     }
 
                     addClass(docEl, this.clsPage);
@@ -5007,7 +4350,7 @@
                             var target = ref.target;
 
 
-                            if (last(active$1) !== this$1 || this$1.overlay && !within(target, this$1.$el) || within(target, this$1.panel)) {
+                            if (last(active) !== this$1 || this$1.overlay && !within(target, this$1.$el) || within(target, this$1.panel)) {
                                 return;
                             }
 
@@ -5026,7 +4369,7 @@
 
                     if (this.escClose) {
                         once(this.$el, 'hide', on(document, 'keydown', function (e) {
-                            if (e.keyCode === 27 && last(active$1) === this$1) {
+                            if (e.keyCode === 27 && last(active) === this$1) {
                                 this$1.hide();
                             }
                         }), {self: true});
@@ -5045,17 +4388,17 @@
                     var this$1 = this;
 
 
-                    if (includes(active$1, this)) {
-                        active$1.splice(active$1.indexOf(this), 1);
+                    if (includes(active, this)) {
+                        active.splice(active.indexOf(this), 1);
                     }
 
-                    if (!active$1.length) {
+                    if (!active.length) {
                         css(document.body, 'overflowY', '');
                     }
 
                     css(this.$el, 'zIndex', '');
 
-                    if (!active$1.some(function (modal) { return modal.clsPage === this$1.clsPage; })) {
+                    if (!active.some(function (modal) { return modal.clsPage === this$1.clsPage; })) {
                         removeClass(document.documentElement, this.clsPage);
                     }
 
@@ -5251,285 +4594,6 @@
 
     }
 
-    var nav = {
-
-        extends: Accordion,
-
-        data: {
-            targets: '> .uk-parent',
-            toggle: '> a',
-            content: '> ul'
-        }
-
-    };
-
-    var offcanvas = {
-
-        mixins: [Modal],
-
-        args: 'mode',
-
-        props: {
-            mode: String,
-            flip: Boolean,
-            overlay: Boolean
-        },
-
-        data: {
-            mode: 'slide',
-            flip: false,
-            overlay: false,
-            clsPage: 'uk-offcanvas-page',
-            clsContainer: 'uk-offcanvas-container',
-            selPanel: '.uk-offcanvas-bar',
-            clsFlip: 'uk-offcanvas-flip',
-            clsContainerAnimation: 'uk-offcanvas-container-animation',
-            clsSidebarAnimation: 'uk-offcanvas-bar-animation',
-            clsMode: 'uk-offcanvas',
-            clsOverlay: 'uk-offcanvas-overlay',
-            selClose: '.uk-offcanvas-close',
-            container: false
-        },
-
-        computed: {
-
-            clsFlip: function(ref) {
-                var flip = ref.flip;
-                var clsFlip = ref.clsFlip;
-
-                return flip ? clsFlip : '';
-            },
-
-            clsOverlay: function(ref) {
-                var overlay = ref.overlay;
-                var clsOverlay = ref.clsOverlay;
-
-                return overlay ? clsOverlay : '';
-            },
-
-            clsMode: function(ref) {
-                var mode = ref.mode;
-                var clsMode = ref.clsMode;
-
-                return (clsMode + "-" + mode);
-            },
-
-            clsSidebarAnimation: function(ref) {
-                var mode = ref.mode;
-                var clsSidebarAnimation = ref.clsSidebarAnimation;
-
-                return mode === 'none' || mode === 'reveal' ? '' : clsSidebarAnimation;
-            },
-
-            clsContainerAnimation: function(ref) {
-                var mode = ref.mode;
-                var clsContainerAnimation = ref.clsContainerAnimation;
-
-                return mode !== 'push' && mode !== 'reveal' ? '' : clsContainerAnimation;
-            },
-
-            transitionElement: function(ref) {
-                var mode = ref.mode;
-
-                return mode === 'reveal' ? parent(this.panel) : this.panel;
-            }
-
-        },
-
-        update: {
-
-            read: function() {
-                if (this.isToggled() && !isVisible(this.$el)) {
-                    this.hide();
-                }
-            },
-
-            events: ['resize']
-
-        },
-
-        events: [
-
-            {
-
-                name: 'click',
-
-                delegate: function() {
-                    return 'a[href^="#"]';
-                },
-
-                handler: function(ref) {
-                    var hash = ref.current.hash;
-                    var defaultPrevented = ref.defaultPrevented;
-
-                    if (!defaultPrevented && hash && $(hash, document.body)) {
-                        this.hide();
-                    }
-                }
-
-            },
-
-            {
-                name: 'touchstart',
-
-                passive: true,
-
-                el: function() {
-                    return this.panel;
-                },
-
-                handler: function(ref) {
-                    var targetTouches = ref.targetTouches;
-
-
-                    if (targetTouches.length === 1) {
-                        this.clientY = targetTouches[0].clientY;
-                    }
-
-                }
-
-            },
-
-            {
-                name: 'touchmove',
-
-                self: true,
-                passive: false,
-
-                filter: function() {
-                    return this.overlay;
-                },
-
-                handler: function(e) {
-                    e.cancelable && e.preventDefault();
-                }
-
-            },
-
-            {
-                name: 'touchmove',
-
-                passive: false,
-
-                el: function() {
-                    return this.panel;
-                },
-
-                handler: function(e) {
-
-                    if (e.targetTouches.length !== 1) {
-                        return;
-                    }
-
-                    var clientY = event.targetTouches[0].clientY - this.clientY;
-                    var ref = this.panel;
-                    var scrollTop = ref.scrollTop;
-                    var scrollHeight = ref.scrollHeight;
-                    var clientHeight = ref.clientHeight;
-
-                    if (clientHeight >= scrollHeight
-                        || scrollTop === 0 && clientY > 0
-                        || scrollHeight - scrollTop <= clientHeight && clientY < 0
-                    ) {
-                        e.cancelable && e.preventDefault();
-                    }
-
-                }
-
-            },
-
-            {
-                name: 'show',
-
-                self: true,
-
-                handler: function() {
-
-                    if (this.mode === 'reveal' && !hasClass(parent(this.panel), this.clsMode)) {
-                        wrapAll(this.panel, '<div>');
-                        addClass(parent(this.panel), this.clsMode);
-                    }
-
-                    css(document.documentElement, 'overflowY', this.overlay ? 'hidden' : '');
-                    addClass(document.body, this.clsContainer, this.clsFlip);
-                    css(document.body, 'touch-action', 'pan-y pinch-zoom');
-                    css(this.$el, 'display', 'block');
-                    addClass(this.$el, this.clsOverlay);
-                    addClass(this.panel, this.clsSidebarAnimation, this.mode !== 'reveal' ? this.clsMode : '');
-
-                    height(document.body); // force reflow
-                    addClass(document.body, this.clsContainerAnimation);
-
-                    this.clsContainerAnimation && suppressUserScale();
-
-
-                }
-            },
-
-            {
-                name: 'hide',
-
-                self: true,
-
-                handler: function() {
-                    removeClass(document.body, this.clsContainerAnimation);
-                    css(document.body, 'touch-action', '');
-                }
-            },
-
-            {
-                name: 'hidden',
-
-                self: true,
-
-                handler: function() {
-
-                    this.clsContainerAnimation && resumeUserScale();
-
-                    if (this.mode === 'reveal') {
-                        unwrap(this.panel);
-                    }
-
-                    removeClass(this.panel, this.clsSidebarAnimation, this.clsMode);
-                    removeClass(this.$el, this.clsOverlay);
-                    css(this.$el, 'display', '');
-                    removeClass(document.body, this.clsContainer, this.clsFlip);
-
-                    css(document.documentElement, 'overflowY', '');
-
-                }
-            },
-
-            {
-                name: 'swipeLeft swipeRight',
-
-                handler: function(e) {
-
-                    if (this.isToggled() && endsWith(e.type, 'Left') ^ this.flip) {
-                        this.hide();
-                    }
-
-                }
-            }
-
-        ]
-
-    };
-
-    // Chrome in responsive mode zooms page upon opening offcanvas
-    function suppressUserScale() {
-        getViewport$1().content += ',user-scalable=0';
-    }
-
-    function resumeUserScale() {
-        var viewport = getViewport$1();
-        viewport.content = viewport.content.replace(/,user-scalable=0$/, '');
-    }
-
-    function getViewport$1() {
-        return $('meta[name="viewport"]', document.head) || append(document.head, '<meta name="viewport">');
-    }
-
     var overflowAuto = {
 
         mixins: [Class],
@@ -5620,301 +4684,6 @@
             events: ['resize']
 
         }
-
-    };
-
-    var scroll = {
-
-        props: {
-            offset: Number
-        },
-
-        data: {
-            offset: 0
-        },
-
-        methods: {
-
-            scrollTo: function(el) {
-                var this$1 = this;
-
-
-                el = el && $(el) || document.body;
-
-                if (trigger(this.$el, 'beforescroll', [this, el])) {
-                    scrollIntoView(el, {offset: this.offset}).then(function () { return trigger(this$1.$el, 'scrolled', [this$1, el]); }
-                    );
-                }
-
-            }
-
-        },
-
-        events: {
-
-            click: function(e) {
-
-                if (e.defaultPrevented) {
-                    return;
-                }
-
-                e.preventDefault();
-                this.scrollTo(("#" + (escape(decodeURIComponent((this.$el.hash || '').substr(1))))));
-            }
-
-        }
-
-    };
-
-    var stateKey$1 = '_ukScrollspy';
-    var scrollspy = {
-
-        args: 'cls',
-
-        props: {
-            cls: String,
-            target: String,
-            hidden: Boolean,
-            offsetTop: Number,
-            offsetLeft: Number,
-            repeat: Boolean,
-            delay: Number
-        },
-
-        data: function () { return ({
-            cls: false,
-            target: false,
-            hidden: true,
-            offsetTop: 0,
-            offsetLeft: 0,
-            repeat: false,
-            delay: 0,
-            inViewClass: 'uk-scrollspy-inview'
-        }); },
-
-        computed: {
-
-            elements: {
-
-                get: function(ref, $el) {
-                    var target = ref.target;
-
-                    return target ? $$(target, $el) : [$el];
-                },
-
-                watch: function(elements) {
-                    if (this.hidden) {
-                        css(filter(elements, (":not(." + (this.inViewClass) + ")")), 'visibility', 'hidden');
-                    }
-                },
-
-                immediate: true
-
-            }
-
-        },
-
-        disconnected: function() {
-            var this$1 = this;
-
-            this.elements.forEach(function (el) {
-                removeClass(el, this$1.inViewClass, el[stateKey$1] ? el[stateKey$1].cls : '');
-                delete el[stateKey$1];
-            });
-        },
-
-        update: [
-
-            {
-
-                read: function(ref) {
-                    var this$1 = this;
-                    var update = ref.update;
-
-
-                    if (!update) {
-                        return;
-                    }
-
-                    this.elements.forEach(function (el) {
-
-                        if (!el[stateKey$1]) {
-                            el[stateKey$1] = {cls: data(el, 'uk-scrollspy-class') || this$1.cls};
-                        }
-
-                        el[stateKey$1].show = isInView(el, this$1.offsetTop, this$1.offsetLeft);
-
-                    });
-
-                },
-
-                write: function(data) {
-                    var this$1 = this;
-
-
-                    // Let child components be applied at least once first
-                    if (!data.update) {
-                        this.$emit();
-                        return data.update = true;
-                    }
-
-                    this.elements.forEach(function (el) {
-
-                        var state = el[stateKey$1];
-                        var toggle = function (inview) {
-
-                            css(el, 'visibility', !inview && this$1.hidden ? 'hidden' : '');
-
-                            toggleClass(el, this$1.inViewClass, inview);
-                            toggleClass(el, state.cls);
-
-                            trigger(el, inview ? 'inview' : 'outview');
-
-                            state.inview = inview;
-
-                            this$1.$update(el);
-
-                        };
-
-                        if (state.show && !state.inview && !state.queued) {
-
-                            state.queued = true;
-
-                            data.promise = (data.promise || Promise.resolve()).then(function () { return new Promise(function (resolve) { return setTimeout(resolve, this$1.delay); }
-                                ); }
-                            ).then(function () {
-                                toggle(true);
-                                setTimeout(function () {
-                                    state.queued = false;
-                                    this$1.$emit();
-                                }, 300);
-                            });
-
-                        } else if (!state.show && state.inview && !state.queued && this$1.repeat) {
-
-                            toggle(false);
-
-                        }
-
-                    });
-
-                },
-
-                events: ['scroll', 'resize']
-
-            }
-
-        ]
-
-    };
-
-    var scrollspyNav = {
-
-        props: {
-            cls: String,
-            closest: String,
-            scroll: Boolean,
-            overflow: Boolean,
-            offset: Number
-        },
-
-        data: {
-            cls: 'uk-active',
-            closest: false,
-            scroll: false,
-            overflow: true,
-            offset: 0
-        },
-
-        computed: {
-
-            links: {
-
-                get: function(_, $el) {
-                    return $$('a[href^="#"]', $el).filter(function (el) { return el.hash; });
-                },
-
-                watch: function(links) {
-                    if (this.scroll) {
-                        this.$create('scroll', links, {offset: this.offset || 0});
-                    }
-                },
-
-                immediate: true
-
-            },
-
-            targets: function() {
-                return $$(this.links.map(function (el) { return escape(el.hash).substr(1); }).join(','));
-            },
-
-            elements: function(ref) {
-                var selector = ref.closest;
-
-                return closest(this.links, selector || '*');
-            }
-
-        },
-
-        update: [
-
-            {
-
-                read: function() {
-                    var this$1 = this;
-
-
-                    var ref = this.targets;
-                    var length = ref.length;
-
-                    if (!length || !isVisible(this.$el)) {
-                        return false;
-                    }
-
-                    var ref$1 = scrollParents(this.targets, /auto|scroll/, true);
-                    var scrollElement = ref$1[0];
-                    var scrollTop = scrollElement.scrollTop;
-                    var scrollHeight = scrollElement.scrollHeight;
-                    var max = scrollHeight - getViewportClientHeight(scrollElement);
-                    var active = false;
-
-                    if (scrollTop === max) {
-                        active = length - 1;
-                    } else {
-
-                        this.targets.every(function (el, i) {
-                            if (offset(el).top - offset(getViewport(scrollElement)).top - this$1.offset <= 0) {
-                                active = i;
-                                return true;
-                            }
-                        });
-
-                        if (active === false && this.overflow) {
-                            active = 0;
-                        }
-                    }
-
-                    return {active: active};
-                },
-
-                write: function(ref) {
-                    var active = ref.active;
-
-
-                    this.links.forEach(function (el) { return el.blur(); });
-                    removeClass(this.elements, this.cls);
-
-                    if (active !== false) {
-                        trigger(this.$el, 'active', [active, addClass(this.elements[active], this.cls)]);
-                    }
-
-                },
-
-                events: ['scroll', 'resize']
-
-            }
-
-        ]
 
     };
 
@@ -6304,6 +5073,351 @@
         }
     }
 
+    var switcher = {
+
+        mixins: [Togglable],
+
+        args: 'connect',
+
+        props: {
+            connect: String,
+            toggle: String,
+            active: Number,
+            swiping: Boolean
+        },
+
+        data: {
+            connect: '~.uk-switcher',
+            toggle: '> * > :first-child',
+            active: 0,
+            swiping: true,
+            cls: 'uk-active',
+            attrItem: 'uk-switcher-item'
+        },
+
+        computed: {
+
+            connects: {
+
+                get: function(ref, $el) {
+                    var connect = ref.connect;
+
+                    return queryAll(connect, $el);
+                },
+
+                watch: function(connects) {
+                    var this$1 = this;
+
+
+                    if (this.swiping) {
+                        css(connects, 'touch-action', 'pan-y pinch-zoom');
+                    }
+
+                    var index = this.index();
+                    this.connects.forEach(function (el) { return children(el).forEach(function (child, i) { return toggleClass(child, this$1.cls, i === index); }
+                        ); }
+                    );
+
+                },
+
+                immediate: true
+
+            },
+
+            toggles: {
+
+                get: function(ref, $el) {
+                    var toggle = ref.toggle;
+
+                    return $$(toggle, $el).filter(function (el) { return !matches(el, '.uk-disabled *, .uk-disabled, [disabled]'); });
+                },
+
+                watch: function(toggles) {
+                    var active = this.index();
+                    this.show(~active ? active : toggles[this.active] || toggles[0]);
+                },
+
+                immediate: true
+
+            },
+
+            children: function() {
+                var this$1 = this;
+
+                return children(this.$el).filter(function (child) { return this$1.toggles.some(function (toggle) { return within(toggle, child); }); });
+            }
+
+        },
+
+        events: [
+
+            {
+
+                name: 'click',
+
+                delegate: function() {
+                    return this.toggle;
+                },
+
+                handler: function(e) {
+                    e.preventDefault();
+                    this.show(e.current);
+                }
+
+            },
+
+            {
+                name: 'click',
+
+                el: function() {
+                    return this.connects;
+                },
+
+                delegate: function() {
+                    return ("[" + (this.attrItem) + "],[data-" + (this.attrItem) + "]");
+                },
+
+                handler: function(e) {
+                    e.preventDefault();
+                    this.show(data(e.current, this.attrItem));
+                }
+            },
+
+            {
+                name: 'swipeRight swipeLeft',
+
+                filter: function() {
+                    return this.swiping;
+                },
+
+                el: function() {
+                    return this.connects;
+                },
+
+                handler: function(ref) {
+                    var type = ref.type;
+
+                    this.show(endsWith(type, 'Left') ? 'next' : 'previous');
+                }
+            }
+
+        ],
+
+        methods: {
+
+            index: function() {
+                var this$1 = this;
+
+                return findIndex(this.children, function (el) { return hasClass(el, this$1.cls); });
+            },
+
+            show: function(item) {
+                var this$1 = this;
+
+
+                var prev = this.index();
+                var next = getIndex(
+                    this.children[getIndex(item, this.toggles, prev)],
+                    children(this.$el)
+                );
+
+                if (prev === next) {
+                    return;
+                }
+
+                this.children.forEach(function (child, i) {
+                    toggleClass(child, this$1.cls, next === i);
+                    attr(this$1.toggles[i], 'aria-expanded', next === i);
+                });
+
+                this.connects.forEach(function (ref) {
+                        var children = ref.children;
+
+                        return this$1.toggleElement(toNodes(children).filter(function (child) { return hasClass(child, this$1.cls); }
+                    ), false, prev >= 0).then(function () { return this$1.toggleElement(children[next], true, prev >= 0); }
+                    );
+                }
+                );
+            }
+
+        }
+
+    };
+
+    var toggle = {
+
+        mixins: [Media, Togglable],
+
+        args: 'target',
+
+        props: {
+            href: String,
+            target: null,
+            mode: 'list',
+            queued: Boolean
+        },
+
+        data: {
+            href: false,
+            target: false,
+            mode: 'click',
+            queued: true
+        },
+
+        computed: {
+
+            target: {
+
+                get: function(ref, $el) {
+                    var href = ref.href;
+                    var target = ref.target;
+
+                    target = queryAll(target || href, $el);
+                    return target.length && target || [$el];
+                },
+
+                watch: function() {
+                    this.updateAria();
+                },
+
+                immediate: true
+
+            }
+
+        },
+
+        events: [
+
+            {
+
+                name: (pointerEnter + " " + pointerLeave),
+
+                filter: function() {
+                    return includes(this.mode, 'hover');
+                },
+
+                handler: function(e) {
+                    if (!isTouch(e)) {
+                        this.toggle(("toggle" + (e.type === pointerEnter ? 'show' : 'hide')));
+                    }
+                }
+
+            },
+
+            {
+
+                name: 'click',
+
+                filter: function() {
+                    return includes(this.mode, 'click') || hasTouch && includes(this.mode, 'hover');
+                },
+
+                handler: function(e) {
+
+                    var link;
+                    if (closest(e.target, 'a[href="#"], a[href=""]')
+                        || (link = closest(e.target, 'a[href]')) && (
+                            !isToggled(this.target, this.cls)
+                            || link.hash && matches(this.target, link.hash)
+                        )
+                    ) {
+                        e.preventDefault();
+                    }
+
+                    this.toggle();
+                }
+
+            },
+
+            {
+
+                name: 'toggled',
+
+                self: true,
+
+                el: function() {
+                    return this.target;
+                },
+
+                handler: function(e, toggled) {
+                    this.updateAria(toggled);
+                }
+            }
+
+        ],
+
+        update: {
+
+            read: function() {
+                return includes(this.mode, 'media') && this.media
+                    ? {match: this.matchMedia}
+                    : false;
+            },
+
+            write: function(ref) {
+                var match = ref.match;
+
+
+                var toggled = this.isToggled(this.target);
+                if (match ? !toggled : toggled) {
+                    this.toggle();
+                }
+
+            },
+
+            events: ['resize']
+
+        },
+
+        methods: {
+
+            toggle: function(type) {
+                var this$1 = this;
+
+
+                if (!trigger(this.target, type || 'toggle', [this])) {
+                    return;
+                }
+
+                if (!this.queued) {
+                    return this.toggleElement(this.target);
+                }
+
+                var leaving = this.target.filter(function (el) { return hasClass(el, this$1.clsLeave); });
+
+                if (leaving.length) {
+                    this.target.forEach(function (el) {
+                        var isLeaving = includes(leaving, el);
+                        this$1.toggleElement(el, isLeaving, isLeaving);
+                    });
+                    return;
+                }
+
+                var toggled = this.target.filter(this.isToggled);
+                this.toggleElement(toggled, false).then(function () { return this$1.toggleElement(this$1.target.filter(function (el) { return !includes(toggled, el); }
+                    ), true); }
+                );
+
+            },
+
+            updateAria: function(toggled) {
+                attr(this.$el, 'aria-expanded', isBoolean(toggled)
+                    ? toggled
+                    : isToggled(this.target, this.cls)
+                );
+            }
+
+        }
+
+    };
+
+    // TODO improve isToggled handling
+    function isToggled(target, cls) {
+        return cls
+            ? hasClass(target, cls.split(' ')[0])
+            : isVisible(target);
+    }
+
     var SVG = {
 
         args: 'src',
@@ -6548,445 +5662,6 @@
         return (el.innerHTML || (new XMLSerializer()).serializeToString(el).replace(/<svg.*?>(.*?)<\/svg>/g, '$1')).replace(/\s/g, '');
     }
 
-    var Switcher = {
-
-        mixins: [Togglable],
-
-        args: 'connect',
-
-        props: {
-            connect: String,
-            toggle: String,
-            active: Number,
-            swiping: Boolean
-        },
-
-        data: {
-            connect: '~.uk-switcher',
-            toggle: '> * > :first-child',
-            active: 0,
-            swiping: true,
-            cls: 'uk-active',
-            attrItem: 'uk-switcher-item'
-        },
-
-        computed: {
-
-            connects: {
-
-                get: function(ref, $el) {
-                    var connect = ref.connect;
-
-                    return queryAll(connect, $el);
-                },
-
-                watch: function(connects) {
-                    var this$1 = this;
-
-
-                    if (this.swiping) {
-                        css(connects, 'touch-action', 'pan-y pinch-zoom');
-                    }
-
-                    var index = this.index();
-                    this.connects.forEach(function (el) { return children(el).forEach(function (child, i) { return toggleClass(child, this$1.cls, i === index); }
-                        ); }
-                    );
-
-                },
-
-                immediate: true
-
-            },
-
-            toggles: {
-
-                get: function(ref, $el) {
-                    var toggle = ref.toggle;
-
-                    return $$(toggle, $el).filter(function (el) { return !matches(el, '.uk-disabled *, .uk-disabled, [disabled]'); });
-                },
-
-                watch: function(toggles) {
-                    var active = this.index();
-                    this.show(~active ? active : toggles[this.active] || toggles[0]);
-                },
-
-                immediate: true
-
-            },
-
-            children: function() {
-                var this$1 = this;
-
-                return children(this.$el).filter(function (child) { return this$1.toggles.some(function (toggle) { return within(toggle, child); }); });
-            }
-
-        },
-
-        events: [
-
-            {
-
-                name: 'click',
-
-                delegate: function() {
-                    return this.toggle;
-                },
-
-                handler: function(e) {
-                    e.preventDefault();
-                    this.show(e.current);
-                }
-
-            },
-
-            {
-                name: 'click',
-
-                el: function() {
-                    return this.connects;
-                },
-
-                delegate: function() {
-                    return ("[" + (this.attrItem) + "],[data-" + (this.attrItem) + "]");
-                },
-
-                handler: function(e) {
-                    e.preventDefault();
-                    this.show(data(e.current, this.attrItem));
-                }
-            },
-
-            {
-                name: 'swipeRight swipeLeft',
-
-                filter: function() {
-                    return this.swiping;
-                },
-
-                el: function() {
-                    return this.connects;
-                },
-
-                handler: function(ref) {
-                    var type = ref.type;
-
-                    this.show(endsWith(type, 'Left') ? 'next' : 'previous');
-                }
-            }
-
-        ],
-
-        methods: {
-
-            index: function() {
-                var this$1 = this;
-
-                return findIndex(this.children, function (el) { return hasClass(el, this$1.cls); });
-            },
-
-            show: function(item) {
-                var this$1 = this;
-
-
-                var prev = this.index();
-                var next = getIndex(
-                    this.children[getIndex(item, this.toggles, prev)],
-                    children(this.$el)
-                );
-
-                if (prev === next) {
-                    return;
-                }
-
-                this.children.forEach(function (child, i) {
-                    toggleClass(child, this$1.cls, next === i);
-                    attr(this$1.toggles[i], 'aria-expanded', next === i);
-                });
-
-                this.connects.forEach(function (ref) {
-                        var children = ref.children;
-
-                        return this$1.toggleElement(toNodes(children).filter(function (child) { return hasClass(child, this$1.cls); }
-                    ), false, prev >= 0).then(function () { return this$1.toggleElement(children[next], true, prev >= 0); }
-                    );
-                }
-                );
-            }
-
-        }
-
-    };
-
-    var tab = {
-
-        mixins: [Class],
-
-        extends: Switcher,
-
-        props: {
-            media: Boolean
-        },
-
-        data: {
-            media: 960,
-            attrItem: 'uk-tab-item'
-        },
-
-        connected: function() {
-
-            var cls = hasClass(this.$el, 'uk-tab-left')
-                ? 'uk-tab-left'
-                : hasClass(this.$el, 'uk-tab-right')
-                    ? 'uk-tab-right'
-                    : false;
-
-            if (cls) {
-                this.$create('toggle', this.$el, {cls: cls, mode: 'media', media: this.media});
-            }
-        }
-
-    };
-
-    var toggle = {
-
-        mixins: [Media, Togglable],
-
-        args: 'target',
-
-        props: {
-            href: String,
-            target: null,
-            mode: 'list',
-            queued: Boolean
-        },
-
-        data: {
-            href: false,
-            target: false,
-            mode: 'click',
-            queued: true
-        },
-
-        computed: {
-
-            target: {
-
-                get: function(ref, $el) {
-                    var href = ref.href;
-                    var target = ref.target;
-
-                    target = queryAll(target || href, $el);
-                    return target.length && target || [$el];
-                },
-
-                watch: function() {
-                    this.updateAria();
-                },
-
-                immediate: true
-
-            }
-
-        },
-
-        events: [
-
-            {
-
-                name: (pointerEnter + " " + pointerLeave),
-
-                filter: function() {
-                    return includes(this.mode, 'hover');
-                },
-
-                handler: function(e) {
-                    if (!isTouch(e)) {
-                        this.toggle(("toggle" + (e.type === pointerEnter ? 'show' : 'hide')));
-                    }
-                }
-
-            },
-
-            {
-
-                name: 'click',
-
-                filter: function() {
-                    return includes(this.mode, 'click') || hasTouch && includes(this.mode, 'hover');
-                },
-
-                handler: function(e) {
-
-                    var link;
-                    if (closest(e.target, 'a[href="#"], a[href=""]')
-                        || (link = closest(e.target, 'a[href]')) && (
-                            !isToggled(this.target, this.cls)
-                            || link.hash && matches(this.target, link.hash)
-                        )
-                    ) {
-                        e.preventDefault();
-                    }
-
-                    this.toggle();
-                }
-
-            },
-
-            {
-
-                name: 'toggled',
-
-                self: true,
-
-                el: function() {
-                    return this.target;
-                },
-
-                handler: function(e, toggled) {
-                    this.updateAria(toggled);
-                }
-            }
-
-        ],
-
-        update: {
-
-            read: function() {
-                return includes(this.mode, 'media') && this.media
-                    ? {match: this.matchMedia}
-                    : false;
-            },
-
-            write: function(ref) {
-                var match = ref.match;
-
-
-                var toggled = this.isToggled(this.target);
-                if (match ? !toggled : toggled) {
-                    this.toggle();
-                }
-
-            },
-
-            events: ['resize']
-
-        },
-
-        methods: {
-
-            toggle: function(type) {
-                var this$1 = this;
-
-
-                if (!trigger(this.target, type || 'toggle', [this])) {
-                    return;
-                }
-
-                if (!this.queued) {
-                    return this.toggleElement(this.target);
-                }
-
-                var leaving = this.target.filter(function (el) { return hasClass(el, this$1.clsLeave); });
-
-                if (leaving.length) {
-                    this.target.forEach(function (el) {
-                        var isLeaving = includes(leaving, el);
-                        this$1.toggleElement(el, isLeaving, isLeaving);
-                    });
-                    return;
-                }
-
-                var toggled = this.target.filter(this.isToggled);
-                this.toggleElement(toggled, false).then(function () { return this$1.toggleElement(this$1.target.filter(function (el) { return !includes(toggled, el); }
-                    ), true); }
-                );
-
-            },
-
-            updateAria: function(toggled) {
-                attr(this.$el, 'aria-expanded', isBoolean(toggled)
-                    ? toggled
-                    : isToggled(this.target, this.cls)
-                );
-            }
-
-        }
-
-    };
-
-    // TODO improve isToggled handling
-    function isToggled(target, cls) {
-        return cls
-            ? hasClass(target, cls.split(' ')[0])
-            : isVisible(target);
-    }
-
-    var video = {
-
-        args: 'autoplay',
-
-        props: {
-            automute: Boolean,
-            autoplay: Boolean
-        },
-
-        data: {
-            automute: false,
-            autoplay: true
-        },
-
-        computed: {
-
-            inView: function(ref) {
-                var autoplay = ref.autoplay;
-
-                return autoplay === 'inview';
-            }
-
-        },
-
-        connected: function() {
-
-            if (this.inView && !hasAttr(this.$el, 'preload')) {
-                this.$el.preload = 'none';
-            }
-
-            if (this.automute) {
-                mute(this.$el);
-            }
-
-        },
-
-        update: {
-
-            read: function() {
-                return {
-                    visible: isVisible(this.$el) && css(this.$el, 'visibility') !== 'hidden',
-                    inView: this.inView && isInView(this.$el)
-                };
-            },
-
-            write: function(ref) {
-                var visible = ref.visible;
-                var inView = ref.inView;
-
-
-                if (!visible || this.inView && !inView) {
-                    pause(this.$el);
-                } else if (this.autoplay === true || this.inView && inView) {
-                    play(this.$el);
-                }
-
-            },
-
-            events: ['resize', 'scroll']
-
-        }
-
-    };
-
     var closeIcon = "<svg width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" xmlns=\"http://www.w3.org/2000/svg\"><line fill=\"none\" stroke=\"#000\" stroke-width=\"1.1\" x1=\"1\" y1=\"1\" x2=\"13\" y2=\"13\"/><line fill=\"none\" stroke=\"#000\" stroke-width=\"1.1\" x1=\"13\" y1=\"1\" x2=\"1\" y2=\"13\"/></svg>";
 
     var closeLarge = "<svg width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" xmlns=\"http://www.w3.org/2000/svg\"><line fill=\"none\" stroke=\"#000\" stroke-width=\"1.4\" x1=\"1\" y1=\"1\" x2=\"19\" y2=\"19\"/><line fill=\"none\" stroke=\"#000\" stroke-width=\"1.4\" x1=\"19\" y1=\"1\" x2=\"1\" y2=\"19\"/></svg>";
@@ -7199,27 +5874,15 @@
 
     var components = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        Accordion: Accordion,
-        Drop: drop,
-        Dropdown: drop,
-        Gif: gif,
+        Accordion: accordion,
         HeightMatch: heightMatch,
         HeightViewport: heightViewport,
-        Margin: margin,
         Modal: modal,
-        Nav: nav,
-        Offcanvas: offcanvas,
         OverflowAuto: overflowAuto,
         Responsive: responsive,
-        Scroll: scroll,
-        Scrollspy: scrollspy,
-        ScrollspyNav: scrollspyNav,
         Sticky: sticky,
-        Svg: SVG,
-        Switcher: Switcher,
-        Tab: tab,
+        Switcher: switcher,
         Toggle: toggle,
-        Video: video,
         Close: Close,
         Spinner: Spinner,
         SlidenavNext: Slidenav,
@@ -7234,685 +5897,12 @@
     });
 
     // register components
-    each(components, function (component, name) { return UIkit.component(name, component); }
-    );
+    each(components, function (component, name) { return UIkit.component(name, component); });
 
     // core functionality
-    UIkit.use(Core);
+    // UIkit.use(Core);
 
     boot(UIkit);
-
-    var clsLeave = 'uk-transition-leave';
-    var clsEnter = 'uk-transition-enter';
-
-    function fade(action, target, duration, stagger) {
-        if ( stagger === void 0 ) stagger = 0;
-
-
-        var index = transitionIndex(target, true);
-        var propsIn = {opacity: 1};
-        var propsOut = {opacity: 0};
-
-        var wrapIndexFn = function (fn) { return function () { return index === transitionIndex(target) ? fn() : Promise.reject(); }; };
-
-        var leaveFn = wrapIndexFn(function () {
-
-            addClass(target, clsLeave);
-
-            return Promise.all(getTransitionNodes(target).map(function (child, i) { return new Promise(function (resolve) { return setTimeout(function () { return Transition.start(child, propsOut, duration / 2, 'ease').then(resolve); }, i * stagger); }
-                ); }
-            )).then(function () { return removeClass(target, clsLeave); });
-
-        });
-
-        var enterFn = wrapIndexFn(function () {
-
-            var oldHeight = height(target);
-
-            addClass(target, clsEnter);
-            action();
-
-            css(children(target), {opacity: 0});
-
-            // Ensure UIkit updates have propagated
-            return new Promise(function (resolve) { return requestAnimationFrame(function () {
-
-                    var nodes = children(target);
-                    var newHeight = height(target);
-
-                    // Ensure Grid cells do not stretch when height is applied
-                    css(target, 'alignContent', 'flex-start');
-                    height(target, oldHeight);
-
-                    var transitionNodes = getTransitionNodes(target);
-                    css(nodes, propsOut);
-
-                    var transitions = transitionNodes.map(function (child, i) { return new Promise(function (resolve) { return setTimeout(function () { return Transition.start(child, propsIn, duration / 2, 'ease').then(resolve); }, i * stagger); }
-                        ); }
-                    );
-
-                    if (oldHeight !== newHeight) {
-                        transitions.push(Transition.start(target, {height: newHeight}, duration / 2 + transitionNodes.length * stagger, 'ease'));
-                    }
-
-                    Promise.all(transitions).then(function () {
-                        removeClass(target, clsEnter);
-                        if (index === transitionIndex(target)) {
-                            css(target, {height: '', alignContent: ''});
-                            css(nodes, {opacity: ''});
-                            delete target.dataset.transition;
-                        }
-                        resolve();
-                    });
-                }); }
-            );
-        });
-
-        return hasClass(target, clsLeave)
-            ? waitTransitionend(target).then(enterFn)
-            : hasClass(target, clsEnter)
-                ? waitTransitionend(target).then(leaveFn).then(enterFn)
-                : leaveFn().then(enterFn);
-    }
-
-    function transitionIndex(target, next) {
-        if (next) {
-            target.dataset.transition = 1 + transitionIndex(target);
-        }
-
-        return toNumber(target.dataset.transition) || 0;
-    }
-
-    function waitTransitionend(target) {
-        return Promise.all(children(target).filter(Transition.inProgress).map(function (el) { return new Promise(function (resolve) { return once(el, 'transitionend transitioncanceled', resolve); }); }
-        ));
-    }
-
-    function getTransitionNodes(target) {
-        return getRows(children(target)).reduce(function (nodes, row) { return nodes.concat(sortBy(row.filter(function (el) { return isInView(el); }), 'offsetLeft')); }, []);
-    }
-
-    function slide (action, target, duration) {
-
-        return new Promise(function (resolve) { return requestAnimationFrame(function () {
-
-                var nodes = children(target);
-
-                // Get current state
-                var currentProps = nodes.map(function (el) { return getProps(el, true); });
-                var targetProps = css(target, ['height', 'padding']);
-
-                // Cancel previous animations
-                Transition.cancel(target);
-                nodes.forEach(Transition.cancel);
-                reset(target);
-
-                // Adding, sorting, removing nodes
-                action();
-
-                // Find new nodes
-                nodes = nodes.concat(children(target).filter(function (el) { return !includes(nodes, el); }));
-
-                // Wait for update to propagate
-                Promise.resolve().then(function () {
-
-                    // Force update
-                    fastdom.flush();
-
-                    // Get new state
-                    var targetPropsTo = css(target, ['height', 'padding']);
-                    var ref = getTransitionProps(target, nodes, currentProps);
-                    var propsTo = ref[0];
-                    var propsFrom = ref[1];
-
-                    // Reset to previous state
-                    nodes.forEach(function (el, i) { return propsFrom[i] && css(el, propsFrom[i]); });
-                    css(target, assign({display: 'block'}, targetProps));
-
-                    // Start transitions on next frame
-                    requestAnimationFrame(function () {
-
-                        var transitions = nodes.map(function (el, i) { return parent(el) === target && Transition.start(el, propsTo[i], duration, 'ease'); }
-                            ).concat(Transition.start(target, targetPropsTo, duration, 'ease'));
-
-                        Promise.all(transitions).then(function () {
-                            nodes.forEach(function (el, i) { return parent(el) === target && css(el, 'display', propsTo[i].opacity === 0 ? 'none' : ''); });
-                            reset(target);
-                        }, noop).then(resolve);
-
-                    });
-                });
-            }); });
-    }
-
-    function getProps(el, opacity) {
-
-        var zIndex = css(el, 'zIndex');
-
-        return isVisible(el)
-            ? assign({
-                display: '',
-                opacity: opacity ? css(el, 'opacity') : '0',
-                pointerEvents: 'none',
-                position: 'absolute',
-                zIndex: zIndex === 'auto' ? index(el) : zIndex
-            }, getPositionWithMargin(el))
-            : false;
-    }
-
-    function getTransitionProps(target, nodes, currentProps) {
-
-        var propsTo = nodes.map(function (el, i) { return parent(el) && i in currentProps
-                ? currentProps[i]
-                ? isVisible(el)
-                    ? getPositionWithMargin(el)
-                    : {opacity: 0}
-                : {opacity: isVisible(el) ? 1 : 0}
-                : false; });
-
-        var propsFrom = propsTo.map(function (props, i) {
-
-            var from = parent(nodes[i]) === target && (currentProps[i] || getProps(nodes[i]));
-
-            if (!from) {
-                return false;
-            }
-
-            if (!props) {
-                delete from.opacity;
-            } else if (!('opacity' in props)) {
-                var opacity = from.opacity;
-
-                if (opacity % 1) {
-                    props.opacity = 1;
-                } else {
-                    delete from.opacity;
-                }
-            }
-
-            return from;
-        });
-
-        return [propsTo, propsFrom];
-    }
-
-    function reset(el) {
-        css(el.children, {
-            height: '',
-            left: '',
-            opacity: '',
-            pointerEvents: '',
-            position: '',
-            top: '',
-            marginTop: '',
-            marginLeft: '',
-            transform: '',
-            width: '',
-            zIndex: ''
-        });
-        css(el, {height: '', display: '', padding: ''});
-    }
-
-    function getPositionWithMargin(el) {
-        var ref = offset(el);
-        var height = ref.height;
-        var width = ref.width;
-        var ref$1 = position(el);
-        var top = ref$1.top;
-        var left = ref$1.left;
-        var ref$2 = css(el, ['marginTop', 'marginLeft']);
-        var marginLeft = ref$2.marginLeft;
-        var marginTop = ref$2.marginTop;
-
-        return {top: top, left: left, height: height, width: width, marginLeft: marginLeft, marginTop: marginTop, transform: ''};
-    }
-
-    var Animate = {
-
-        props: {
-            duration: Number,
-            animation: Boolean
-        },
-
-        data: {
-            duration: 150,
-            animation: 'slide'
-        },
-
-        methods: {
-
-            animate: function(action, target) {
-                var this$1 = this;
-                if ( target === void 0 ) target = this.$el;
-
-
-                var name = this.animation;
-                var animationFn = name === 'fade'
-                    ? fade
-                    : name === 'delayed-fade'
-                        ? function () {
-                            var args = [], len = arguments.length;
-                            while ( len-- ) args[ len ] = arguments[ len ];
-
-                            return fade.apply(void 0, args.concat( [40] ));
-                }
-                        : slide;
-
-                return animationFn(action, target, this.duration)
-                    .then(function () { return this$1.$update(target, 'resize'); }, noop);
-            }
-
-        }
-    };
-
-    var filter$1 = {
-
-        mixins: [Animate],
-
-        args: 'target',
-
-        props: {
-            target: Boolean,
-            selActive: Boolean
-        },
-
-        data: {
-            target: null,
-            selActive: false,
-            attrItem: 'uk-filter-control',
-            cls: 'uk-active',
-            duration: 250
-        },
-
-        computed: {
-
-            toggles: {
-
-                get: function(ref, $el) {
-                    var attrItem = ref.attrItem;
-
-                    return $$(("[" + attrItem + "],[data-" + attrItem + "]"), $el);
-                },
-
-                watch: function() {
-                    var this$1 = this;
-
-
-                    this.updateState();
-
-                    if (this.selActive !== false) {
-                        var actives = $$(this.selActive, this.$el);
-                        this.toggles.forEach(function (el) { return toggleClass(el, this$1.cls, includes(actives, el)); });
-                    }
-
-                },
-
-                immediate: true
-
-            },
-
-            children: {
-
-                get: function(ref, $el) {
-                    var target = ref.target;
-
-                    return $$((target + " > *"), $el);
-                },
-
-                watch: function(list, old) {
-                    if (old && !isEqualList(list, old)) {
-                        this.updateState();
-                    }
-                },
-
-                immediate: true
-
-            }
-
-        },
-
-        events: [
-
-            {
-
-                name: 'click',
-
-                delegate: function() {
-                    return ("[" + (this.attrItem) + "],[data-" + (this.attrItem) + "]");
-                },
-
-                handler: function(e) {
-
-                    e.preventDefault();
-                    this.apply(e.current);
-
-                }
-
-            }
-
-        ],
-
-        methods: {
-
-            apply: function(el) {
-                var prevState = this.getState();
-                var newState = mergeState(el, this.attrItem, this.getState());
-
-                if (!isEqualState(prevState, newState)) {
-                    this.setState(newState);
-                }
-            },
-
-            getState: function() {
-                var this$1 = this;
-
-                return this.toggles
-                    .filter(function (item) { return hasClass(item, this$1.cls); })
-                    .reduce(function (state, el) { return mergeState(el, this$1.attrItem, state); }, {filter: {'': ''}, sort: []});
-            },
-
-            setState: function(state, animate) {
-                var this$1 = this;
-                if ( animate === void 0 ) animate = true;
-
-
-                state = assign({filter: {'': ''}, sort: []}, state);
-
-                trigger(this.$el, 'beforeFilter', [this, state]);
-
-                this.toggles.forEach(function (el) { return toggleClass(el, this$1.cls, !!matchFilter(el, this$1.attrItem, state)); });
-
-                Promise.all($$(this.target, this.$el).map(function (target) {
-                    var filterFn = function () {
-                        applyState(state, target, children(target));
-                        this$1.$update(this$1.$el);
-                    };
-                    return animate ? this$1.animate(filterFn, target) : filterFn();
-                })).then(function () { return trigger(this$1.$el, 'afterFilter', [this$1]); });
-
-            },
-
-            updateState: function() {
-                var this$1 = this;
-
-                fastdom.write(function () { return this$1.setState(this$1.getState(), false); });
-            }
-
-        }
-
-    };
-
-    function getFilter(el, attr) {
-        return parseOptions(data(el, attr), ['filter']);
-    }
-
-    function isEqualState(stateA, stateB) {
-        return ['filter', 'sort'].every(function (prop) { return isEqual(stateA[prop], stateB[prop]); });
-    }
-
-    function applyState(state, target, children) {
-        var selector = getSelector(state);
-
-        children.forEach(function (el) { return css(el, 'display', selector && !matches(el, selector) ? 'none' : ''); });
-
-        var ref = state.sort;
-        var sort = ref[0];
-        var order = ref[1];
-
-        if (sort) {
-            var sorted = sortItems(children, sort, order);
-            if (!isEqual(sorted, children)) {
-                append(target, sorted);
-            }
-        }
-    }
-
-    function mergeState(el, attr, state) {
-
-        var filterBy = getFilter(el, attr);
-        var filter = filterBy.filter;
-        var group = filterBy.group;
-        var sort = filterBy.sort;
-        var order = filterBy.order; if ( order === void 0 ) order = 'asc';
-
-        if (filter || isUndefined(sort)) {
-
-            if (group) {
-
-                if (filter) {
-                    delete state.filter[''];
-                    state.filter[group] = filter;
-                } else {
-                    delete state.filter[group];
-
-                    if (isEmpty(state.filter) || '' in state.filter) {
-                        state.filter = {'': filter || ''};
-                    }
-
-                }
-
-            } else {
-                state.filter = {'': filter || ''};
-            }
-
-        }
-
-        if (!isUndefined(sort)) {
-            state.sort = [sort, order];
-        }
-
-        return state;
-    }
-
-    function matchFilter(el, attr, ref) {
-        var stateFilter = ref.filter; if ( stateFilter === void 0 ) stateFilter = {'': ''};
-        var ref_sort = ref.sort;
-        var stateSort = ref_sort[0];
-        var stateOrder = ref_sort[1];
-
-
-        var ref$1 = getFilter(el, attr);
-        var filter = ref$1.filter; if ( filter === void 0 ) filter = '';
-        var group = ref$1.group; if ( group === void 0 ) group = '';
-        var sort = ref$1.sort;
-        var order = ref$1.order; if ( order === void 0 ) order = 'asc';
-
-        return isUndefined(sort)
-            ? group in stateFilter && filter === stateFilter[group]
-                || !filter && group && !(group in stateFilter) && !stateFilter['']
-            : stateSort === sort && stateOrder === order;
-    }
-
-    function isEqualList(listA, listB) {
-        return listA.length === listB.length
-            && listA.every(function (el) { return ~listB.indexOf(el); });
-    }
-
-    function getSelector(ref) {
-        var filter = ref.filter;
-
-        var selector = '';
-        each(filter, function (value) { return selector += value || ''; });
-        return selector;
-    }
-
-    function sortItems(nodes, sort, order) {
-        return assign([], nodes).sort(function (a, b) { return data(a, sort).localeCompare(data(b, sort), undefined, {numeric: true}) * (order === 'asc' || -1); });
-    }
-
-    var Animations = {
-
-        slide: {
-
-            show: function(dir) {
-                return [
-                    {transform: translate(dir * -100)},
-                    {transform: translate()}
-                ];
-            },
-
-            percent: function(current) {
-                return translated(current);
-            },
-
-            translate: function(percent, dir) {
-                return [
-                    {transform: translate(dir * -100 * percent)},
-                    {transform: translate(dir * 100 * (1 - percent))}
-                ];
-            }
-
-        }
-
-    };
-
-    function translated(el) {
-        return Math.abs(css(el, 'transform').split(',')[4] / el.offsetWidth) || 0;
-    }
-
-    function translate(value, unit) {
-        if ( value === void 0 ) value = 0;
-        if ( unit === void 0 ) unit = '%';
-
-        value += value ? unit : '';
-        return isIE ? ("translateX(" + value + ")") : ("translate3d(" + value + ", 0, 0)"); // currently not translate3d in IE, translate3d within translate3d does not work while transitioning
-    }
-
-    function scale3d(value) {
-        return ("scale3d(" + value + ", " + value + ", 1)");
-    }
-
-    var Animations$1 = assign({}, Animations, {
-
-        fade: {
-
-            show: function() {
-                return [
-                    {opacity: 0},
-                    {opacity: 1}
-                ];
-            },
-
-            percent: function(current) {
-                return 1 - css(current, 'opacity');
-            },
-
-            translate: function(percent) {
-                return [
-                    {opacity: 1 - percent},
-                    {opacity: percent}
-                ];
-            }
-
-        },
-
-        scale: {
-
-            show: function() {
-                return [
-                    {opacity: 0, transform: scale3d(1 - .2)},
-                    {opacity: 1, transform: scale3d(1)}
-                ];
-            },
-
-            percent: function(current) {
-                return 1 - css(current, 'opacity');
-            },
-
-            translate: function(percent) {
-                return [
-                    {opacity: 1 - percent, transform: scale3d(1 - .2 * percent)},
-                    {opacity: percent, transform: scale3d(1 - .2 + .2 * percent)}
-                ];
-            }
-
-        }
-
-    });
-
-    function Transitioner(prev, next, dir, ref) {
-        var animation = ref.animation;
-        var easing = ref.easing;
-
-
-        var percent = animation.percent;
-        var translate = animation.translate;
-        var show = animation.show; if ( show === void 0 ) show = noop;
-        var props = show(dir);
-        var deferred = new Deferred();
-
-        return {
-
-            dir: dir,
-
-            show: function(duration, percent, linear) {
-                var this$1 = this;
-                if ( percent === void 0 ) percent = 0;
-
-
-                var timing = linear ? 'linear' : easing;
-                duration -= Math.round(duration * clamp(percent, -1, 1));
-
-                this.translate(percent);
-
-                triggerUpdate(next, 'itemin', {percent: percent, duration: duration, timing: timing, dir: dir});
-                triggerUpdate(prev, 'itemout', {percent: 1 - percent, duration: duration, timing: timing, dir: dir});
-
-                Promise.all([
-                    Transition.start(next, props[1], duration, timing),
-                    Transition.start(prev, props[0], duration, timing)
-                ]).then(function () {
-                    this$1.reset();
-                    deferred.resolve();
-                }, noop);
-
-                return deferred.promise;
-            },
-
-            cancel: function() {
-                Transition.cancel([next, prev]);
-            },
-
-            reset: function() {
-                for (var prop in props[0]) {
-                    css([next, prev], prop, '');
-                }
-            },
-
-            forward: function(duration, percent) {
-                if ( percent === void 0 ) percent = this.percent();
-
-                Transition.cancel([next, prev]);
-                return this.show(duration, percent, true);
-            },
-
-            translate: function(percent) {
-
-                this.reset();
-
-                var props = translate(percent, dir);
-                css(next, props[1]);
-                css(prev, props[0]);
-                triggerUpdate(next, 'itemtranslatein', {percent: percent, dir: dir});
-                triggerUpdate(prev, 'itemtranslateout', {percent: 1 - percent, dir: dir});
-
-            },
-
-            percent: function() {
-                return percent(prev || next, next, dir);
-            },
-
-            getDistance: function() {
-                return prev && prev.offsetWidth;
-            }
-
-        };
-
-    }
-
-    function triggerUpdate(el, type, data) {
-        trigger(el, createEvent(type, false, false, data));
-    }
 
     var SliderAutoplay = {
 
@@ -8559,535 +6549,6 @@
         return .5 * x + 300; // parabola through (400,500; 600,600; 1800,1200)
     }
 
-    var Slideshow = {
-
-        mixins: [Slider],
-
-        props: {
-            animation: String
-        },
-
-        data: {
-            animation: 'slide',
-            clsActivated: 'uk-transition-active',
-            Animations: Animations,
-            Transitioner: Transitioner
-        },
-
-        computed: {
-
-            animation: function(ref) {
-                var animation = ref.animation;
-                var Animations = ref.Animations;
-
-                return assign(Animations[animation] || Animations.slide, {name: animation});
-            },
-
-            transitionOptions: function() {
-                return {animation: this.animation};
-            }
-
-        },
-
-        events: {
-
-            'itemshow itemhide itemshown itemhidden': function(ref) {
-                var target = ref.target;
-
-                this.$update(target);
-            },
-
-            beforeitemshow: function(ref) {
-                var target = ref.target;
-
-                addClass(target, this.clsActive);
-            },
-
-            itemshown: function(ref) {
-                var target = ref.target;
-
-                addClass(target, this.clsActivated);
-            },
-
-            itemhidden: function(ref) {
-                var target = ref.target;
-
-                removeClass(target, this.clsActive, this.clsActivated);
-            }
-
-        }
-
-    };
-
-    var LightboxPanel = {
-
-        mixins: [Container, Modal, Togglable, Slideshow],
-
-        functional: true,
-
-        props: {
-            delayControls: Number,
-            preload: Number,
-            videoAutoplay: Boolean,
-            template: String
-        },
-
-        data: function () { return ({
-            preload: 1,
-            videoAutoplay: false,
-            delayControls: 3000,
-            items: [],
-            cls: 'uk-open',
-            clsPage: 'uk-lightbox-page',
-            selList: '.uk-lightbox-items',
-            attrItem: 'uk-lightbox-item',
-            selClose: '.uk-close-large',
-            selCaption: '.uk-lightbox-caption',
-            pauseOnHover: false,
-            velocity: 2,
-            Animations: Animations$1,
-            template: "<div class=\"uk-lightbox uk-overflow-hidden\"> <ul class=\"uk-lightbox-items\"></ul> <div class=\"uk-lightbox-toolbar uk-position-top uk-text-right uk-transition-slide-top uk-transition-opaque\"> <button class=\"uk-lightbox-toolbar-icon uk-close-large\" type=\"button\" uk-close></button> </div> <a class=\"uk-lightbox-button uk-position-center-left uk-position-medium uk-transition-fade\" href uk-slidenav-previous uk-lightbox-item=\"previous\"></a> <a class=\"uk-lightbox-button uk-position-center-right uk-position-medium uk-transition-fade\" href uk-slidenav-next uk-lightbox-item=\"next\"></a> <div class=\"uk-lightbox-toolbar uk-lightbox-caption uk-position-bottom uk-text-center uk-transition-slide-bottom uk-transition-opaque\"></div> </div>"
-        }); },
-
-        created: function() {
-
-            var $el = $(this.template);
-            var list = $(this.selList, $el);
-            this.items.forEach(function () { return append(list, '<li>'); });
-
-            this.$mount(append(this.container, $el));
-
-        },
-
-        computed: {
-
-            caption: function(ref, $el) {
-                var selCaption = ref.selCaption;
-
-                return $(selCaption, $el);
-            }
-
-        },
-
-        events: [
-
-            {
-
-                name: (pointerMove + " " + pointerDown + " keydown"),
-
-                handler: 'showControls'
-
-            },
-
-            {
-
-                name: 'click',
-
-                self: true,
-
-                delegate: function() {
-                    return this.selSlides;
-                },
-
-                handler: function(e) {
-
-                    if (e.defaultPrevented) {
-                        return;
-                    }
-
-                    this.hide();
-                }
-
-            },
-
-            {
-
-                name: 'shown',
-
-                self: true,
-
-                handler: function() {
-                    this.showControls();
-                }
-
-            },
-
-            {
-
-                name: 'hide',
-
-                self: true,
-
-                handler: function() {
-
-                    this.hideControls();
-
-                    removeClass(this.slides, this.clsActive);
-                    Transition.stop(this.slides);
-
-                }
-            },
-
-            {
-
-                name: 'hidden',
-
-                self: true,
-
-                handler: function() {
-                    this.$destroy(true);
-                }
-
-            },
-
-            {
-
-                name: 'keyup',
-
-                el: function() {
-                    return document;
-                },
-
-                handler: function(e) {
-
-                    if (!this.isToggled(this.$el) || !this.draggable) {
-                        return;
-                    }
-
-                    switch (e.keyCode) {
-                        case 37:
-                            this.show('previous');
-                            break;
-                        case 39:
-                            this.show('next');
-                            break;
-                    }
-                }
-            },
-
-            {
-
-                name: 'beforeitemshow',
-
-                handler: function(e) {
-
-                    if (this.isToggled()) {
-                        return;
-                    }
-
-                    this.draggable = false;
-
-                    e.preventDefault();
-
-                    this.toggleElement(this.$el, true, false);
-
-                    this.animation = Animations$1['scale'];
-                    removeClass(e.target, this.clsActive);
-                    this.stack.splice(1, 0, this.index);
-
-                }
-
-            },
-
-            {
-
-                name: 'itemshow',
-
-                handler: function() {
-
-                    html(this.caption, this.getItem().caption || '');
-
-                    for (var j = -this.preload; j <= this.preload; j++) {
-                        this.loadItem(this.index + j);
-                    }
-
-                }
-
-            },
-
-            {
-
-                name: 'itemshown',
-
-                handler: function() {
-                    this.draggable = this.$props.draggable;
-                }
-
-            },
-
-            {
-
-                name: 'itemload',
-
-                handler: function(_, item) {
-                    var this$1 = this;
-
-
-                    var src = item.source;
-                    var type = item.type;
-                    var alt = item.alt; if ( alt === void 0 ) alt = '';
-                    var poster = item.poster;
-                    var attrs = item.attrs; if ( attrs === void 0 ) attrs = {};
-
-                    this.setItem(item, '<span uk-spinner></span>');
-
-                    if (!src) {
-                        return;
-                    }
-
-                    var matches;
-                    var iframeAttrs = {
-                        frameborder: '0',
-                        allow: 'autoplay',
-                        allowfullscreen: '',
-                        style: 'max-width: 100%; box-sizing: border-box;',
-                        'uk-responsive': '',
-                        'uk-video': ("" + (this.videoAutoplay))
-                    };
-
-                    // Image
-                    if (type === 'image' || src.match(/\.(avif|jpe?g|a?png|gif|svg|webp)($|\?)/i)) {
-
-                        getImage(src, attrs.srcset, attrs.size).then(
-                            function (ref) {
-                                var width = ref.width;
-                                var height = ref.height;
-
-                                return this$1.setItem(item, createEl('img', assign({src: src, width: width, height: height, alt: alt}, attrs)));
-                        },
-                            function () { return this$1.setError(item); }
-                        );
-
-                    // Video
-                    } else if (type === 'video' || src.match(/\.(mp4|webm|ogv)($|\?)/i)) {
-
-                        var video = createEl('video', assign({
-                            src: src,
-                            poster: poster,
-                            controls: '',
-                            playsinline: '',
-                            'uk-video': ("" + (this.videoAutoplay))
-                        }, attrs));
-
-                        on(video, 'loadedmetadata', function () {
-                            attr(video, {width: video.videoWidth, height: video.videoHeight});
-                            this$1.setItem(item, video);
-                        });
-                        on(video, 'error', function () { return this$1.setError(item); });
-
-                    // Iframe
-                    } else if (type === 'iframe' || src.match(/\.(html|php)($|\?)/i)) {
-
-                        this.setItem(item, createEl('iframe', assign({
-                            src: src,
-                            frameborder: '0',
-                            allowfullscreen: '',
-                            class: 'uk-lightbox-iframe'
-                        }, attrs)));
-
-                    // YouTube
-                    } else if ((matches = src.match(/\/\/(?:.*?youtube(-nocookie)?\..*?[?&]v=|youtu\.be\/)([\w-]{11})[&?]?(.*)?/))) {
-
-                        this.setItem(item, createEl('iframe', assign({
-                            src: ("https://www.youtube" + (matches[1] || '') + ".com/embed/" + (matches[2]) + (matches[3] ? ("?" + (matches[3])) : '')),
-                            width: 1920,
-                            height: 1080
-                        }, iframeAttrs, attrs)));
-
-                    // Vimeo
-                    } else if ((matches = src.match(/\/\/.*?vimeo\.[a-z]+\/(\d+)[&?]?(.*)?/))) {
-
-                        ajax(("https://vimeo.com/api/oembed.json?maxwidth=1920&url=" + (encodeURI(src))), {
-                            responseType: 'json',
-                            withCredentials: false
-                        }).then(
-                            function (ref) {
-                                var ref_response = ref.response;
-                                var height = ref_response.height;
-                                var width = ref_response.width;
-
-                                return this$1.setItem(item, createEl('iframe', assign({
-                                src: ("https://player.vimeo.com/video/" + (matches[1]) + (matches[2] ? ("?" + (matches[2])) : '')),
-                                width: width,
-                                height: height
-                            }, iframeAttrs, attrs)));
-                        },
-                            function () { return this$1.setError(item); }
-                        );
-
-                    }
-
-                }
-
-            }
-
-        ],
-
-        methods: {
-
-            loadItem: function(index) {
-                if ( index === void 0 ) index = this.index;
-
-
-                var item = this.getItem(index);
-
-                if (!this.getSlide(item).childElementCount) {
-                    trigger(this.$el, 'itemload', [item]);
-                }
-            },
-
-            getItem: function(index) {
-                if ( index === void 0 ) index = this.index;
-
-                return this.items[getIndex(index, this.slides)];
-            },
-
-            setItem: function(item, content) {
-                trigger(this.$el, 'itemloaded', [this, html(this.getSlide(item), content) ]);
-            },
-
-            getSlide: function(item) {
-                return this.slides[this.items.indexOf(item)];
-            },
-
-            setError: function(item) {
-                this.setItem(item, '<span uk-icon="icon: bolt; ratio: 2"></span>');
-            },
-
-            showControls: function() {
-
-                clearTimeout(this.controlsTimer);
-                this.controlsTimer = setTimeout(this.hideControls, this.delayControls);
-
-                addClass(this.$el, 'uk-active', 'uk-transition-active');
-
-            },
-
-            hideControls: function() {
-                removeClass(this.$el, 'uk-active', 'uk-transition-active');
-            }
-
-        }
-
-    };
-
-    function createEl(tag, attrs) {
-        var el = fragment(("<" + tag + ">"));
-        attr(el, attrs);
-        return el;
-    }
-
-    var lightbox = {
-
-        install: install$2,
-
-        props: {toggle: String},
-
-        data: {toggle: 'a'},
-
-        computed: {
-
-            toggles: {
-
-                get: function(ref, $el) {
-                    var toggle = ref.toggle;
-
-                    return $$(toggle, $el);
-                },
-
-                watch: function() {
-                    this.hide();
-                }
-
-            }
-
-        },
-
-        disconnected: function() {
-            this.hide();
-        },
-
-        events: [
-
-            {
-
-                name: 'click',
-
-                delegate: function() {
-                    return ((this.toggle) + ":not(.uk-disabled)");
-                },
-
-                handler: function(e) {
-                    e.preventDefault();
-                    this.show(e.current);
-                }
-
-            }
-
-        ],
-
-        methods: {
-
-            show: function(index) {
-                var this$1 = this;
-
-
-                var items = uniqueBy(this.toggles.map(toItem), 'source');
-
-                if (isElement(index)) {
-                    var ref = toItem(index);
-                    var source = ref.source;
-                    index = findIndex(items, function (ref) {
-                        var src = ref.source;
-
-                        return source === src;
-                    });
-                }
-
-                this.panel = this.panel || this.$create('lightboxPanel', assign({}, this.$props, {items: items}));
-
-                on(this.panel.$el, 'hidden', function () { return this$1.panel = false; });
-
-                return this.panel.show(index);
-
-            },
-
-            hide: function() {
-
-                return this.panel && this.panel.hide();
-
-            }
-
-        }
-
-    };
-
-    function install$2(UIkit, Lightbox) {
-
-        if (!UIkit.lightboxPanel) {
-            UIkit.component('lightboxPanel', LightboxPanel);
-        }
-
-        assign(
-            Lightbox.props,
-            UIkit.component('lightboxPanel').options.props
-        );
-
-    }
-
-    function toItem(el) {
-
-        var item = {};
-
-        ['href', 'caption', 'type', 'poster', 'alt', 'attrs'].forEach(function (attr) {
-            item[attr === 'href' ? 'source' : attr] = data(el, attr);
-        });
-
-        item.attrs = parseOptions(item.attrs);
-
-        return item;
-    }
-
     var SliderReactive = {
 
         update: {
@@ -9112,7 +6573,49 @@
 
     };
 
-    function Transitioner$1 (prev, next, dir, ref) {
+    var Animations = {
+
+        slide: {
+
+            show: function(dir) {
+                return [
+                    {transform: translate(dir * -100)},
+                    {transform: translate()}
+                ];
+            },
+
+            percent: function(current) {
+                return translated(current);
+            },
+
+            translate: function(percent, dir) {
+                return [
+                    {transform: translate(dir * -100 * percent)},
+                    {transform: translate(dir * 100 * (1 - percent))}
+                ];
+            }
+
+        }
+
+    };
+
+    function translated(el) {
+        return Math.abs(css(el, 'transform').split(',')[4] / el.offsetWidth) || 0;
+    }
+
+    function translate(value, unit) {
+        if ( value === void 0 ) value = 0;
+        if ( unit === void 0 ) unit = '%';
+
+        value += value ? unit : '';
+        return isIE ? ("translateX(" + value + ")") : ("translate3d(" + value + ", 0, 0)"); // currently not translate3d in IE, translate3d within translate3d does not work while transitioning
+    }
+
+    function scale3d(value) {
+        return ("scale3d(" + value + ", " + value + ", 1)");
+    }
+
+    function Transitioner (prev, next, dir, ref) {
         var center = ref.center;
         var easing = ref.easing;
         var list = ref.list;
@@ -9142,8 +6645,8 @@
 
                 prev && this.updateTranslates();
                 percent = prev ? percent : clamp(percent, 0, 1);
-                triggerUpdate$1(this.getItemIn(), 'itemin', {percent: percent, duration: duration, timing: timing, dir: dir});
-                prev && triggerUpdate$1(this.getItemIn(true), 'itemout', {percent: 1 - percent, duration: duration, timing: timing, dir: dir});
+                triggerUpdate(this.getItemIn(), 'itemin', {percent: percent, duration: duration, timing: timing, dir: dir});
+                prev && triggerUpdate(this.getItemIn(true), 'itemout', {percent: 1 - percent, duration: duration, timing: timing, dir: dir});
 
                 Transition
                     .start(list, {transform: translate(-to * (isRtl ? -1 : 1), 'px')}, duration, timing)
@@ -9182,8 +6685,8 @@
 
                 if (prev) {
                     percent = clamp(percent, -1, 1);
-                    triggerUpdate$1(this.getItemIn(), 'itemtranslatein', {percent: percent, dir: dir});
-                    triggerUpdate$1(this.getItemIn(true), 'itemtranslateout', {percent: 1 - percent, dir: dir});
+                    triggerUpdate(this.getItemIn(), 'itemtranslatein', {percent: percent, dir: dir});
+                    triggerUpdate(this.getItemIn(true), 'itemtranslateout', {percent: 1 - percent, dir: dir});
                 }
 
             },
@@ -9222,7 +6725,7 @@
                 children(list).forEach(function (slide) {
                     var isActive = includes(actives, slide);
 
-                    triggerUpdate$1(slide, ("itemtranslate" + (isActive ? 'in' : 'out')), {
+                    triggerUpdate(slide, ("itemtranslate" + (isActive ? 'in' : 'out')), {
                         percent: isActive ? 1 : 0,
                         dir: slide.offsetLeft <= next.offsetLeft ? 1 : -1
                     });
@@ -9259,7 +6762,7 @@
         return el && (position(el).left + (isRtl ? dimensions(el).width - dimensions(list).width : 0)) * (isRtl ? -1 : 1) || 0;
     }
 
-    function triggerUpdate$1(el, type, data) {
+    function triggerUpdate(el, type, data) {
         trigger(el, createEvent(type, false, false, data));
     }
 
@@ -9279,7 +6782,7 @@
             selList: '.uk-slider-items',
             selNav: '.uk-slider-nav',
             clsContainer: 'uk-slider-container',
-            Transitioner: Transitioner$1
+            Transitioner: Transitioner
         },
 
         computed: {
@@ -9985,7 +7488,151 @@
                 : percent;
     }
 
-    var Animations$2 = assign({}, Animations, {
+    function Transitioner$1(prev, next, dir, ref) {
+        var animation = ref.animation;
+        var easing = ref.easing;
+
+
+        var percent = animation.percent;
+        var translate = animation.translate;
+        var show = animation.show; if ( show === void 0 ) show = noop;
+        var props = show(dir);
+        var deferred = new Deferred();
+
+        return {
+
+            dir: dir,
+
+            show: function(duration, percent, linear) {
+                var this$1 = this;
+                if ( percent === void 0 ) percent = 0;
+
+
+                var timing = linear ? 'linear' : easing;
+                duration -= Math.round(duration * clamp(percent, -1, 1));
+
+                this.translate(percent);
+
+                triggerUpdate$1(next, 'itemin', {percent: percent, duration: duration, timing: timing, dir: dir});
+                triggerUpdate$1(prev, 'itemout', {percent: 1 - percent, duration: duration, timing: timing, dir: dir});
+
+                Promise.all([
+                    Transition.start(next, props[1], duration, timing),
+                    Transition.start(prev, props[0], duration, timing)
+                ]).then(function () {
+                    this$1.reset();
+                    deferred.resolve();
+                }, noop);
+
+                return deferred.promise;
+            },
+
+            cancel: function() {
+                Transition.cancel([next, prev]);
+            },
+
+            reset: function() {
+                for (var prop in props[0]) {
+                    css([next, prev], prop, '');
+                }
+            },
+
+            forward: function(duration, percent) {
+                if ( percent === void 0 ) percent = this.percent();
+
+                Transition.cancel([next, prev]);
+                return this.show(duration, percent, true);
+            },
+
+            translate: function(percent) {
+
+                this.reset();
+
+                var props = translate(percent, dir);
+                css(next, props[1]);
+                css(prev, props[0]);
+                triggerUpdate$1(next, 'itemtranslatein', {percent: percent, dir: dir});
+                triggerUpdate$1(prev, 'itemtranslateout', {percent: 1 - percent, dir: dir});
+
+            },
+
+            percent: function() {
+                return percent(prev || next, next, dir);
+            },
+
+            getDistance: function() {
+                return prev && prev.offsetWidth;
+            }
+
+        };
+
+    }
+
+    function triggerUpdate$1(el, type, data) {
+        trigger(el, createEvent(type, false, false, data));
+    }
+
+    var Slideshow = {
+
+        mixins: [Slider],
+
+        props: {
+            animation: String
+        },
+
+        data: {
+            animation: 'slide',
+            clsActivated: 'uk-transition-active',
+            Animations: Animations,
+            Transitioner: Transitioner$1
+        },
+
+        computed: {
+
+            animation: function(ref) {
+                var animation = ref.animation;
+                var Animations = ref.Animations;
+
+                return assign(Animations[animation] || Animations.slide, {name: animation});
+            },
+
+            transitionOptions: function() {
+                return {animation: this.animation};
+            }
+
+        },
+
+        events: {
+
+            'itemshow itemhide itemshown itemhidden': function(ref) {
+                var target = ref.target;
+
+                this.$update(target);
+            },
+
+            beforeitemshow: function(ref) {
+                var target = ref.target;
+
+                addClass(target, this.clsActive);
+            },
+
+            itemshown: function(ref) {
+                var target = ref.target;
+
+                addClass(target, this.clsActivated);
+            },
+
+            itemhidden: function(ref) {
+                var target = ref.target;
+
+                removeClass(target, this.clsActive, this.clsActivated);
+            }
+
+        }
+
+    };
+
+    var Animations$1 = assign({}, Animations, {
 
         fade: {
 
@@ -10118,7 +7765,7 @@
             selList: '.uk-slideshow-items',
             attrItem: 'uk-slideshow-item',
             selNav: '.uk-slideshow-nav',
-            Animations: Animations$2
+            Animations: Animations$1
         },
 
         update: {
@@ -10162,9 +7809,6 @@
 
     var components$1 = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        Filter: filter$1,
-        Lightbox: lightbox,
-        LightboxPanel: LightboxPanel,
         Slider: slider,
         SliderParallax: sliderParallax,
         Slideshow: slideshow
