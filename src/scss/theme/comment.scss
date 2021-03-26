@@ -60,7 +60,10 @@ $comment-primary-background:                     $global-muted-background !defau
 // Style modifier
 // ========================================================================
 
-
+@mixin hook-comment-primary(){
+    padding: $comment-primary-padding;
+    background-color: $comment-primary-background;
+}
 
 
 // Miscellaneous

@@ -73,7 +73,12 @@ $modal-close-full-background:                   $modal-dialog-background !defaul
 
 // @mixin hook-modal-close-outside-hover(){}
 
-
+@mixin hook-modal-close-full(){
+    top: 0;
+    right: 0;
+    padding: $modal-close-full-padding;
+    background: $modal-close-full-background;
+}
 
 // @mixin hook-modal-close-full-hover(){}
 

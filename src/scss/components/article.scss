@@ -93,7 +93,18 @@ $article-meta-color:                             $global-muted-color !default;
 
 $inverse-article-meta-color:                    $inverse-global-muted-color !default;
 
+@mixin hook-inverse-component-article(){
 
+    .uk-article-title  {
+        @if(mixin-exists(hook-inverse-article-title)) {@include hook-inverse-article-title();}
+    }
+
+    .uk-article-meta  {
+        color: $inverse-article-meta-color;
+        @if(mixin-exists(hook-inverse-article-meta)) {@include hook-inverse-article-meta();}
+    }
+
+}
 
 // @mixin hook-inverse-article-title(){}
 // @mixin hook-inverse-article-meta(){}

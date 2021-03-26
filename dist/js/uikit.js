@@ -1,4 +1,4 @@
-/*! UIkit 3.6.18 | https://www.getuikit.com | (c) 2014 - 2021 YOOtheme | MIT License */
+/*! UIkit 3.6.19 | https://www.getuikit.com | (c) 2014 - 2021 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -3442,7 +3442,7 @@
     UIkit.data = '__uikit__';
     UIkit.prefix = 'uk-';
     UIkit.options = {};
-    UIkit.version = '3.6.18';
+    UIkit.version = '3.6.19';
 
     globalAPI(UIkit);
     hooksAPI(UIkit);
@@ -3961,178 +3961,6 @@
         el && (el.hidden = hide);
     }
 
-    var alert = {
-
-        mixins: [Class, Togglable],
-
-        args: 'animation',
-
-        props: {
-            close: String
-        },
-
-        data: {
-            animation: [true],
-            selClose: '.uk-alert-close',
-            duration: 150,
-            hideProps: assign({opacity: 0}, Togglable.data.hideProps)
-        },
-
-        events: [
-
-            {
-
-                name: 'click',
-
-                delegate: function() {
-                    return this.selClose;
-                },
-
-                handler: function(e) {
-                    e.preventDefault();
-                    this.close();
-                }
-
-            }
-
-        ],
-
-        methods: {
-
-            close: function() {
-                var this$1 = this;
-
-                this.toggleElement(this.$el).then(function () { return this$1.$destroy(true); });
-            }
-
-        }
-
-    };
-
-    var Video = {
-
-        args: 'autoplay',
-
-        props: {
-            automute: Boolean,
-            autoplay: Boolean
-        },
-
-        data: {
-            automute: false,
-            autoplay: true
-        },
-
-        computed: {
-
-            inView: function(ref) {
-                var autoplay = ref.autoplay;
-
-                return autoplay === 'inview';
-            }
-
-        },
-
-        connected: function() {
-
-            if (this.inView && !hasAttr(this.$el, 'preload')) {
-                this.$el.preload = 'none';
-            }
-
-            if (this.automute) {
-                mute(this.$el);
-            }
-
-        },
-
-        update: {
-
-            read: function() {
-                return {
-                    visible: isVisible(this.$el) && css(this.$el, 'visibility') !== 'hidden',
-                    inView: this.inView && isInView(this.$el)
-                };
-            },
-
-            write: function(ref) {
-                var visible = ref.visible;
-                var inView = ref.inView;
-
-
-                if (!visible || this.inView && !inView) {
-                    pause(this.$el);
-                } else if (this.autoplay === true || this.inView && inView) {
-                    play(this.$el);
-                }
-
-            },
-
-            events: ['resize', 'scroll']
-
-        }
-
-    };
-
-    var cover = {
-
-        mixins: [Class, Video],
-
-        props: {
-            width: Number,
-            height: Number
-        },
-
-        data: {
-            automute: true
-        },
-
-        update: {
-
-            read: function() {
-
-                var el = this.$el;
-                var ref = getPositionedParent(el) || parent(el);
-                var height = ref.offsetHeight;
-                var width = ref.offsetWidth;
-                var dim = Dimensions.cover(
-                    {
-                        width: this.width || el.naturalWidth || el.videoWidth || el.clientWidth,
-                        height: this.height || el.naturalHeight || el.videoHeight || el.clientHeight
-                    },
-                    {
-                        width: width + (width % 2 ? 1 : 0),
-                        height: height + (height % 2 ? 1 : 0)
-                    }
-                );
-
-                if (!dim.width || !dim.height) {
-                    return false;
-                }
-
-                return dim;
-            },
-
-            write: function(ref) {
-                var height = ref.height;
-                var width = ref.width;
-
-                css(this.$el, {height: height, width: width});
-            },
-
-            events: ['resize']
-
-        }
-
-    };
-
-    function getPositionedParent(el) {
-        while ((el = parent(el))) {
-            if (css(el, 'position') !== 'static') {
-                return el;
-            }
-        }
-    }
-
     var Position = {
 
         props: {
@@ -4612,92 +4440,6 @@
         return result;
     }
 
-    var formCustom = {
-
-        mixins: [Class],
-
-        args: 'target',
-
-        props: {
-            target: Boolean
-        },
-
-        data: {
-            target: false
-        },
-
-        computed: {
-
-            input: function(_, $el) {
-                return $(selInput, $el);
-            },
-
-            state: function() {
-                return this.input.nextElementSibling;
-            },
-
-            target: function(ref, $el) {
-                var target = ref.target;
-
-                return target && (target === true
-                    && parent(this.input) === $el
-                    && this.input.nextElementSibling
-                    || query(target, $el));
-            }
-
-        },
-
-        update: function() {
-
-            var ref = this;
-            var target = ref.target;
-            var input = ref.input;
-
-            if (!target) {
-                return;
-            }
-
-            var option;
-            var prop = isInput(target) ? 'value' : 'textContent';
-            var prev = target[prop];
-            var value = input.files && input.files[0]
-                ? input.files[0].name
-                : matches(input, 'select') && (option = $$('option', input).filter(function (el) { return el.selected; })[0]) // eslint-disable-line prefer-destructuring
-                    ? option.textContent
-                    : input.value;
-
-            if (prev !== value) {
-                target[prop] = value;
-            }
-
-        },
-
-        events: [
-
-            {
-                name: 'change',
-
-                handler: function() {
-                    this.$update();
-                }
-            },
-
-            {
-                name: 'reset',
-
-                el: function() {
-                    return closest(this.$el, 'form');
-                },
-
-                handler: function() {
-                    this.$update();
-                }
-            }
-
-        ]
-
-    };
-
     // Deprecated
     var gif = {
 
@@ -4723,7 +4465,66 @@
 
     };
 
-    var Margin = {
+    // IE 11 fix (min-height on a flex container won't apply to its flex items)
+    var FlexBug = isIE ? {
+
+        props: {
+            selMinHeight: String
+        },
+
+        data: {
+            selMinHeight: false,
+            forceHeight: false
+        },
+
+        computed: {
+
+            elements: function(ref, $el) {
+                var selMinHeight = ref.selMinHeight;
+
+                return selMinHeight ? $$(selMinHeight, $el) : [$el];
+            }
+
+        },
+
+        update: [
+
+            {
+
+                read: function() {
+                    css(this.elements, 'height', '');
+                },
+
+                order: -5,
+
+                events: ['resize']
+
+            },
+
+            {
+
+                write: function() {
+                    var this$1 = this;
+
+                    this.elements.forEach(function (el) {
+                        var height = toFloat(css(el, 'minHeight'));
+                        if (height && (this$1.forceHeight || Math.round(height + boxModelAdjust(el, 'height', 'content-box')) >= el.offsetHeight)) {
+                            css(el, 'height', height);
+                        }
+                    });
+                },
+
+                order: 5,
+
+                events: ['resize']
+
+            }
+
+        ]
+
+    } : {};
+
+    var margin = {
 
         props: {
             margin: String,
@@ -4859,226 +4660,6 @@
             right: offsetLeft + offsetWidth
         };
     }
-
-    var grid = {
-
-        extends: Margin,
-
-        mixins: [Class],
-
-        name: 'grid',
-
-        props: {
-            masonry: Boolean,
-            parallax: Number
-        },
-
-        data: {
-            margin: 'uk-grid-margin',
-            clsStack: 'uk-grid-stack',
-            masonry: false,
-            parallax: 0
-        },
-
-        connected: function() {
-            this.masonry && addClass(this.$el, 'uk-flex-top uk-flex-wrap-top');
-        },
-
-        update: [
-
-            {
-
-                write: function(ref) {
-                    var columns = ref.columns;
-
-                    toggleClass(this.$el, this.clsStack, columns.length < 2);
-                },
-
-                events: ['resize']
-
-            },
-
-            {
-
-                read: function(data) {
-
-                    var columns = data.columns;
-                    var rows = data.rows;
-
-                    // Filter component makes elements positioned absolute
-                    if (!columns.length || !this.masonry && !this.parallax || positionedAbsolute(this.$el)) {
-                        data.translates = false;
-                        return false;
-                    }
-
-                    var translates = false;
-
-                    var nodes = children(this.$el);
-                    var columnHeights = getColumnHeights(columns);
-                    var margin = getMarginTop(nodes, this.margin) * (rows.length - 1);
-                    var elHeight = Math.max.apply(Math, columnHeights) + margin;
-
-                    if (this.masonry) {
-                        columns = columns.map(function (column) { return sortBy(column, 'offsetTop'); });
-                        translates = getTranslates(rows, columns);
-                    }
-
-                    var padding = Math.abs(this.parallax);
-                    if (padding) {
-                        padding = columnHeights.reduce(function (newPadding, hgt, i) { return Math.max(newPadding, hgt + margin + (i % 2 ? padding : padding / 8) - elHeight); }
-                            , 0);
-                    }
-
-                    return {padding: padding, columns: columns, translates: translates, height: translates ? elHeight : ''};
-
-                },
-
-                write: function(ref) {
-                    var height = ref.height;
-                    var padding = ref.padding;
-
-
-                    css(this.$el, 'paddingBottom', padding || '');
-                    height !== false && css(this.$el, 'height', height);
-
-                },
-
-                events: ['resize']
-
-            },
-
-            {
-
-                read: function(ref) {
-                    var height$1 = ref.height;
-
-
-                    if (positionedAbsolute(this.$el)) {
-                        return false;
-                    }
-
-                    return {
-                        scrolled: this.parallax
-                            ? scrolledOver(this.$el, height$1 ? height$1 - height(this.$el) : 0) * Math.abs(this.parallax)
-                            : false
-                    };
-                },
-
-                write: function(ref) {
-                    var columns = ref.columns;
-                    var scrolled = ref.scrolled;
-                    var translates = ref.translates;
-
-
-                    if (scrolled === false && !translates) {
-                        return;
-                    }
-
-                    columns.forEach(function (column, i) { return column.forEach(function (el, j) { return css(el, 'transform', !scrolled && !translates ? '' : ("translateY(" + ((translates && -translates[i][j]) + (scrolled ? i % 2 ? scrolled : scrolled / 8 : 0)) + "px)")); }
-                        ); }
-                    );
-
-                },
-
-                events: ['scroll', 'resize']
-
-            }
-
-        ]
-
-    };
-
-    function positionedAbsolute(el) {
-        return children(el).some(function (el) { return css(el, 'position') === 'absolute'; });
-    }
-
-    function getTranslates(rows, columns) {
-
-        var rowHeights = rows.map(function (row) { return Math.max.apply(Math, row.map(function (el) { return el.offsetHeight; })); }
-        );
-
-        return columns.map(function (elements) {
-            var prev = 0;
-            return elements.map(function (element, row) { return prev += row
-                    ? rowHeights[row - 1] - elements[row - 1].offsetHeight
-                    : 0; }
-            );
-        });
-    }
-
-    function getMarginTop(nodes, cls) {
-
-        var ref = nodes.filter(function (el) { return hasClass(el, cls); });
-        var node = ref[0];
-
-        return toFloat(node
-            ? css(node, 'marginTop')
-            : css(nodes[0], 'paddingLeft'));
-    }
-
-    function getColumnHeights(columns) {
-        return columns.map(function (column) { return column.reduce(function (sum, el) { return sum + el.offsetHeight; }, 0); }
-        );
-    }
-
-    // IE 11 fix (min-height on a flex container won't apply to its flex items)
-    var FlexBug = isIE ? {
-
-        props: {
-            selMinHeight: String
-        },
-
-        data: {
-            selMinHeight: false,
-            forceHeight: false
-        },
-
-        computed: {
-
-            elements: function(ref, $el) {
-                var selMinHeight = ref.selMinHeight;
-
-                return selMinHeight ? $$(selMinHeight, $el) : [$el];
-            }
-
-        },
-
-        update: [
-
-            {
-
-                read: function() {
-                    css(this.elements, 'height', '');
-                },
-
-                order: -5,
-
-                events: ['resize']
-
-            },
-
-            {
-
-                write: function() {
-                    var this$1 = this;
-
-                    this.elements.forEach(function (el) {
-                        var height = toFloat(css(el, 'minHeight'));
-                        if (height && (this$1.forceHeight || Math.round(height + boxModelAdjust(el, 'height', 'content-box')) >= el.offsetHeight)) {
-                            css(el, 'height', height);
-                        }
-                    });
-                },
-
-                order: 5,
-
-                events: ['resize']
-
-            }
-
-        ]
-
-    } : {};
 
     var heightMatch = {
 
@@ -5260,839 +4841,6 @@
 
                 if (this.minHeight && toFloat(css(this.$el, 'minHeight')) < this.minHeight) {
                     css(this.$el, 'minHeight', this.minHeight);
-                }
-
-            },
-
-            events: ['resize']
-
-        }
-
-    };
-
-    var SVG = {
-
-        args: 'src',
-
-        props: {
-            id: Boolean,
-            icon: String,
-            src: String,
-            style: String,
-            width: Number,
-            height: Number,
-            ratio: Number,
-            class: String,
-            strokeAnimation: Boolean,
-            focusable: Boolean, // IE 11
-            attributes: 'list'
-        },
-
-        data: {
-            ratio: 1,
-            include: ['style', 'class', 'focusable'],
-            class: '',
-            strokeAnimation: false
-        },
-
-        beforeConnect: function() {
-            this.class += ' uk-svg';
-        },
-
-        connected: function() {
-            var this$1 = this;
-            var assign;
-
-
-            if (!this.icon && includes(this.src, '#')) {
-                (assign = this.src.split('#'), this.src = assign[0], this.icon = assign[1]);
-            }
-
-            this.svg = this.getSvg().then(function (el) {
-
-                if (this$1._connected) {
-
-                    var svg = insertSVG(el, this$1.$el);
-
-                    if (this$1.svgEl && svg !== this$1.svgEl) {
-                        remove(this$1.svgEl);
-                    }
-
-                    this$1.applyAttributes(svg, el);
-                    this$1.$emit();
-                    return this$1.svgEl = svg;
-                }
-
-            }, noop);
-
-        },
-
-        disconnected: function() {
-            var this$1 = this;
-
-
-            this.svg.then(function (svg) {
-                if (!this$1._connected) {
-
-                    if (isVoidElement(this$1.$el)) {
-                        this$1.$el.hidden = false;
-                    }
-
-                    remove(svg);
-                    this$1.svgEl = null;
-                }
-            });
-
-            this.svg = null;
-
-        },
-
-        update: {
-
-            read: function() {
-                return !!(this.strokeAnimation && this.svgEl && isVisible(this.svgEl));
-            },
-
-            write: function() {
-                applyAnimation(this.svgEl);
-            },
-
-            type: ['resize']
-
-        },
-
-        methods: {
-
-            getSvg: function() {
-                var this$1 = this;
-
-                return loadSVG(this.src).then(function (svg) { return parseSVG(svg, this$1.icon) || Promise.reject('SVG not found.'); }
-                );
-            },
-
-            applyAttributes: function(el, ref) {
-                var this$1 = this;
-
-
-                for (var prop in this.$options.props) {
-                    if (includes(this.include, prop) && (prop in this)) {
-                        attr(el, prop, this[prop]);
-                    }
-                }
-
-                for (var attribute in this.attributes) {
-                    var ref$1 = this.attributes[attribute].split(':', 2);
-                    var prop$1 = ref$1[0];
-                    var value = ref$1[1];
-                    attr(el, prop$1, value);
-                }
-
-                if (!this.id) {
-                    removeAttr(el, 'id');
-                }
-
-                var props = ['width', 'height'];
-                var dimensions = props.map(function (prop) { return this$1[prop]; });
-
-                if (!dimensions.some(function (val) { return val; })) {
-                    dimensions = props.map(function (prop) { return attr(ref, prop); });
-                }
-
-                var viewBox = attr(ref, 'viewBox');
-                if (viewBox && !dimensions.some(function (val) { return val; })) {
-                    dimensions = viewBox.split(' ').slice(2);
-                }
-
-                dimensions.forEach(function (val, i) { return attr(el, props[i], toFloat(val) * this$1.ratio || null); }
-                );
-
-            }
-
-        }
-
-    };
-
-    var loadSVG = memoize(function (src) { return new Promise(function (resolve, reject) {
-
-            if (!src) {
-                reject();
-                return;
-            }
-
-            if (startsWith(src, 'data:')) {
-                resolve(decodeURIComponent(src.split(',')[1]));
-            } else {
-
-                ajax(src).then(
-                    function (xhr) { return resolve(xhr.response); },
-                    function () { return reject('SVG not found.'); }
-                );
-
-            }
-        }); }
-    );
-
-    function parseSVG(svg, icon) {
-
-        if (icon && includes(svg, '<symbol')) {
-            svg = parseSymbols(svg, icon) || svg;
-        }
-
-        svg = $(svg.substr(svg.indexOf('<svg')));
-        return svg && svg.hasChildNodes() && svg;
-    }
-
-    var symbolRe = /<symbol([^]*?id=(['"])(.+?)\2[^]*?<\/)symbol>/g;
-    var symbols = {};
-
-    function parseSymbols(svg, icon) {
-
-        if (!symbols[svg]) {
-
-            symbols[svg] = {};
-
-            symbolRe.lastIndex = 0;
-
-            var match;
-            while ((match = symbolRe.exec(svg))) {
-                symbols[svg][match[3]] = "<svg xmlns=\"http://www.w3.org/2000/svg\"" + (match[1]) + "svg>";
-            }
-
-        }
-
-        return symbols[svg][icon];
-    }
-
-    function applyAnimation(el) {
-
-        var length = getMaxPathLength(el);
-
-        if (length) {
-            el.style.setProperty('--uk-animation-stroke', length);
-        }
-
-    }
-
-    function getMaxPathLength(el) {
-        return Math.ceil(Math.max.apply(Math, [ 0 ].concat( $$('[stroke]', el).map(function (stroke) {
-            try {
-                return stroke.getTotalLength();
-            } catch (e) {
-                return 0;
-            }
-        }) )));
-    }
-
-    function insertSVG(el, root) {
-
-        if (isVoidElement(root) || root.tagName === 'CANVAS') {
-
-            root.hidden = true;
-
-            var next = root.nextElementSibling;
-            return equals(el, next)
-                ? next
-                : after(root, el);
-
-        }
-
-        var last = root.lastElementChild;
-        return equals(el, last)
-            ? last
-            : append(root, el);
-    }
-
-    function equals(el, other) {
-        return isSVG(el) && isSVG(other) && innerHTML(el) === innerHTML(other);
-    }
-
-    function isSVG(el) {
-        return el && el.tagName === 'svg';
-    }
-
-    function innerHTML(el) {
-        return (el.innerHTML || (new XMLSerializer()).serializeToString(el).replace(/<svg.*?>(.*?)<\/svg>/g, '$1')).replace(/\s/g, '');
-    }
-
-    var closeIcon = "<svg width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" xmlns=\"http://www.w3.org/2000/svg\"><line fill=\"none\" stroke=\"#000\" stroke-width=\"1.1\" x1=\"1\" y1=\"1\" x2=\"13\" y2=\"13\"/><line fill=\"none\" stroke=\"#000\" stroke-width=\"1.1\" x1=\"13\" y1=\"1\" x2=\"1\" y2=\"13\"/></svg>";
-
-    var closeLarge = "<svg width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" xmlns=\"http://www.w3.org/2000/svg\"><line fill=\"none\" stroke=\"#000\" stroke-width=\"1.4\" x1=\"1\" y1=\"1\" x2=\"19\" y2=\"19\"/><line fill=\"none\" stroke=\"#000\" stroke-width=\"1.4\" x1=\"19\" y1=\"1\" x2=\"1\" y2=\"19\"/></svg>";
-
-    var marker = "<svg width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"9\" y=\"4\" width=\"1\" height=\"11\"/><rect x=\"4\" y=\"9\" width=\"11\" height=\"1\"/></svg>";
-
-    var navbarToggleIcon = "<svg width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" xmlns=\"http://www.w3.org/2000/svg\"><rect y=\"9\" width=\"20\" height=\"2\"/><rect y=\"3\" width=\"20\" height=\"2\"/><rect y=\"15\" width=\"20\" height=\"2\"/></svg>";
-
-    var overlayIcon = "<svg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"19\" y=\"0\" width=\"1\" height=\"40\"/><rect x=\"0\" y=\"19\" width=\"40\" height=\"1\"/></svg>";
-
-    var paginationNext = "<svg width=\"7\" height=\"12\" viewBox=\"0 0 7 12\" xmlns=\"http://www.w3.org/2000/svg\"><polyline fill=\"none\" stroke=\"#000\" stroke-width=\"1.2\" points=\"1 1 6 6 1 11\"/></svg>";
-
-    var paginationPrevious = "<svg width=\"7\" height=\"12\" viewBox=\"0 0 7 12\" xmlns=\"http://www.w3.org/2000/svg\"><polyline fill=\"none\" stroke=\"#000\" stroke-width=\"1.2\" points=\"6 1 1 6 6 11\"/></svg>";
-
-    var searchIcon = "<svg width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" xmlns=\"http://www.w3.org/2000/svg\"><circle fill=\"none\" stroke=\"#000\" stroke-width=\"1.1\" cx=\"9\" cy=\"9\" r=\"7\"/><path fill=\"none\" stroke=\"#000\" stroke-width=\"1.1\" d=\"M14,14 L18,18 L14,14 Z\"/></svg>";
-
-    var searchLarge = "<svg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\" xmlns=\"http://www.w3.org/2000/svg\"><circle fill=\"none\" stroke=\"#000\" stroke-width=\"1.8\" cx=\"17.5\" cy=\"17.5\" r=\"16.5\"/><line fill=\"none\" stroke=\"#000\" stroke-width=\"1.8\" x1=\"38\" y1=\"39\" x2=\"29\" y2=\"30\"/></svg>";
-
-    var searchNavbar = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><circle fill=\"none\" stroke=\"#000\" stroke-width=\"1.1\" cx=\"10.5\" cy=\"10.5\" r=\"9.5\"/><line fill=\"none\" stroke=\"#000\" stroke-width=\"1.1\" x1=\"23\" y1=\"23\" x2=\"17\" y2=\"17\"/></svg>";
-
-    var slidenavNext = "<svg width=\"14\" height=\"24\" viewBox=\"0 0 14 24\" xmlns=\"http://www.w3.org/2000/svg\"><polyline fill=\"none\" stroke=\"#000\" stroke-width=\"1.4\" points=\"1.225,23 12.775,12 1.225,1 \"/></svg>";
-
-    var slidenavNextLarge = "<svg width=\"25\" height=\"40\" viewBox=\"0 0 25 40\" xmlns=\"http://www.w3.org/2000/svg\"><polyline fill=\"none\" stroke=\"#000\" stroke-width=\"2\" points=\"4.002,38.547 22.527,20.024 4,1.5 \"/></svg>";
-
-    var slidenavPrevious = "<svg width=\"14\" height=\"24\" viewBox=\"0 0 14 24\" xmlns=\"http://www.w3.org/2000/svg\"><polyline fill=\"none\" stroke=\"#000\" stroke-width=\"1.4\" points=\"12.775,1 1.225,12 12.775,23 \"/></svg>";
-
-    var slidenavPreviousLarge = "<svg width=\"25\" height=\"40\" viewBox=\"0 0 25 40\" xmlns=\"http://www.w3.org/2000/svg\"><polyline fill=\"none\" stroke=\"#000\" stroke-width=\"2\" points=\"20.527,1.5 2,20.024 20.525,38.547 \"/></svg>";
-
-    var spinner = "<svg width=\"30\" height=\"30\" viewBox=\"0 0 30 30\" xmlns=\"http://www.w3.org/2000/svg\"><circle fill=\"none\" stroke=\"#000\" cx=\"15\" cy=\"15\" r=\"14\"/></svg>";
-
-    var totop = "<svg width=\"18\" height=\"10\" viewBox=\"0 0 18 10\" xmlns=\"http://www.w3.org/2000/svg\"><polyline fill=\"none\" stroke=\"#000\" stroke-width=\"1.2\" points=\"1 9 9 1 17 9 \"/></svg>";
-
-    var icons = {
-        spinner: spinner,
-        totop: totop,
-        marker: marker,
-        'close-icon': closeIcon,
-        'close-large': closeLarge,
-        'navbar-toggle-icon': navbarToggleIcon,
-        'overlay-icon': overlayIcon,
-        'pagination-next': paginationNext,
-        'pagination-previous': paginationPrevious,
-        'search-icon': searchIcon,
-        'search-large': searchLarge,
-        'search-navbar': searchNavbar,
-        'slidenav-next': slidenavNext,
-        'slidenav-next-large': slidenavNextLarge,
-        'slidenav-previous': slidenavPrevious,
-        'slidenav-previous-large': slidenavPreviousLarge
-    };
-
-    var Icon = {
-
-        install: install,
-
-        extends: SVG,
-
-        args: 'icon',
-
-        props: ['icon'],
-
-        data: {
-            include: ['focusable']
-        },
-
-        isIcon: true,
-
-        beforeConnect: function() {
-            addClass(this.$el, 'uk-icon');
-        },
-
-        methods: {
-
-            getSvg: function() {
-
-                var icon = getIcon(this.icon);
-
-                if (!icon) {
-                    return Promise.reject('Icon not found.');
-                }
-
-                return Promise.resolve(icon);
-            }
-
-        }
-
-    };
-
-    var IconComponent = {
-
-        args: false,
-
-        extends: Icon,
-
-        data: function (vm) { return ({
-            icon: hyphenate(vm.constructor.options.name)
-        }); },
-
-        beforeConnect: function() {
-            addClass(this.$el, this.$name);
-        }
-
-    };
-
-    var Slidenav = {
-
-        extends: IconComponent,
-
-        beforeConnect: function() {
-            addClass(this.$el, 'uk-slidenav');
-        },
-
-        computed: {
-
-            icon: function(ref, $el) {
-                var icon = ref.icon;
-
-                return hasClass($el, 'uk-slidenav-large')
-                    ? (icon + "-large")
-                    : icon;
-            }
-
-        }
-
-    };
-
-    var Search = {
-
-        extends: IconComponent,
-
-        computed: {
-
-            icon: function(ref, $el) {
-                var icon = ref.icon;
-
-                return hasClass($el, 'uk-search-icon') && parents($el, '.uk-search-large').length
-                    ? 'search-large'
-                    : parents($el, '.uk-search-navbar').length
-                        ? 'search-navbar'
-                        : icon;
-            }
-
-        }
-
-    };
-
-    var Close = {
-
-        extends: IconComponent,
-
-        computed: {
-
-            icon: function() {
-                return ("close-" + (hasClass(this.$el, 'uk-close-large') ? 'large' : 'icon'));
-            }
-
-        }
-
-    };
-
-    var Spinner = {
-
-        extends: IconComponent,
-
-        connected: function() {
-            var this$1 = this;
-
-            this.svg.then(function (svg) { return svg && this$1.ratio !== 1 && css($('circle', svg), 'strokeWidth', 1 / this$1.ratio); });
-        }
-
-    };
-
-    var parsed = {};
-    function install(UIkit) {
-        UIkit.icon.add = function (name, svg) {
-            var obj;
-
-
-            var added = isString(name) ? (( obj = {}, obj[name] = svg, obj )) : name;
-            each(added, function (svg, name) {
-                icons[name] = svg;
-                delete parsed[name];
-            });
-
-            if (UIkit._initialized) {
-                apply(document.body, function (el) { return each(UIkit.getComponents(el), function (cmp) {
-                        cmp.$options.isIcon && cmp.icon in added && cmp.$reset();
-                    }); }
-                );
-            }
-        };
-    }
-
-    function getIcon(icon) {
-
-        if (!icons[icon]) {
-            return null;
-        }
-
-        if (!parsed[icon]) {
-            parsed[icon] = $((icons[applyRtl(icon)] || icons[icon]).trim());
-        }
-
-        return parsed[icon].cloneNode(true);
-    }
-
-    function applyRtl(icon) {
-        return isRtl ? swap(swap(icon, 'left', 'right'), 'previous', 'next') : icon;
-    }
-
-    var img = {
-
-        args: 'dataSrc',
-
-        props: {
-            dataSrc: String,
-            dataSrcset: Boolean,
-            sizes: String,
-            width: Number,
-            height: Number,
-            offsetTop: String,
-            offsetLeft: String,
-            target: String
-        },
-
-        data: {
-            dataSrc: '',
-            dataSrcset: false,
-            sizes: false,
-            width: false,
-            height: false,
-            offsetTop: '50vh',
-            offsetLeft: '50vw',
-            target: false
-        },
-
-        computed: {
-
-            cacheKey: function(ref) {
-                var dataSrc = ref.dataSrc;
-
-                return ((this.$name) + "." + dataSrc);
-            },
-
-            width: function(ref) {
-                var width = ref.width;
-                var dataWidth = ref.dataWidth;
-
-                return width || dataWidth;
-            },
-
-            height: function(ref) {
-                var height = ref.height;
-                var dataHeight = ref.dataHeight;
-
-                return height || dataHeight;
-            },
-
-            sizes: function(ref) {
-                var sizes = ref.sizes;
-                var dataSizes = ref.dataSizes;
-
-                return sizes || dataSizes;
-            },
-
-            isImg: function(_, $el) {
-                return isImg($el);
-            },
-
-            target: {
-
-                get: function(ref) {
-                    var target = ref.target;
-
-                    return [this.$el ].concat( queryAll(target, this.$el));
-                },
-
-                watch: function() {
-                    this.observe();
-                }
-
-            },
-
-            offsetTop: function(ref) {
-                var offsetTop = ref.offsetTop;
-
-                return toPx(offsetTop, 'height');
-            },
-
-            offsetLeft: function(ref) {
-                var offsetLeft = ref.offsetLeft;
-
-                return toPx(offsetLeft, 'width');
-            }
-
-        },
-
-        connected: function() {
-
-            if (!window.IntersectionObserver) {
-                setSrcAttrs(this.$el, this.dataSrc, this.dataSrcset, this.sizes);
-                return;
-            }
-
-            if (storage[this.cacheKey]) {
-                setSrcAttrs(this.$el, storage[this.cacheKey], this.dataSrcset, this.sizes);
-            } else if (this.isImg && this.width && this.height) {
-                setSrcAttrs(this.$el, getPlaceholderImage(this.width, this.height, this.sizes));
-            }
-
-            this.observer = new IntersectionObserver(this.load, {
-                rootMargin: ((this.offsetTop) + "px " + (this.offsetLeft) + "px")
-            });
-
-            requestAnimationFrame(this.observe);
-
-        },
-
-        disconnected: function() {
-            this.observer && this.observer.disconnect();
-        },
-
-        update: {
-
-            read: function(ref) {
-                var this$1 = this;
-                var image = ref.image;
-
-
-                if (!this.observer) {
-                    return false;
-                }
-
-                if (!image && document.readyState === 'complete') {
-                    this.load(this.observer.takeRecords());
-                }
-
-                if (this.isImg) {
-                    return false;
-                }
-
-                image && image.then(function (img) { return img && img.currentSrc !== '' && setSrcAttrs(this$1.$el, currentSrc(img)); });
-
-            },
-
-            write: function(data) {
-
-                if (this.dataSrcset && window.devicePixelRatio !== 1) {
-
-                    var bgSize = css(this.$el, 'backgroundSize');
-                    if (bgSize.match(/^(auto\s?)+$/) || toFloat(bgSize) === data.bgSize) {
-                        data.bgSize = getSourceSize(this.dataSrcset, this.sizes);
-                        css(this.$el, 'backgroundSize', ((data.bgSize) + "px"));
-                    }
-
-                }
-
-            },
-
-            events: ['resize']
-
-        },
-
-        methods: {
-
-            load: function(entries) {
-                var this$1 = this;
-
-
-                // Old chromium based browsers (UC Browser) did not implement `isIntersecting`
-                if (!entries.some(function (entry) { return isUndefined(entry.isIntersecting) || entry.isIntersecting; })) {
-                    return;
-                }
-
-                this._data.image = getImage(this.dataSrc, this.dataSrcset, this.sizes).then(function (img) {
-
-                    setSrcAttrs(this$1.$el, currentSrc(img), img.srcset, img.sizes);
-                    storage[this$1.cacheKey] = currentSrc(img);
-                    return img;
-
-                }, function (e) { return trigger(this$1.$el, new e.constructor(e.type, e)); });
-
-                this.observer.disconnect();
-            },
-
-            observe: function() {
-                var this$1 = this;
-
-                if (this._connected && !this._data.image) {
-                    this.target.forEach(function (el) { return this$1.observer.observe(el); });
-                }
-            }
-
-        }
-
-    };
-
-    function setSrcAttrs(el, src, srcset, sizes) {
-
-        if (isImg(el)) {
-            sizes && (el.sizes = sizes);
-            srcset && (el.srcset = srcset);
-            src && (el.src = src);
-        } else if (src) {
-
-            var change = !includes(el.style.backgroundImage, src);
-            if (change) {
-                css(el, 'backgroundImage', ("url(" + (escape(src)) + ")"));
-                trigger(el, createEvent('load', false));
-            }
-
-        }
-
-    }
-
-    function getPlaceholderImage(width, height, sizes) {
-        var assign;
-
-
-        if (sizes) {
-            ((assign = Dimensions.ratio({width: width, height: height}, 'width', toPx(sizesToPixel(sizes))), width = assign.width, height = assign.height));
-        }
-
-        return ("data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"" + width + "\" height=\"" + height + "\"></svg>");
-    }
-
-    var sizesRe = /\s*(.*?)\s*(\w+|calc\(.*?\))\s*(?:,|$)/g;
-    function sizesToPixel(sizes) {
-        var matches;
-
-        sizesRe.lastIndex = 0;
-
-        while ((matches = sizesRe.exec(sizes))) {
-            if (!matches[1] || window.matchMedia(matches[1]).matches) {
-                matches = evaluateSize(matches[2]);
-                break;
-            }
-        }
-
-        return matches || '100vw';
-    }
-
-    var sizeRe = /\d+(?:\w+|%)/g;
-    var additionRe = /[+-]?(\d+)/g;
-    function evaluateSize(size) {
-        return startsWith(size, 'calc')
-            ? size
-                .slice(5, -1)
-                .replace(sizeRe, function (size) { return toPx(size); })
-                .replace(/ /g, '')
-                .match(additionRe)
-                .reduce(function (a, b) { return a + +b; }, 0)
-            : size;
-    }
-
-    var srcSetRe = /\s+\d+w\s*(?:,|$)/g;
-    function getSourceSize(srcset, sizes) {
-        var srcSize = toPx(sizesToPixel(sizes));
-        var descriptors = (srcset.match(srcSetRe) || []).map(toFloat).sort(function (a, b) { return a - b; });
-
-        return descriptors.filter(function (size) { return size >= srcSize; })[0] || descriptors.pop() || '';
-    }
-
-    function isImg(el) {
-        return el.tagName === 'IMG';
-    }
-
-    function currentSrc(el) {
-        return el.currentSrc || el.src;
-    }
-
-    var key = '__test__';
-    var storage;
-
-    // workaround for Safari's private browsing mode and accessing sessionStorage in Blink
-    try {
-        storage = window.sessionStorage || {};
-        storage[key] = 1;
-        delete storage[key];
-    } catch (e) {
-        storage = {};
-    }
-
-    var Media = {
-
-        props: {
-            media: Boolean
-        },
-
-        data: {
-            media: false
-        },
-
-        computed: {
-
-            matchMedia: function() {
-                var media = toMedia(this.media);
-                return !media || window.matchMedia(media).matches;
-            }
-
-        }
-
-    };
-
-    function toMedia(value) {
-
-        if (isString(value)) {
-            if (value[0] === '@') {
-                var name = "breakpoint-" + (value.substr(1));
-                value = toFloat(getCssVar(name));
-            } else if (isNaN(value)) {
-                return value;
-            }
-        }
-
-        return value && !isNaN(value) ? ("(min-width: " + value + "px)") : false;
-    }
-
-    var leader = {
-
-        mixins: [Class, Media],
-
-        props: {
-            fill: String
-        },
-
-        data: {
-            fill: '',
-            clsWrapper: 'uk-leader-fill',
-            clsHide: 'uk-leader-hide',
-            attrFill: 'data-fill'
-        },
-
-        computed: {
-
-            fill: function(ref) {
-                var fill = ref.fill;
-
-                return fill || getCssVar('leader-fill-content');
-            }
-
-        },
-
-        connected: function() {
-            var assign;
-
-            (assign = wrapInner(this.$el, ("<span class=\"" + (this.clsWrapper) + "\">")), this.wrapper = assign[0]);
-        },
-
-        disconnected: function() {
-            unwrap(this.wrapper.childNodes);
-        },
-
-        update: {
-
-            read: function(ref) {
-                var changed = ref.changed;
-                var width = ref.width;
-
-
-                var prev = width;
-
-                width = Math.floor(this.$el.offsetWidth / 2);
-
-                return {
-                    width: width,
-                    fill: this.fill,
-                    changed: changed || prev !== width,
-                    hide: !this.matchMedia
-                };
-            },
-
-            write: function(data) {
-
-                toggleClass(this.wrapper, this.clsHide, data.hide);
-
-                if (data.changed) {
-                    data.changed = false;
-                    attr(this.wrapper, this.attrFill, new Array(data.width).join(data.fill));
                 }
 
             },
@@ -6370,7 +5118,7 @@
 
     var modal = {
 
-        install: install$1,
+        install: install,
 
         mixins: [Modal],
 
@@ -6416,7 +5164,7 @@
 
     };
 
-    function install$1(ref) {
+    function install(ref) {
         var modal = ref.modal;
 
 
@@ -6511,286 +5259,6 @@
             targets: '> .uk-parent',
             toggle: '> a',
             content: '> ul'
-        }
-
-    };
-
-    var navbar = {
-
-        mixins: [Class, FlexBug],
-
-        props: {
-            dropdown: String,
-            mode: 'list',
-            align: String,
-            offset: Number,
-            boundary: Boolean,
-            boundaryAlign: Boolean,
-            clsDrop: String,
-            delayShow: Number,
-            delayHide: Number,
-            dropbar: Boolean,
-            dropbarMode: String,
-            dropbarAnchor: Boolean,
-            duration: Number
-        },
-
-        data: {
-            dropdown: '.uk-navbar-nav > li',
-            align: !isRtl ? 'left' : 'right',
-            clsDrop: 'uk-navbar-dropdown',
-            mode: undefined,
-            offset: undefined,
-            delayShow: undefined,
-            delayHide: undefined,
-            boundaryAlign: undefined,
-            flip: 'x',
-            boundary: true,
-            dropbar: false,
-            dropbarMode: 'slide',
-            dropbarAnchor: false,
-            duration: 200,
-            forceHeight: true,
-            selMinHeight: '.uk-navbar-nav > li > a, .uk-navbar-item, .uk-navbar-toggle'
-        },
-
-        computed: {
-
-            boundary: function(ref, $el) {
-                var boundary = ref.boundary;
-                var boundaryAlign = ref.boundaryAlign;
-
-                return (boundary === true || boundaryAlign) ? $el : boundary;
-            },
-
-            dropbarAnchor: function(ref, $el) {
-                var dropbarAnchor = ref.dropbarAnchor;
-
-                return query(dropbarAnchor, $el);
-            },
-
-            pos: function(ref) {
-                var align = ref.align;
-
-                return ("bottom-" + align);
-            },
-
-            dropbar: {
-
-                get: function(ref) {
-                    var dropbar = ref.dropbar;
-
-
-                    if (!dropbar) {
-                        return null;
-                    }
-
-                    dropbar = this._dropbar || query(dropbar, this.$el) || $('+ .uk-navbar-dropbar', this.$el);
-
-                    return dropbar ? dropbar : (this._dropbar = $('<div></div>'));
-
-                },
-
-                watch: function(dropbar) {
-                    addClass(dropbar, 'uk-navbar-dropbar');
-                },
-
-                immediate: true
-
-            },
-
-            dropdowns: {
-
-                get: function(ref, $el) {
-                    var dropdown = ref.dropdown;
-                    var clsDrop = ref.clsDrop;
-
-                    return $$((dropdown + " ." + clsDrop), $el);
-                },
-
-                watch: function(dropdowns) {
-                    var this$1 = this;
-
-                    this.$create(
-                        'drop',
-                        dropdowns.filter(function (el) { return !this$1.getDropdown(el); }),
-                        assign({}, this.$props, {boundary: this.boundary, pos: this.pos, offset: this.dropbar || this.offset})
-                    );
-                },
-
-                immediate: true
-
-            }
-
-        },
-
-        disconnected: function() {
-            this.dropbar && remove(this.dropbar);
-            delete this._dropbar;
-        },
-
-        events: [
-
-            {
-                name: 'mouseover',
-
-                delegate: function() {
-                    return this.dropdown;
-                },
-
-                handler: function(ref) {
-                    var current = ref.current;
-
-                    var active = this.getActive();
-                    if (active && active.toggle && !within(active.toggle.$el, current) && !active.tracker.movesTo(active.$el)) {
-                        active.hide(false);
-                    }
-                }
-
-            },
-
-            {
-                name: 'mouseleave',
-
-                el: function() {
-                    return this.dropbar;
-                },
-
-                handler: function() {
-                    var active = this.getActive();
-
-                    if (active && !this.dropdowns.some(function (el) { return matches(el, ':hover'); })) {
-                        active.hide();
-                    }
-                }
-            },
-
-            {
-                name: 'beforeshow',
-
-                capture: true,
-
-                filter: function() {
-                    return this.dropbar;
-                },
-
-                handler: function() {
-
-                    if (!parent(this.dropbar)) {
-                        after(this.dropbarAnchor || this.$el, this.dropbar);
-                    }
-
-                }
-            },
-
-            {
-                name: 'show',
-
-                filter: function() {
-                    return this.dropbar;
-                },
-
-                handler: function(_, ref) {
-                    var $el = ref.$el;
-                    var dir = ref.dir;
-
-                    if (!hasClass($el, this.clsDrop)) {
-                        return;
-                    }
-
-                    if (this.dropbarMode === 'slide') {
-                        addClass(this.dropbar, 'uk-navbar-dropbar-slide');
-                    }
-
-                    this.clsDrop && addClass($el, ((this.clsDrop) + "-dropbar"));
-
-                    if (dir === 'bottom') {
-                        this.transitionTo($el.offsetHeight + toFloat(css($el, 'marginTop')) + toFloat(css($el, 'marginBottom')), $el);
-                    }
-                }
-            },
-
-            {
-                name: 'beforehide',
-
-                filter: function() {
-                    return this.dropbar;
-                },
-
-                handler: function(e, ref) {
-                    var $el = ref.$el;
-
-
-                    var active = this.getActive();
-
-                    if (matches(this.dropbar, ':hover') && active && active.$el === $el) {
-                        e.preventDefault();
-                    }
-                }
-            },
-
-            {
-                name: 'hide',
-
-                filter: function() {
-                    return this.dropbar;
-                },
-
-                handler: function(_, ref) {
-                    var $el = ref.$el;
-
-                    if (!hasClass($el, this.clsDrop)) {
-                        return;
-                    }
-
-                    var active = this.getActive();
-
-                    if (!active || active && active.$el === $el) {
-                        this.transitionTo(0);
-                    }
-                }
-            }
-
-        ],
-
-        methods: {
-
-            getActive: function() {
-                var ref = this.dropdowns.map(this.getDropdown).filter(function (drop) { return drop && drop.isActive(); });
-                var active = ref[0];
-                return active && includes(active.mode, 'hover') && within(active.toggle.$el, this.$el) && active;
-            },
-
-            transitionTo: function(newHeight, el) {
-                var this$1 = this;
-
-
-                var ref = this;
-                var dropbar = ref.dropbar;
-                var oldHeight = isVisible(dropbar) ? height(dropbar) : 0;
-
-                el = oldHeight < newHeight && el;
-
-                css(el, 'clip', ("rect(0," + (el.offsetWidth) + "px," + oldHeight + "px,0)"));
-
-                height(dropbar, oldHeight);
-
-                Transition.cancel([el, dropbar]);
-                return Promise.all([
-                    Transition.start(dropbar, {height: newHeight}, this.duration),
-                    Transition.start(el, {clip: ("rect(0," + (el.offsetWidth) + "px," + newHeight + "px,0)")}, this.duration)
-                ])
-                    .catch(noop)
-                    .then(function () {
-                        css(el, {clip: ''});
-                        this$1.$update(dropbar);
-                    });
-            },
-
-            getDropdown: function(el) {
-                return this.$getComponent(el, 'drop') || this.$getComponent(el, 'dropdown');
-            }
-
         }
 
     };
@@ -7450,6 +5918,41 @@
 
     };
 
+    var Media = {
+
+        props: {
+            media: Boolean
+        },
+
+        data: {
+            media: false
+        },
+
+        computed: {
+
+            matchMedia: function() {
+                var media = toMedia(this.media);
+                return !media || window.matchMedia(media).matches;
+            }
+
+        }
+
+    };
+
+    function toMedia(value) {
+
+        if (isString(value)) {
+            if (value[0] === '@') {
+                var name = "breakpoint-" + (value.substr(1));
+                value = toFloat(getCssVar(name));
+            } else if (isNaN(value)) {
+                return value;
+            }
+        }
+
+        return value && !isNaN(value) ? ("(min-width: " + value + "px)") : false;
+    }
+
     var sticky = {
 
         mixins: [Class, Media],
@@ -7799,6 +6302,250 @@
             return offset(value === true ? parent($el) : query(value, $el)).bottom;
 
         }
+    }
+
+    var SVG = {
+
+        args: 'src',
+
+        props: {
+            id: Boolean,
+            icon: String,
+            src: String,
+            style: String,
+            width: Number,
+            height: Number,
+            ratio: Number,
+            class: String,
+            strokeAnimation: Boolean,
+            focusable: Boolean, // IE 11
+            attributes: 'list'
+        },
+
+        data: {
+            ratio: 1,
+            include: ['style', 'class', 'focusable'],
+            class: '',
+            strokeAnimation: false
+        },
+
+        beforeConnect: function() {
+            this.class += ' uk-svg';
+        },
+
+        connected: function() {
+            var this$1 = this;
+            var assign;
+
+
+            if (!this.icon && includes(this.src, '#')) {
+                (assign = this.src.split('#'), this.src = assign[0], this.icon = assign[1]);
+            }
+
+            this.svg = this.getSvg().then(function (el) {
+
+                if (this$1._connected) {
+
+                    var svg = insertSVG(el, this$1.$el);
+
+                    if (this$1.svgEl && svg !== this$1.svgEl) {
+                        remove(this$1.svgEl);
+                    }
+
+                    this$1.applyAttributes(svg, el);
+                    this$1.$emit();
+                    return this$1.svgEl = svg;
+                }
+
+            }, noop);
+
+        },
+
+        disconnected: function() {
+            var this$1 = this;
+
+
+            this.svg.then(function (svg) {
+                if (!this$1._connected) {
+
+                    if (isVoidElement(this$1.$el)) {
+                        this$1.$el.hidden = false;
+                    }
+
+                    remove(svg);
+                    this$1.svgEl = null;
+                }
+            });
+
+            this.svg = null;
+
+        },
+
+        update: {
+
+            read: function() {
+                return !!(this.strokeAnimation && this.svgEl && isVisible(this.svgEl));
+            },
+
+            write: function() {
+                applyAnimation(this.svgEl);
+            },
+
+            type: ['resize']
+
+        },
+
+        methods: {
+
+            getSvg: function() {
+                var this$1 = this;
+
+                return loadSVG(this.src).then(function (svg) { return parseSVG(svg, this$1.icon) || Promise.reject('SVG not found.'); }
+                );
+            },
+
+            applyAttributes: function(el, ref) {
+                var this$1 = this;
+
+
+                for (var prop in this.$options.props) {
+                    if (includes(this.include, prop) && (prop in this)) {
+                        attr(el, prop, this[prop]);
+                    }
+                }
+
+                for (var attribute in this.attributes) {
+                    var ref$1 = this.attributes[attribute].split(':', 2);
+                    var prop$1 = ref$1[0];
+                    var value = ref$1[1];
+                    attr(el, prop$1, value);
+                }
+
+                if (!this.id) {
+                    removeAttr(el, 'id');
+                }
+
+                var props = ['width', 'height'];
+                var dimensions = props.map(function (prop) { return this$1[prop]; });
+
+                if (!dimensions.some(function (val) { return val; })) {
+                    dimensions = props.map(function (prop) { return attr(ref, prop); });
+                }
+
+                var viewBox = attr(ref, 'viewBox');
+                if (viewBox && !dimensions.some(function (val) { return val; })) {
+                    dimensions = viewBox.split(' ').slice(2);
+                }
+
+                dimensions.forEach(function (val, i) { return attr(el, props[i], toFloat(val) * this$1.ratio || null); }
+                );
+
+            }
+
+        }
+
+    };
+
+    var loadSVG = memoize(function (src) { return new Promise(function (resolve, reject) {
+
+            if (!src) {
+                reject();
+                return;
+            }
+
+            if (startsWith(src, 'data:')) {
+                resolve(decodeURIComponent(src.split(',')[1]));
+            } else {
+
+                ajax(src).then(
+                    function (xhr) { return resolve(xhr.response); },
+                    function () { return reject('SVG not found.'); }
+                );
+
+            }
+        }); }
+    );
+
+    function parseSVG(svg, icon) {
+
+        if (icon && includes(svg, '<symbol')) {
+            svg = parseSymbols(svg, icon) || svg;
+        }
+
+        svg = $(svg.substr(svg.indexOf('<svg')));
+        return svg && svg.hasChildNodes() && svg;
+    }
+
+    var symbolRe = /<symbol([^]*?id=(['"])(.+?)\2[^]*?<\/)symbol>/g;
+    var symbols = {};
+
+    function parseSymbols(svg, icon) {
+
+        if (!symbols[svg]) {
+
+            symbols[svg] = {};
+
+            symbolRe.lastIndex = 0;
+
+            var match;
+            while ((match = symbolRe.exec(svg))) {
+                symbols[svg][match[3]] = "<svg xmlns=\"http://www.w3.org/2000/svg\"" + (match[1]) + "svg>";
+            }
+
+        }
+
+        return symbols[svg][icon];
+    }
+
+    function applyAnimation(el) {
+
+        var length = getMaxPathLength(el);
+
+        if (length) {
+            el.style.setProperty('--uk-animation-stroke', length);
+        }
+
+    }
+
+    function getMaxPathLength(el) {
+        return Math.ceil(Math.max.apply(Math, [ 0 ].concat( $$('[stroke]', el).map(function (stroke) {
+            try {
+                return stroke.getTotalLength();
+            } catch (e) {
+                return 0;
+            }
+        }) )));
+    }
+
+    function insertSVG(el, root) {
+
+        if (isVoidElement(root) || root.tagName === 'CANVAS') {
+
+            root.hidden = true;
+
+            var next = root.nextElementSibling;
+            return equals(el, next)
+                ? next
+                : after(root, el);
+
+        }
+
+        var last = root.lastElementChild;
+        return equals(el, last)
+            ? last
+            : append(root, el);
+    }
+
+    function equals(el, other) {
+        return isSVG(el) && isSVG(other) && innerHTML(el) === innerHTML(other);
+    }
+
+    function isSVG(el) {
+        return el && el.tagName === 'svg';
+    }
+
+    function innerHTML(el) {
+        return (el.innerHTML || (new XMLSerializer()).serializeToString(el).replace(/<svg.*?>(.*?)<\/svg>/g, '$1')).replace(/\s/g, '');
     }
 
     var Switcher = {
@@ -8176,25 +6923,291 @@
             : isVisible(target);
     }
 
+    var video = {
+
+        args: 'autoplay',
+
+        props: {
+            automute: Boolean,
+            autoplay: Boolean
+        },
+
+        data: {
+            automute: false,
+            autoplay: true
+        },
+
+        computed: {
+
+            inView: function(ref) {
+                var autoplay = ref.autoplay;
+
+                return autoplay === 'inview';
+            }
+
+        },
+
+        connected: function() {
+
+            if (this.inView && !hasAttr(this.$el, 'preload')) {
+                this.$el.preload = 'none';
+            }
+
+            if (this.automute) {
+                mute(this.$el);
+            }
+
+        },
+
+        update: {
+
+            read: function() {
+                return {
+                    visible: isVisible(this.$el) && css(this.$el, 'visibility') !== 'hidden',
+                    inView: this.inView && isInView(this.$el)
+                };
+            },
+
+            write: function(ref) {
+                var visible = ref.visible;
+                var inView = ref.inView;
+
+
+                if (!visible || this.inView && !inView) {
+                    pause(this.$el);
+                } else if (this.autoplay === true || this.inView && inView) {
+                    play(this.$el);
+                }
+
+            },
+
+            events: ['resize', 'scroll']
+
+        }
+
+    };
+
+    var closeIcon = "<svg width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" xmlns=\"http://www.w3.org/2000/svg\"><line fill=\"none\" stroke=\"#000\" stroke-width=\"1.1\" x1=\"1\" y1=\"1\" x2=\"13\" y2=\"13\"/><line fill=\"none\" stroke=\"#000\" stroke-width=\"1.1\" x1=\"13\" y1=\"1\" x2=\"1\" y2=\"13\"/></svg>";
+
+    var closeLarge = "<svg width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" xmlns=\"http://www.w3.org/2000/svg\"><line fill=\"none\" stroke=\"#000\" stroke-width=\"1.4\" x1=\"1\" y1=\"1\" x2=\"19\" y2=\"19\"/><line fill=\"none\" stroke=\"#000\" stroke-width=\"1.4\" x1=\"19\" y1=\"1\" x2=\"1\" y2=\"19\"/></svg>";
+
+    var marker = "<svg width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"9\" y=\"4\" width=\"1\" height=\"11\"/><rect x=\"4\" y=\"9\" width=\"11\" height=\"1\"/></svg>";
+
+    var navbarToggleIcon = "<svg width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" xmlns=\"http://www.w3.org/2000/svg\"><rect y=\"9\" width=\"20\" height=\"2\"/><rect y=\"3\" width=\"20\" height=\"2\"/><rect y=\"15\" width=\"20\" height=\"2\"/></svg>";
+
+    var overlayIcon = "<svg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"19\" y=\"0\" width=\"1\" height=\"40\"/><rect x=\"0\" y=\"19\" width=\"40\" height=\"1\"/></svg>";
+
+    var paginationNext = "<svg width=\"7\" height=\"12\" viewBox=\"0 0 7 12\" xmlns=\"http://www.w3.org/2000/svg\"><polyline fill=\"none\" stroke=\"#000\" stroke-width=\"1.2\" points=\"1 1 6 6 1 11\"/></svg>";
+
+    var paginationPrevious = "<svg width=\"7\" height=\"12\" viewBox=\"0 0 7 12\" xmlns=\"http://www.w3.org/2000/svg\"><polyline fill=\"none\" stroke=\"#000\" stroke-width=\"1.2\" points=\"6 1 1 6 6 11\"/></svg>";
+
+    var searchIcon = "<svg width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" xmlns=\"http://www.w3.org/2000/svg\"><circle fill=\"none\" stroke=\"#000\" stroke-width=\"1.1\" cx=\"9\" cy=\"9\" r=\"7\"/><path fill=\"none\" stroke=\"#000\" stroke-width=\"1.1\" d=\"M14,14 L18,18 L14,14 Z\"/></svg>";
+
+    var searchLarge = "<svg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\" xmlns=\"http://www.w3.org/2000/svg\"><circle fill=\"none\" stroke=\"#000\" stroke-width=\"1.8\" cx=\"17.5\" cy=\"17.5\" r=\"16.5\"/><line fill=\"none\" stroke=\"#000\" stroke-width=\"1.8\" x1=\"38\" y1=\"39\" x2=\"29\" y2=\"30\"/></svg>";
+
+    var searchNavbar = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><circle fill=\"none\" stroke=\"#000\" stroke-width=\"1.1\" cx=\"10.5\" cy=\"10.5\" r=\"9.5\"/><line fill=\"none\" stroke=\"#000\" stroke-width=\"1.1\" x1=\"23\" y1=\"23\" x2=\"17\" y2=\"17\"/></svg>";
+
+    var slidenavNext = "<svg width=\"14\" height=\"24\" viewBox=\"0 0 14 24\" xmlns=\"http://www.w3.org/2000/svg\"><polyline fill=\"none\" stroke=\"#000\" stroke-width=\"1.4\" points=\"1.225,23 12.775,12 1.225,1 \"/></svg>";
+
+    var slidenavNextLarge = "<svg width=\"25\" height=\"40\" viewBox=\"0 0 25 40\" xmlns=\"http://www.w3.org/2000/svg\"><polyline fill=\"none\" stroke=\"#000\" stroke-width=\"2\" points=\"4.002,38.547 22.527,20.024 4,1.5 \"/></svg>";
+
+    var slidenavPrevious = "<svg width=\"14\" height=\"24\" viewBox=\"0 0 14 24\" xmlns=\"http://www.w3.org/2000/svg\"><polyline fill=\"none\" stroke=\"#000\" stroke-width=\"1.4\" points=\"12.775,1 1.225,12 12.775,23 \"/></svg>";
+
+    var slidenavPreviousLarge = "<svg width=\"25\" height=\"40\" viewBox=\"0 0 25 40\" xmlns=\"http://www.w3.org/2000/svg\"><polyline fill=\"none\" stroke=\"#000\" stroke-width=\"2\" points=\"20.527,1.5 2,20.024 20.525,38.547 \"/></svg>";
+
+    var spinner = "<svg width=\"30\" height=\"30\" viewBox=\"0 0 30 30\" xmlns=\"http://www.w3.org/2000/svg\"><circle fill=\"none\" stroke=\"#000\" cx=\"15\" cy=\"15\" r=\"14\"/></svg>";
+
+    var totop = "<svg width=\"18\" height=\"10\" viewBox=\"0 0 18 10\" xmlns=\"http://www.w3.org/2000/svg\"><polyline fill=\"none\" stroke=\"#000\" stroke-width=\"1.2\" points=\"1 9 9 1 17 9 \"/></svg>";
+
+    var icons = {
+        spinner: spinner,
+        totop: totop,
+        marker: marker,
+        'close-icon': closeIcon,
+        'close-large': closeLarge,
+        'navbar-toggle-icon': navbarToggleIcon,
+        'overlay-icon': overlayIcon,
+        'pagination-next': paginationNext,
+        'pagination-previous': paginationPrevious,
+        'search-icon': searchIcon,
+        'search-large': searchLarge,
+        'search-navbar': searchNavbar,
+        'slidenav-next': slidenavNext,
+        'slidenav-next-large': slidenavNextLarge,
+        'slidenav-previous': slidenavPrevious,
+        'slidenav-previous-large': slidenavPreviousLarge
+    };
+
+    var Icon = {
+
+        install: install$1,
+
+        extends: SVG,
+
+        args: 'icon',
+
+        props: ['icon'],
+
+        data: {
+            include: ['focusable']
+        },
+
+        isIcon: true,
+
+        beforeConnect: function() {
+            addClass(this.$el, 'uk-icon');
+        },
+
+        methods: {
+
+            getSvg: function() {
+
+                var icon = getIcon(this.icon);
+
+                if (!icon) {
+                    return Promise.reject('Icon not found.');
+                }
+
+                return Promise.resolve(icon);
+            }
+
+        }
+
+    };
+
+    var IconComponent = {
+
+        args: false,
+
+        extends: Icon,
+
+        data: function (vm) { return ({
+            icon: hyphenate(vm.constructor.options.name)
+        }); },
+
+        beforeConnect: function() {
+            addClass(this.$el, this.$name);
+        }
+
+    };
+
+    var Slidenav = {
+
+        extends: IconComponent,
+
+        beforeConnect: function() {
+            addClass(this.$el, 'uk-slidenav');
+        },
+
+        computed: {
+
+            icon: function(ref, $el) {
+                var icon = ref.icon;
+
+                return hasClass($el, 'uk-slidenav-large')
+                    ? (icon + "-large")
+                    : icon;
+            }
+
+        }
+
+    };
+
+    var Search = {
+
+        extends: IconComponent,
+
+        computed: {
+
+            icon: function(ref, $el) {
+                var icon = ref.icon;
+
+                return hasClass($el, 'uk-search-icon') && parents($el, '.uk-search-large').length
+                    ? 'search-large'
+                    : parents($el, '.uk-search-navbar').length
+                        ? 'search-navbar'
+                        : icon;
+            }
+
+        }
+
+    };
+
+    var Close = {
+
+        extends: IconComponent,
+
+        computed: {
+
+            icon: function() {
+                return ("close-" + (hasClass(this.$el, 'uk-close-large') ? 'large' : 'icon'));
+            }
+
+        }
+
+    };
+
+    var Spinner = {
+
+        extends: IconComponent,
+
+        connected: function() {
+            var this$1 = this;
+
+            this.svg.then(function (svg) { return svg && this$1.ratio !== 1 && css($('circle', svg), 'strokeWidth', 1 / this$1.ratio); });
+        }
+
+    };
+
+    var parsed = {};
+    function install$1(UIkit) {
+        UIkit.icon.add = function (name, svg) {
+            var obj;
+
+
+            var added = isString(name) ? (( obj = {}, obj[name] = svg, obj )) : name;
+            each(added, function (svg, name) {
+                icons[name] = svg;
+                delete parsed[name];
+            });
+
+            if (UIkit._initialized) {
+                apply(document.body, function (el) { return each(UIkit.getComponents(el), function (cmp) {
+                        cmp.$options.isIcon && cmp.icon in added && cmp.$reset();
+                    }); }
+                );
+            }
+        };
+    }
+
+    function getIcon(icon) {
+
+        if (!icons[icon]) {
+            return null;
+        }
+
+        if (!parsed[icon]) {
+            parsed[icon] = $((icons[applyRtl(icon)] || icons[icon]).trim());
+        }
+
+        return parsed[icon].cloneNode(true);
+    }
+
+    function applyRtl(icon) {
+        return isRtl ? swap(swap(icon, 'left', 'right'), 'previous', 'next') : icon;
+    }
+
     var components = /*#__PURE__*/Object.freeze({
         __proto__: null,
         Accordion: Accordion,
-        Alert: alert,
-        Cover: cover,
         Drop: drop,
         Dropdown: drop,
-        FormCustom: formCustom,
         Gif: gif,
-        Grid: grid,
         HeightMatch: heightMatch,
         HeightViewport: heightViewport,
-        Icon: Icon,
-        Img: img,
-        Leader: leader,
-        Margin: Margin,
+        Margin: margin,
         Modal: modal,
         Nav: nav,
-        Navbar: navbar,
         Offcanvas: offcanvas,
         OverflowAuto: overflowAuto,
         Responsive: responsive,
@@ -8206,7 +7219,7 @@
         Switcher: Switcher,
         Tab: tab,
         Toggle: toggle,
-        Video: Video,
+        Video: video,
         Close: Close,
         Spinner: Spinner,
         SlidenavNext: Slidenav,
@@ -8228,174 +7241,6 @@
     UIkit.use(Core);
 
     boot(UIkit);
-
-    var countdown = {
-
-        mixins: [Class],
-
-        props: {
-            date: String,
-            clsWrapper: String
-        },
-
-        data: {
-            date: '',
-            clsWrapper: '.uk-countdown-%unit%'
-        },
-
-        computed: {
-
-            date: function(ref) {
-                var date = ref.date;
-
-                return Date.parse(date);
-            },
-
-            days: function(ref, $el) {
-                var clsWrapper = ref.clsWrapper;
-
-                return $(clsWrapper.replace('%unit%', 'days'), $el);
-            },
-
-            hours: function(ref, $el) {
-                var clsWrapper = ref.clsWrapper;
-
-                return $(clsWrapper.replace('%unit%', 'hours'), $el);
-            },
-
-            minutes: function(ref, $el) {
-                var clsWrapper = ref.clsWrapper;
-
-                return $(clsWrapper.replace('%unit%', 'minutes'), $el);
-            },
-
-            seconds: function(ref, $el) {
-                var clsWrapper = ref.clsWrapper;
-
-                return $(clsWrapper.replace('%unit%', 'seconds'), $el);
-            },
-
-            units: function() {
-                var this$1 = this;
-
-                return ['days', 'hours', 'minutes', 'seconds'].filter(function (unit) { return this$1[unit]; });
-            }
-
-        },
-
-        connected: function() {
-            this.start();
-        },
-
-        disconnected: function() {
-            var this$1 = this;
-
-            this.stop();
-            this.units.forEach(function (unit) { return empty(this$1[unit]); });
-        },
-
-        events: [
-
-            {
-
-                name: 'visibilitychange',
-
-                el: function() {
-                    return document;
-                },
-
-                handler: function() {
-                    if (document.hidden) {
-                        this.stop();
-                    } else {
-                        this.start();
-                    }
-                }
-
-            }
-
-        ],
-
-        update: {
-
-            write: function() {
-                var this$1 = this;
-
-
-                var timespan = getTimeSpan(this.date);
-
-                if (timespan.total <= 0) {
-
-                    this.stop();
-
-                    timespan.days
-                        = timespan.hours
-                        = timespan.minutes
-                        = timespan.seconds
-                        = 0;
-                }
-
-                this.units.forEach(function (unit) {
-
-                    var digits = String(Math.floor(timespan[unit]));
-
-                    digits = digits.length < 2 ? ("0" + digits) : digits;
-
-                    var el = this$1[unit];
-                    if (el.textContent !== digits) {
-                        digits = digits.split('');
-
-                        if (digits.length !== el.children.length) {
-                            html(el, digits.map(function () { return '<span></span>'; }).join(''));
-                        }
-
-                        digits.forEach(function (digit, i) { return el.children[i].textContent = digit; });
-                    }
-
-                });
-
-            }
-
-        },
-
-        methods: {
-
-            start: function() {
-
-                this.stop();
-
-                if (this.date && this.units.length) {
-                    this.$update();
-                    this.timer = setInterval(this.$update, 1000);
-                }
-
-            },
-
-            stop: function() {
-
-                if (this.timer) {
-                    clearInterval(this.timer);
-                    this.timer = null;
-                }
-
-            }
-
-        }
-
-    };
-
-    function getTimeSpan(date) {
-
-        var total = date - Date.now();
-
-        return {
-            total: total,
-            seconds: total / 1000 % 60,
-            minutes: total / 1000 / 60 % 60,
-            hours: total / 1000 / 60 / 60 % 24,
-            days: total / 1000 / 60 / 60 / 24
-        };
-    }
 
     var clsLeave = 'uk-transition-leave';
     var clsEnter = 'uk-transition-enter';
@@ -8626,7 +7471,7 @@
 
         props: {
             duration: Number,
-            animation: String
+            animation: Boolean
         },
 
         data: {
@@ -10243,570 +9088,6 @@
         return item;
     }
 
-    var obj;
-
-    var notification = {
-
-        mixins: [Container],
-
-        functional: true,
-
-        args: ['message', 'status'],
-
-        data: {
-            message: '',
-            status: '',
-            timeout: 5000,
-            group: null,
-            pos: 'top-center',
-            clsContainer: 'uk-notification',
-            clsClose: 'uk-notification-close',
-            clsMsg: 'uk-notification-message'
-        },
-
-        install: install$3,
-
-        computed: {
-
-            marginProp: function(ref) {
-                var pos = ref.pos;
-
-                return ("margin" + (startsWith(pos, 'top') ? 'Top' : 'Bottom'));
-            },
-
-            startProps: function() {
-                var obj;
-
-                return ( obj = {opacity: 0}, obj[this.marginProp] = -this.$el.offsetHeight, obj );
-            }
-
-        },
-
-        created: function() {
-
-            var container = $(("." + (this.clsContainer) + "-" + (this.pos)), this.container)
-                || append(this.container, ("<div class=\"" + (this.clsContainer) + " " + (this.clsContainer) + "-" + (this.pos) + "\" style=\"display: block\"></div>"));
-
-            this.$mount(append(container,
-                ("<div class=\"" + (this.clsMsg) + (this.status ? (" " + (this.clsMsg) + "-" + (this.status)) : '') + "\"> <a href class=\"" + (this.clsClose) + "\" data-uk-close></a> <div>" + (this.message) + "</div> </div>")
-            ));
-
-        },
-
-        connected: function() {
-            var this$1 = this;
-            var obj;
-
-
-            var margin = toFloat(css(this.$el, this.marginProp));
-            Transition.start(
-                css(this.$el, this.startProps),
-                ( obj = {opacity: 1}, obj[this.marginProp] = margin, obj )
-            ).then(function () {
-                if (this$1.timeout) {
-                    this$1.timer = setTimeout(this$1.close, this$1.timeout);
-                }
-            });
-
-        },
-
-        events: ( obj = {
-
-            click: function(e) {
-                if (closest(e.target, 'a[href="#"],a[href=""]')) {
-                    e.preventDefault();
-                }
-                this.close();
-            }
-
-        }, obj[pointerEnter] = function () {
-                if (this.timer) {
-                    clearTimeout(this.timer);
-                }
-            }, obj[pointerLeave] = function () {
-                if (this.timeout) {
-                    this.timer = setTimeout(this.close, this.timeout);
-                }
-            }, obj ),
-
-        methods: {
-
-            close: function(immediate) {
-                var this$1 = this;
-
-
-                var removeFn = function (el) {
-
-                    var container = parent(el);
-
-                    trigger(el, 'close', [this$1]);
-                    remove(el);
-
-                    if (container && !container.hasChildNodes()) {
-                        remove(container);
-                    }
-
-                };
-
-                if (this.timer) {
-                    clearTimeout(this.timer);
-                }
-
-                if (immediate) {
-                    removeFn(this.$el);
-                } else {
-                    Transition.start(this.$el, this.startProps).then(removeFn);
-                }
-            }
-
-        }
-
-    };
-
-    function install$3(UIkit) {
-        UIkit.notification.closeAll = function (group, immediate) {
-            apply(document.body, function (el) {
-                var notification = UIkit.getComponent(el, 'notification');
-                if (notification && (!group || group === notification.group)) {
-                    notification.close(immediate);
-                }
-            });
-        };
-    }
-
-    var props = ['x', 'y', 'bgx', 'bgy', 'rotate', 'scale', 'color', 'backgroundColor', 'borderColor', 'opacity', 'blur', 'hue', 'grayscale', 'invert', 'saturate', 'sepia', 'fopacity', 'stroke'];
-
-    var Parallax = {
-
-        mixins: [Media],
-
-        props: props.reduce(function (props, prop) {
-            props[prop] = 'list';
-            return props;
-        }, {}),
-
-        data: props.reduce(function (data, prop) {
-            data[prop] = undefined;
-            return data;
-        }, {}),
-
-        computed: {
-
-            props: function(properties, $el) {
-                var this$1 = this;
-
-
-                return props.reduce(function (props, prop) {
-
-                    if (isUndefined(properties[prop])) {
-                        return props;
-                    }
-
-                    var isColor = prop.match(/color/i);
-                    var isCssProp = isColor || prop === 'opacity';
-
-                    var pos, bgPos, diff;
-                    var steps = properties[prop].slice();
-
-                    if (isCssProp) {
-                        css($el, prop, '');
-                    }
-
-                    if (steps.length < 2) {
-                        steps.unshift((prop === 'scale'
-                            ? 1
-                            : isCssProp
-                                ? css($el, prop)
-                                : 0) || 0);
-                    }
-
-                    var unit = getUnit(steps);
-
-                    if (isColor) {
-
-                        var ref = $el.style;
-                        var color = ref.color;
-                        steps = steps.map(function (step) { return parseColor($el, step); });
-                        $el.style.color = color;
-
-                    } else if (startsWith(prop, 'bg')) {
-
-                        var attr = prop === 'bgy' ? 'height' : 'width';
-                        steps = steps.map(function (step) { return toPx(step, attr, this$1.$el); });
-
-                        css($el, ("background-position-" + (prop[2])), '');
-                        bgPos = css($el, 'backgroundPosition').split(' ')[prop[2] === 'x' ? 0 : 1]; // IE 11 can't read background-position-[x|y]
-
-                        if (this$1.covers) {
-
-                            var min = Math.min.apply(Math, steps);
-                            var max = Math.max.apply(Math, steps);
-                            var down = steps.indexOf(min) < steps.indexOf(max);
-
-                            diff = max - min;
-
-                            steps = steps.map(function (step) { return step - (down ? min : max); });
-                            pos = (down ? -diff : 0) + "px";
-
-                        } else {
-
-                            pos = bgPos;
-
-                        }
-
-                    } else {
-
-                        steps = steps.map(toFloat);
-
-                    }
-
-                    if (prop === 'stroke') {
-
-                        if (!steps.some(function (step) { return step; })) {
-                            return props;
-                        }
-
-                        var length = getMaxPathLength(this$1.$el);
-                        css($el, 'strokeDasharray', length);
-
-                        if (unit === '%') {
-                            steps = steps.map(function (step) { return step * length / 100; });
-                        }
-
-                        steps = steps.reverse();
-
-                        prop = 'strokeDashoffset';
-                    }
-
-                    props[prop] = {steps: steps, unit: unit, pos: pos, bgPos: bgPos, diff: diff};
-
-                    return props;
-
-                }, {});
-
-            },
-
-            bgProps: function() {
-                var this$1 = this;
-
-                return ['bgx', 'bgy'].filter(function (bg) { return bg in this$1.props; });
-            },
-
-            covers: function(_, $el) {
-                return covers($el);
-            }
-
-        },
-
-        disconnected: function() {
-            delete this._image;
-        },
-
-        update: {
-
-            read: function(data) {
-                var this$1 = this;
-
-
-                if (!this.matchMedia) {
-                    return;
-                }
-
-                if (!data.image && this.covers && this.bgProps.length) {
-                    var src = css(this.$el, 'backgroundImage').replace(/^none|url\(["']?(.+?)["']?\)$/, '$1');
-
-                    if (src) {
-                        var img = new Image();
-                        img.src = src;
-                        data.image = img;
-
-                        if (!img.naturalWidth) {
-                            img.onload = function () { return this$1.$update(); };
-                        }
-                    }
-
-                }
-
-                var image = data.image;
-
-                if (!image || !image.naturalWidth) {
-                    return;
-                }
-
-                var dimEl = {
-                    width: this.$el.offsetWidth,
-                    height: this.$el.offsetHeight
-                };
-                var dimImage = {
-                    width: image.naturalWidth,
-                    height: image.naturalHeight
-                };
-
-                var dim = Dimensions.cover(dimImage, dimEl);
-
-                this.bgProps.forEach(function (prop) {
-
-                    var ref = this$1.props[prop];
-                    var diff = ref.diff;
-                    var bgPos = ref.bgPos;
-                    var steps = ref.steps;
-                    var attr = prop === 'bgy' ? 'height' : 'width';
-                    var span = dim[attr] - dimEl[attr];
-
-                    if (span < diff) {
-                        dimEl[attr] = dim[attr] + diff - span;
-                    } else if (span > diff) {
-
-                        var posPercentage = dimEl[attr] / toPx(bgPos, attr, this$1.$el);
-
-                        if (posPercentage) {
-                            this$1.props[prop].steps = steps.map(function (step) { return step - (span - diff) / posPercentage; });
-                        }
-                    }
-
-                    dim = Dimensions.cover(dimImage, dimEl);
-                });
-
-                data.dim = dim;
-            },
-
-            write: function(ref) {
-                var dim = ref.dim;
-
-
-                if (!this.matchMedia) {
-                    css(this.$el, {backgroundSize: '', backgroundRepeat: ''});
-                    return;
-                }
-
-                dim && css(this.$el, {
-                    backgroundSize: ((dim.width) + "px " + (dim.height) + "px"),
-                    backgroundRepeat: 'no-repeat'
-                });
-
-            },
-
-            events: ['resize']
-
-        },
-
-        methods: {
-
-            reset: function() {
-                var this$1 = this;
-
-                each(this.getCss(0), function (_, prop) { return css(this$1.$el, prop, ''); });
-            },
-
-            getCss: function(percent) {
-
-                var ref = this;
-                var props = ref.props;
-                return Object.keys(props).reduce(function (css, prop) {
-
-                    var ref = props[prop];
-                    var steps = ref.steps;
-                    var unit = ref.unit;
-                    var pos = ref.pos;
-                    var value = getValue(steps, percent);
-
-                    switch (prop) {
-
-                        // transforms
-                        case 'x':
-                        case 'y': {
-                            unit = unit || 'px';
-                            css.transform += " translate" + (ucfirst(prop)) + "(" + (toFloat(value).toFixed(unit === 'px' ? 0 : 2)) + unit + ")";
-                            break;
-                        }
-                        case 'rotate':
-                            unit = unit || 'deg';
-                            css.transform += " rotate(" + (value + unit) + ")";
-                            break;
-                        case 'scale':
-                            css.transform += " scale(" + value + ")";
-                            break;
-
-                        // bg image
-                        case 'bgy':
-                        case 'bgx':
-                            css[("background-position-" + (prop[2]))] = "calc(" + pos + " + " + value + "px)";
-                            break;
-
-                        // color
-                        case 'color':
-                        case 'backgroundColor':
-                        case 'borderColor': {
-
-                            var ref$1 = getStep(steps, percent);
-                            var start = ref$1[0];
-                            var end = ref$1[1];
-                            var p = ref$1[2];
-
-                            css[prop] = "rgba(" + (start.map(function (value, i) {
-                                    value = value + p * (end[i] - value);
-                                    return i === 3 ? toFloat(value) : parseInt(value, 10);
-                                }).join(',')) + ")";
-                            break;
-                        }
-                        // CSS Filter
-                        case 'blur':
-                            unit = unit || 'px';
-                            css.filter += " blur(" + (value + unit) + ")";
-                            break;
-                        case 'hue':
-                            unit = unit || 'deg';
-                            css.filter += " hue-rotate(" + (value + unit) + ")";
-                            break;
-                        case 'fopacity':
-                            unit = unit || '%';
-                            css.filter += " opacity(" + (value + unit) + ")";
-                            break;
-                        case 'grayscale':
-                        case 'invert':
-                        case 'saturate':
-                        case 'sepia':
-                            unit = unit || '%';
-                            css.filter += " " + prop + "(" + (value + unit) + ")";
-                            break;
-                        default:
-                            css[prop] = value;
-                    }
-
-                    return css;
-
-                }, {transform: '', filter: ''});
-
-            }
-
-        }
-
-    };
-
-    function parseColor(el, color) {
-        return css(css(el, 'color', color), 'color')
-            .split(/[(),]/g)
-            .slice(1, -1)
-            .concat(1)
-            .slice(0, 4)
-            .map(toFloat);
-    }
-
-    function getStep(steps, percent) {
-        var count = steps.length - 1;
-        var index = Math.min(Math.floor(count * percent), count - 1);
-        var step = steps.slice(index, index + 2);
-
-        step.push(percent === 1 ? 1 : percent % (1 / count) * count);
-
-        return step;
-    }
-
-    function getValue(steps, percent, digits) {
-        if ( digits === void 0 ) digits = 2;
-
-        var ref = getStep(steps, percent);
-        var start = ref[0];
-        var end = ref[1];
-        var p = ref[2];
-        return (isNumber(start)
-            ? start + Math.abs(start - end) * p * (start < end ? 1 : -1)
-            : +end
-        ).toFixed(digits);
-    }
-
-    function getUnit(steps) {
-        return steps.reduce(function (unit, step) { return isString(step) && step.replace(/-|\d/g, '').trim() || unit; }, '');
-    }
-
-    function covers(el) {
-        var ref = el.style;
-        var backgroundSize = ref.backgroundSize;
-        var covers = css(css(el, 'backgroundSize', ''), 'backgroundSize') === 'cover';
-        el.style.backgroundSize = backgroundSize;
-        return covers;
-    }
-
-    var parallax = {
-
-        mixins: [Parallax],
-
-        props: {
-            target: String,
-            viewport: Number,
-            easing: Number
-        },
-
-        data: {
-            target: false,
-            viewport: 1,
-            easing: 1
-        },
-
-        computed: {
-
-            target: function(ref, $el) {
-                var target = ref.target;
-
-                return getOffsetElement(target && query(target, $el) || $el);
-            }
-
-        },
-
-        update: {
-
-            read: function(ref, types) {
-                var percent = ref.percent;
-
-
-                if (!types.has('scroll')) {
-                    percent = false;
-                }
-
-                if (!this.matchMedia) {
-                    return;
-                }
-
-                var prev = percent;
-                percent = ease(scrolledOver(this.target) / (this.viewport || 1), this.easing);
-
-                return {
-                    percent: percent,
-                    style: prev !== percent ? this.getCss(percent) : false
-                };
-            },
-
-            write: function(ref) {
-                var style = ref.style;
-
-
-                if (!this.matchMedia) {
-                    this.reset();
-                    return;
-                }
-
-                style && css(this.$el, style);
-
-            },
-
-            events: ['scroll', 'resize']
-        }
-
-    };
-
-    function ease(percent, easing) {
-        return clamp(percent * (1 - (easing - easing * percent)));
-    }
-
-    // SVG elements do not inherit from HTMLElement
-    function getOffsetElement(el) {
-        return el
-            ? 'offsetTop' in el
-                ? el
-                : getOffsetElement(parent(el))
-            : document.body;
-    }
-
     var SliderReactive = {
 
         update: {
@@ -11241,6 +9522,359 @@
         return Math.max.apply(Math, [ 0 ].concat( children(list).map(function (el) { return dimensions(el).width; }) ));
     }
 
+    var props = ['x', 'y', 'bgx', 'bgy', 'rotate', 'scale', 'color', 'backgroundColor', 'borderColor', 'opacity', 'blur', 'hue', 'grayscale', 'invert', 'saturate', 'sepia', 'fopacity', 'stroke'];
+
+    var Parallax = {
+
+        mixins: [Media],
+
+        props: props.reduce(function (props, prop) {
+            props[prop] = 'list';
+            return props;
+        }, {}),
+
+        data: props.reduce(function (data, prop) {
+            data[prop] = undefined;
+            return data;
+        }, {}),
+
+        computed: {
+
+            props: function(properties, $el) {
+                var this$1 = this;
+
+
+                return props.reduce(function (props, prop) {
+
+                    if (isUndefined(properties[prop])) {
+                        return props;
+                    }
+
+                    var isColor = prop.match(/color/i);
+                    var isCssProp = isColor || prop === 'opacity';
+
+                    var pos, bgPos, diff;
+                    var steps = properties[prop].slice();
+
+                    if (isCssProp) {
+                        css($el, prop, '');
+                    }
+
+                    if (steps.length < 2) {
+                        steps.unshift((prop === 'scale'
+                            ? 1
+                            : isCssProp
+                                ? css($el, prop)
+                                : 0) || 0);
+                    }
+
+                    var unit = getUnit(steps);
+
+                    if (isColor) {
+
+                        var ref = $el.style;
+                        var color = ref.color;
+                        steps = steps.map(function (step) { return parseColor($el, step); });
+                        $el.style.color = color;
+
+                    } else if (startsWith(prop, 'bg')) {
+
+                        var attr = prop === 'bgy' ? 'height' : 'width';
+                        steps = steps.map(function (step) { return toPx(step, attr, this$1.$el); });
+
+                        css($el, ("background-position-" + (prop[2])), '');
+                        bgPos = css($el, 'backgroundPosition').split(' ')[prop[2] === 'x' ? 0 : 1]; // IE 11 can't read background-position-[x|y]
+
+                        if (this$1.covers) {
+
+                            var min = Math.min.apply(Math, steps);
+                            var max = Math.max.apply(Math, steps);
+                            var down = steps.indexOf(min) < steps.indexOf(max);
+
+                            diff = max - min;
+
+                            steps = steps.map(function (step) { return step - (down ? min : max); });
+                            pos = (down ? -diff : 0) + "px";
+
+                        } else {
+
+                            pos = bgPos;
+
+                        }
+
+                    } else {
+
+                        steps = steps.map(toFloat);
+
+                    }
+
+                    if (prop === 'stroke') {
+
+                        if (!steps.some(function (step) { return step; })) {
+                            return props;
+                        }
+
+                        var length = getMaxPathLength(this$1.$el);
+                        css($el, 'strokeDasharray', length);
+
+                        if (unit === '%') {
+                            steps = steps.map(function (step) { return step * length / 100; });
+                        }
+
+                        steps = steps.reverse();
+
+                        prop = 'strokeDashoffset';
+                    }
+
+                    props[prop] = {steps: steps, unit: unit, pos: pos, bgPos: bgPos, diff: diff};
+
+                    return props;
+
+                }, {});
+
+            },
+
+            bgProps: function() {
+                var this$1 = this;
+
+                return ['bgx', 'bgy'].filter(function (bg) { return bg in this$1.props; });
+            },
+
+            covers: function(_, $el) {
+                return covers($el);
+            }
+
+        },
+
+        disconnected: function() {
+            delete this._image;
+        },
+
+        update: {
+
+            read: function(data) {
+                var this$1 = this;
+
+
+                if (!this.matchMedia) {
+                    return;
+                }
+
+                if (!data.image && this.covers && this.bgProps.length) {
+                    var src = css(this.$el, 'backgroundImage').replace(/^none|url\(["']?(.+?)["']?\)$/, '$1');
+
+                    if (src) {
+                        var img = new Image();
+                        img.src = src;
+                        data.image = img;
+
+                        if (!img.naturalWidth) {
+                            img.onload = function () { return this$1.$update(); };
+                        }
+                    }
+
+                }
+
+                var image = data.image;
+
+                if (!image || !image.naturalWidth) {
+                    return;
+                }
+
+                var dimEl = {
+                    width: this.$el.offsetWidth,
+                    height: this.$el.offsetHeight
+                };
+                var dimImage = {
+                    width: image.naturalWidth,
+                    height: image.naturalHeight
+                };
+
+                var dim = Dimensions.cover(dimImage, dimEl);
+
+                this.bgProps.forEach(function (prop) {
+
+                    var ref = this$1.props[prop];
+                    var diff = ref.diff;
+                    var bgPos = ref.bgPos;
+                    var steps = ref.steps;
+                    var attr = prop === 'bgy' ? 'height' : 'width';
+                    var span = dim[attr] - dimEl[attr];
+
+                    if (span < diff) {
+                        dimEl[attr] = dim[attr] + diff - span;
+                    } else if (span > diff) {
+
+                        var posPercentage = dimEl[attr] / toPx(bgPos, attr, this$1.$el);
+
+                        if (posPercentage) {
+                            this$1.props[prop].steps = steps.map(function (step) { return step - (span - diff) / posPercentage; });
+                        }
+                    }
+
+                    dim = Dimensions.cover(dimImage, dimEl);
+                });
+
+                data.dim = dim;
+            },
+
+            write: function(ref) {
+                var dim = ref.dim;
+
+
+                if (!this.matchMedia) {
+                    css(this.$el, {backgroundSize: '', backgroundRepeat: ''});
+                    return;
+                }
+
+                dim && css(this.$el, {
+                    backgroundSize: ((dim.width) + "px " + (dim.height) + "px"),
+                    backgroundRepeat: 'no-repeat'
+                });
+
+            },
+
+            events: ['resize']
+
+        },
+
+        methods: {
+
+            reset: function() {
+                var this$1 = this;
+
+                each(this.getCss(0), function (_, prop) { return css(this$1.$el, prop, ''); });
+            },
+
+            getCss: function(percent) {
+
+                var ref = this;
+                var props = ref.props;
+                return Object.keys(props).reduce(function (css, prop) {
+
+                    var ref = props[prop];
+                    var steps = ref.steps;
+                    var unit = ref.unit;
+                    var pos = ref.pos;
+                    var value = getValue(steps, percent);
+
+                    switch (prop) {
+
+                        // transforms
+                        case 'x':
+                        case 'y': {
+                            unit = unit || 'px';
+                            css.transform += " translate" + (ucfirst(prop)) + "(" + (toFloat(value).toFixed(unit === 'px' ? 0 : 2)) + unit + ")";
+                            break;
+                        }
+                        case 'rotate':
+                            unit = unit || 'deg';
+                            css.transform += " rotate(" + (value + unit) + ")";
+                            break;
+                        case 'scale':
+                            css.transform += " scale(" + value + ")";
+                            break;
+
+                        // bg image
+                        case 'bgy':
+                        case 'bgx':
+                            css[("background-position-" + (prop[2]))] = "calc(" + pos + " + " + value + "px)";
+                            break;
+
+                        // color
+                        case 'color':
+                        case 'backgroundColor':
+                        case 'borderColor': {
+
+                            var ref$1 = getStep(steps, percent);
+                            var start = ref$1[0];
+                            var end = ref$1[1];
+                            var p = ref$1[2];
+
+                            css[prop] = "rgba(" + (start.map(function (value, i) {
+                                    value = value + p * (end[i] - value);
+                                    return i === 3 ? toFloat(value) : parseInt(value, 10);
+                                }).join(',')) + ")";
+                            break;
+                        }
+                        // CSS Filter
+                        case 'blur':
+                            unit = unit || 'px';
+                            css.filter += " blur(" + (value + unit) + ")";
+                            break;
+                        case 'hue':
+                            unit = unit || 'deg';
+                            css.filter += " hue-rotate(" + (value + unit) + ")";
+                            break;
+                        case 'fopacity':
+                            unit = unit || '%';
+                            css.filter += " opacity(" + (value + unit) + ")";
+                            break;
+                        case 'grayscale':
+                        case 'invert':
+                        case 'saturate':
+                        case 'sepia':
+                            unit = unit || '%';
+                            css.filter += " " + prop + "(" + (value + unit) + ")";
+                            break;
+                        default:
+                            css[prop] = value;
+                    }
+
+                    return css;
+
+                }, {transform: '', filter: ''});
+
+            }
+
+        }
+
+    };
+
+    function parseColor(el, color) {
+        return css(css(el, 'color', color), 'color')
+            .split(/[(),]/g)
+            .slice(1, -1)
+            .concat(1)
+            .slice(0, 4)
+            .map(toFloat);
+    }
+
+    function getStep(steps, percent) {
+        var count = steps.length - 1;
+        var index = Math.min(Math.floor(count * percent), count - 1);
+        var step = steps.slice(index, index + 2);
+
+        step.push(percent === 1 ? 1 : percent % (1 / count) * count);
+
+        return step;
+    }
+
+    function getValue(steps, percent, digits) {
+        if ( digits === void 0 ) digits = 2;
+
+        var ref = getStep(steps, percent);
+        var start = ref[0];
+        var end = ref[1];
+        var p = ref[2];
+        return (isNumber(start)
+            ? start + Math.abs(start - end) * p * (start < end ? 1 : -1)
+            : +end
+        ).toFixed(digits);
+    }
+
+    function getUnit(steps) {
+        return steps.reduce(function (unit, step) { return isString(step) && step.replace(/-|\d/g, '').trim() || unit; }, '');
+    }
+
+    function covers(el) {
+        var ref = el.style;
+        var backgroundSize = ref.backgroundSize;
+        var covers = css(css(el, 'backgroundSize', ''), 'backgroundSize') === 'cover';
+        el.style.backgroundSize = backgroundSize;
+        return covers;
+    }
+
     var sliderParallax = {
 
         mixins: [Parallax],
@@ -11520,814 +10154,20 @@
 
     };
 
-    var sortable = {
-
-        mixins: [Class, Animate],
-
-        props: {
-            group: String,
-            threshold: Number,
-            clsItem: String,
-            clsPlaceholder: String,
-            clsDrag: String,
-            clsDragState: String,
-            clsBase: String,
-            clsNoDrag: String,
-            clsEmpty: String,
-            clsCustom: String,
-            handle: String
-        },
-
-        data: {
-            group: false,
-            threshold: 5,
-            clsItem: 'uk-sortable-item',
-            clsPlaceholder: 'uk-sortable-placeholder',
-            clsDrag: 'uk-sortable-drag',
-            clsDragState: 'uk-drag',
-            clsBase: 'uk-sortable',
-            clsNoDrag: 'uk-sortable-nodrag',
-            clsEmpty: 'uk-sortable-empty',
-            clsCustom: '',
-            handle: false,
-            pos: {}
-        },
-
-        created: function() {
-            var this$1 = this;
-
-            ['init', 'start', 'move', 'end'].forEach(function (key) {
-                var fn = this$1[key];
-                this$1[key] = function (e) {
-                    assign(this$1.pos, getEventPos(e));
-                    fn(e);
-                };
-            });
-        },
-
-        events: {
-
-            name: pointerDown,
-            passive: false,
-            handler: 'init'
-
-        },
-
-        computed: {
-
-            target: function() {
-                return (this.$el.tBodies || [this.$el])[0];
-            },
-
-            items: function() {
-                return children(this.target);
-            },
-
-            isEmpty: {
-
-                get: function() {
-                    return isEmpty(this.items);
-                },
-
-                watch: function(empty) {
-                    toggleClass(this.target, this.clsEmpty, empty);
-                },
-
-                immediate: true
-
-            },
-
-            handles: {
-
-                get: function(ref, el) {
-                    var handle = ref.handle;
-
-                    return handle ? $$(handle, el) : this.items;
-                },
-
-                watch: function(handles, prev) {
-                    css(prev, {touchAction: '', userSelect: ''});
-                    css(handles, {touchAction: hasTouch ? 'none' : '', userSelect: 'none'}); // touchAction set to 'none' causes a performance drop in Chrome 80
-                },
-
-                immediate: true
-
-            }
-
-        },
-
-        update: {
-
-            write: function(data) {
-
-                if (!this.drag || !parent(this.placeholder)) {
-                    return;
-                }
-
-                var ref = this;
-                var ref_pos = ref.pos;
-                var x = ref_pos.x;
-                var y = ref_pos.y;
-                var ref_origin = ref.origin;
-                var offsetTop = ref_origin.offsetTop;
-                var offsetLeft = ref_origin.offsetLeft;
-                var placeholder = ref.placeholder;
-
-                css(this.drag, {
-                    top: y - offsetTop,
-                    left: x - offsetLeft
-                });
-
-                var sortable = this.getSortable(document.elementFromPoint(x, y));
-
-                if (!sortable) {
-                    return;
-                }
-
-                var items = sortable.items;
-
-                if (items.some(Transition.inProgress)) {
-                    return;
-                }
-
-                var target = findTarget(items, {x: x, y: y});
-
-                if (items.length && (!target || target === placeholder)) {
-                    return;
-                }
-
-                var previous = this.getSortable(placeholder);
-                var insertTarget = findInsertTarget(sortable.target, target, placeholder, x, y, sortable === previous && data.moved !== target);
-
-                if (insertTarget === false) {
-                    return;
-                }
-
-                if (insertTarget && placeholder === insertTarget) {
-                    return;
-                }
-
-                if (sortable !== previous) {
-                    previous.remove(placeholder);
-                    data.moved = target;
-                } else {
-                    delete data.moved;
-                }
-
-                sortable.insert(placeholder, insertTarget);
-
-                this.touched.add(sortable);
-            },
-
-            events: ['move']
-
-        },
-
-        methods: {
-
-            init: function(e) {
-
-                var target = e.target;
-                var button = e.button;
-                var defaultPrevented = e.defaultPrevented;
-                var ref = this.items.filter(function (el) { return within(target, el); });
-                var placeholder = ref[0];
-
-                if (!placeholder
-                    || defaultPrevented
-                    || button > 0
-                    || isInput(target)
-                    || within(target, ("." + (this.clsNoDrag)))
-                    || this.handle && !within(target, this.handle)
-                ) {
-                    return;
-                }
-
-                e.preventDefault();
-
-                this.touched = new Set([this]);
-                this.placeholder = placeholder;
-                this.origin = assign({target: target, index: index(placeholder)}, this.pos);
-
-                on(document, pointerMove, this.move);
-                on(document, pointerUp, this.end);
-
-                if (!this.threshold) {
-                    this.start(e);
-                }
-
-            },
-
-            start: function(e) {
-
-                this.drag = appendDrag(this.$container, this.placeholder);
-                var ref = this.placeholder.getBoundingClientRect();
-                var left = ref.left;
-                var top = ref.top;
-                assign(this.origin, {offsetLeft: this.pos.x - left, offsetTop: this.pos.y - top});
-
-                addClass(this.drag, this.clsDrag, this.clsCustom);
-                addClass(this.placeholder, this.clsPlaceholder);
-                addClass(this.items, this.clsItem);
-                addClass(document.documentElement, this.clsDragState);
-
-                trigger(this.$el, 'start', [this, this.placeholder]);
-
-                trackScroll(this.pos);
-
-                this.move(e);
-            },
-
-            move: function(e) {
-
-                if (this.drag) {
-                    this.$emit('move');
-                } else if (Math.abs(this.pos.x - this.origin.x) > this.threshold || Math.abs(this.pos.y - this.origin.y) > this.threshold) {
-                    this.start(e);
-                }
-
-            },
-
-            end: function() {
-                var this$1 = this;
-
-
-                off(document, pointerMove, this.move);
-                off(document, pointerUp, this.end);
-                off(window, 'scroll', this.scroll);
-
-                if (!this.drag) {
-                    return;
-                }
-
-                untrackScroll();
-
-                var sortable = this.getSortable(this.placeholder);
-
-                if (this === sortable) {
-                    if (this.origin.index !== index(this.placeholder)) {
-                        trigger(this.$el, 'moved', [this, this.placeholder]);
-                    }
-                } else {
-                    trigger(sortable.$el, 'added', [sortable, this.placeholder]);
-                    trigger(this.$el, 'removed', [this, this.placeholder]);
-                }
-
-                trigger(this.$el, 'stop', [this, this.placeholder]);
-
-                remove(this.drag);
-                this.drag = null;
-
-                this.touched.forEach(function (ref) {
-                        var clsPlaceholder = ref.clsPlaceholder;
-                        var clsItem = ref.clsItem;
-
-                        return this$1.touched.forEach(function (sortable) { return removeClass(sortable.items, clsPlaceholder, clsItem); }
-                    );
-                }
-                );
-                this.touched = null;
-                removeClass(document.documentElement, this.clsDragState);
-
-            },
-
-            insert: function(element, target) {
-                var this$1 = this;
-
-
-                addClass(this.items, this.clsItem);
-
-                var insert = function () { return target
-                    ? before(target, element)
-                    : append(this$1.target, element); };
-
-                if (this.animation) {
-                    this.animate(insert);
-                } else {
-                    insert();
-                }
-
-            },
-
-            remove: function(element) {
-
-                if (!within(element, this.target)) {
-                    return;
-                }
-
-                if (this.animation) {
-                    this.animate(function () { return remove(element); });
-                } else {
-                    remove(element);
-                }
-
-            },
-
-            getSortable: function(element) {
-                do {
-                    var sortable = this.$getComponent(element, 'sortable');
-
-                    if (sortable && (sortable === this || this.group !== false && sortable.group === this.group)) {
-                        return sortable;
-                    }
-                } while ((element = parent(element)));
-            }
-
-        }
-
-    };
-
-    var trackTimer;
-    function trackScroll(pos) {
-
-        var last = Date.now();
-        trackTimer = setInterval(function () {
-
-            var x = pos.x;
-            var y = pos.y;
-            y += window.pageYOffset;
-
-            var dist = (Date.now() - last) * .3;
-            last = Date.now();
-
-            scrollParents(document.elementFromPoint(x, pos.y)).reverse().some(function (scrollEl) {
-
-                var scroll = scrollEl.scrollTop;
-                var scrollHeight = scrollEl.scrollHeight;
-
-                var ref = offset(getViewport(scrollEl));
-                var top = ref.top;
-                var bottom = ref.bottom;
-                var height = ref.height;
-
-                if (top < y && top + 35 > y) {
-                    scroll -= dist;
-                } else if (bottom > y && bottom - 35 < y) {
-                    scroll += dist;
-                } else {
-                    return;
-                }
-
-                if (scroll > 0 && scroll < scrollHeight - height) {
-                    scrollTop(scrollEl, scroll);
-                    return true;
-                }
-
-            });
-
-        }, 15);
-
-    }
-
-    function untrackScroll() {
-        clearInterval(trackTimer);
-    }
-
-    function appendDrag(container, element) {
-        var clone = append(container, element.outerHTML.replace(/(^<)(?:li|tr)|(?:li|tr)(\/>$)/g, '$1div$2'));
-
-        css(clone, 'margin', '0', 'important');
-        css(clone, assign({
-            boxSizing: 'border-box',
-            width: element.offsetWidth,
-            height: element.offsetHeight
-        }, css(element, ['paddingLeft', 'paddingRight', 'paddingTop', 'paddingBottom'])));
-
-        height(clone.firstElementChild, height(element.firstElementChild));
-
-        return clone;
-    }
-
-    function findTarget(items, point) {
-        return items[findIndex(items, function (item) { return pointInRect(point, item.getBoundingClientRect()); })];
-    }
-
-    function findInsertTarget(list, target, placeholder, x, y, sameList) {
-
-        if (!children(list).length) {
-            return;
-        }
-
-        var rect = target.getBoundingClientRect();
-        if (!sameList) {
-
-            if (!isHorizontal(list, placeholder)) {
-                return y < rect.top + rect.height / 2
-                    ? target
-                    : target.nextElementSibling;
-            }
-
-            return target;
-        }
-
-        var placeholderRect = placeholder.getBoundingClientRect();
-        var sameRow = linesIntersect(
-            [rect.top, rect.bottom],
-            [placeholderRect.top, placeholderRect.bottom]
-        );
-
-        var pointerPos = sameRow ? x : y;
-        var lengthProp = sameRow ? 'width' : 'height';
-        var startProp = sameRow ? 'left' : 'top';
-        var endProp = sameRow ? 'right' : 'bottom';
-
-        var diff = placeholderRect[lengthProp] < rect[lengthProp] ? rect[lengthProp] - placeholderRect[lengthProp] : 0;
-
-        if (placeholderRect[startProp] < rect[startProp]) {
-
-            if (diff && pointerPos < rect[startProp] + diff) {
-                return false;
-            }
-
-            return target.nextElementSibling;
-        }
-
-        if (diff && pointerPos > rect[endProp] - diff) {
-            return false;
-        }
-
-        return target;
-    }
-
-    function isHorizontal(list, placeholder) {
-
-        var single = children(list).length === 1;
-
-        if (single) {
-            append(list, placeholder);
-        }
-
-        var items = children(list);
-        var isHorizontal = items.some(function (el, i) {
-            var rectA = el.getBoundingClientRect();
-            return items.slice(i + 1).some(function (el) {
-                var rectB = el.getBoundingClientRect();
-                return !linesIntersect([rectA.left, rectA.right], [rectB.left, rectB.right]);
-            });
-        });
-
-        if (single) {
-            remove(placeholder);
-        }
-
-        return isHorizontal;
-    }
-
-    function linesIntersect(lineA, lineB) {
-        return lineA[1] > lineB[0] && lineB[1] > lineA[0];
-    }
-
-    var obj$1;
-
-    var tooltip = {
-
-        mixins: [Container, Togglable, Position],
-
-        args: 'title',
-
-        props: {
-            delay: Number,
-            title: String
-        },
-
-        data: {
-            pos: 'top',
-            title: '',
-            delay: 0,
-            animation: ['uk-animation-scale-up'],
-            duration: 100,
-            cls: 'uk-active',
-            clsPos: 'uk-tooltip'
-        },
-
-        beforeConnect: function() {
-            this._hasTitle = hasAttr(this.$el, 'title');
-            attr(this.$el, 'title', '');
-            this.updateAria(false);
-            makeFocusable(this.$el);
-        },
-
-        disconnected: function() {
-            this.hide();
-            attr(this.$el, 'title', this._hasTitle ? this.title : null);
-        },
-
-        methods: {
-
-            show: function() {
-                var this$1 = this;
-
-
-                if (this.isToggled(this.tooltip) || !this.title) {
-                    return;
-                }
-
-                this._unbind = once(document, ("show keydown " + pointerDown), this.hide, false, function (e) { return e.type === pointerDown && !within(e.target, this$1.$el)
-                    || e.type === 'keydown' && e.keyCode === 27
-                    || e.type === 'show' && e.detail[0] !== this$1 && e.detail[0].$name === this$1.$name; }
-                );
-
-                clearTimeout(this.showTimer);
-                this.showTimer = setTimeout(this._show, this.delay);
-            },
-
-            hide: function() {
-                var this$1 = this;
-
-
-                if (matches(this.$el, 'input:focus')) {
-                    return;
-                }
-
-                clearTimeout(this.showTimer);
-
-                if (!this.isToggled(this.tooltip)) {
-                    return;
-                }
-
-                this.toggleElement(this.tooltip, false, false).then(function () {
-                    this$1.tooltip = remove(this$1.tooltip);
-                    this$1._unbind();
-                });
-            },
-
-            _show: function() {
-                var this$1 = this;
-
-
-                this.tooltip = append(this.container,
-                    ("<div class=\"" + (this.clsPos) + "\"> <div class=\"" + (this.clsPos) + "-inner\">" + (this.title) + "</div> </div>")
-                );
-
-                on(this.tooltip, 'toggled', function (e, toggled) {
-
-                    this$1.updateAria(toggled);
-
-                    if (!toggled) {
-                        return;
-                    }
-
-                    this$1.positionAt(this$1.tooltip, this$1.$el);
-
-                    this$1.origin = this$1.getAxis() === 'y'
-                        ? ((flipPosition(this$1.dir)) + "-" + (this$1.align))
-                        : ((this$1.align) + "-" + (flipPosition(this$1.dir)));
-                });
-
-                this.toggleElement(this.tooltip, true);
-
-            },
-
-            updateAria: function(toggled) {
-                attr(this.$el, 'aria-expanded', toggled);
-            }
-
-        },
-
-        events: ( obj$1 = {
-
-            focus: 'show',
-            blur: 'hide'
-
-        }, obj$1[(pointerEnter + " " + pointerLeave)] = function (e) {
-                if (!isTouch(e)) {
-                    this[e.type === pointerEnter ? 'show' : 'hide']();
-                }
-            }, obj$1[pointerDown] = function (e) {
-                if (isTouch(e)) {
-                    this.show();
-                }
-            }, obj$1 )
-
-    };
-
-    function makeFocusable(el) {
-        if (!isFocusable(el)) {
-            attr(el, 'tabindex', '0');
-        }
-    }
-
-    function isFocusable(el) {
-        return isInput(el) || matches(el, 'a,button') || hasAttr(el, 'tabindex');
-    }
-
-    var upload = {
-
-        props: {
-            allow: String,
-            clsDragover: String,
-            concurrent: Number,
-            maxSize: Number,
-            method: String,
-            mime: String,
-            msgInvalidMime: String,
-            msgInvalidName: String,
-            msgInvalidSize: String,
-            multiple: Boolean,
-            name: String,
-            params: Object,
-            type: String,
-            url: String
-        },
-
-        data: {
-            allow: false,
-            clsDragover: 'uk-dragover',
-            concurrent: 1,
-            maxSize: 0,
-            method: 'POST',
-            mime: false,
-            msgInvalidMime: 'Invalid File Type: %s',
-            msgInvalidName: 'Invalid File Name: %s',
-            msgInvalidSize: 'Invalid File Size: %s Kilobytes Max',
-            multiple: false,
-            name: 'files[]',
-            params: {},
-            type: '',
-            url: '',
-            abort: noop,
-            beforeAll: noop,
-            beforeSend: noop,
-            complete: noop,
-            completeAll: noop,
-            error: noop,
-            fail: noop,
-            load: noop,
-            loadEnd: noop,
-            loadStart: noop,
-            progress: noop
-        },
-
-        events: {
-
-            change: function(e) {
-
-                if (!matches(e.target, 'input[type="file"]')) {
-                    return;
-                }
-
-                e.preventDefault();
-
-                if (e.target.files) {
-                    this.upload(e.target.files);
-                }
-
-                e.target.value = '';
-            },
-
-            drop: function(e) {
-                stop(e);
-
-                var transfer = e.dataTransfer;
-
-                if (!transfer || !transfer.files) {
-                    return;
-                }
-
-                removeClass(this.$el, this.clsDragover);
-
-                this.upload(transfer.files);
-            },
-
-            dragenter: function(e) {
-                stop(e);
-            },
-
-            dragover: function(e) {
-                stop(e);
-                addClass(this.$el, this.clsDragover);
-            },
-
-            dragleave: function(e) {
-                stop(e);
-                removeClass(this.$el, this.clsDragover);
-            }
-
-        },
-
-        methods: {
-
-            upload: function(files) {
-                var this$1 = this;
-
-
-                if (!files.length) {
-                    return;
-                }
-
-                trigger(this.$el, 'upload', [files]);
-
-                for (var i = 0; i < files.length; i++) {
-
-                    if (this.maxSize && this.maxSize * 1000 < files[i].size) {
-                        this.fail(this.msgInvalidSize.replace('%s', this.maxSize));
-                        return;
-                    }
-
-                    if (this.allow && !match$1(this.allow, files[i].name)) {
-                        this.fail(this.msgInvalidName.replace('%s', this.allow));
-                        return;
-                    }
-
-                    if (this.mime && !match$1(this.mime, files[i].type)) {
-                        this.fail(this.msgInvalidMime.replace('%s', this.mime));
-                        return;
-                    }
-
-                }
-
-                if (!this.multiple) {
-                    files = [files[0]];
-                }
-
-                this.beforeAll(this, files);
-
-                var chunks = chunk(files, this.concurrent);
-                var upload = function (files) {
-
-                    var data = new FormData();
-
-                    files.forEach(function (file) { return data.append(this$1.name, file); });
-
-                    for (var key in this$1.params) {
-                        data.append(key, this$1.params[key]);
-                    }
-
-                    ajax(this$1.url, {
-                        data: data,
-                        method: this$1.method,
-                        responseType: this$1.type,
-                        beforeSend: function (env) {
-
-                            var xhr = env.xhr;
-                            xhr.upload && on(xhr.upload, 'progress', this$1.progress);
-                            ['loadStart', 'load', 'loadEnd', 'abort'].forEach(function (type) { return on(xhr, type.toLowerCase(), this$1[type]); }
-                            );
-
-                            return this$1.beforeSend(env);
-
-                        }
-                    }).then(
-                        function (xhr) {
-
-                            this$1.complete(xhr);
-
-                            if (chunks.length) {
-                                upload(chunks.shift());
-                            } else {
-                                this$1.completeAll(xhr);
-                            }
-
-                        },
-                        function (e) { return this$1.error(e); }
-                    );
-
-                };
-
-                upload(chunks.shift());
-
-            }
-
-        }
-
-    };
-
-    function match$1(pattern, path) {
-        return path.match(new RegExp(("^" + (pattern.replace(/\//g, '\\/').replace(/\*\*/g, '(\\/[^\\/]+)*').replace(/\*/g, '[^\\/]+').replace(/((?!\\))\?/g, '$1.')) + "$"), 'i'));
-    }
-
-    function chunk(files, size) {
-        var chunks = [];
-        for (var i = 0; i < files.length; i += size) {
-            var chunk = [];
-            for (var j = 0; j < size; j++) {
-                chunk.push(files[i + j]);
-            }
-            chunks.push(chunk);
-        }
-        return chunks;
-    }
-
-    function stop(e) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
+    // export {default as Countdown} from './countdown';
+    // export {default as SlideshowParallax} from './slideshow-parallax';
+    // export {default as Sortable} from './sortable';
+    // export {default as Tooltip} from './tooltip';
+    // export {default as Upload} from './upload';
 
     var components$1 = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        Countdown: countdown,
         Filter: filter$1,
         Lightbox: lightbox,
         LightboxPanel: LightboxPanel,
-        Notification: notification,
-        Parallax: parallax,
         Slider: slider,
         SliderParallax: sliderParallax,
-        Slideshow: slideshow,
-        SlideshowParallax: sliderParallax,
-        Sortable: sortable,
-        Tooltip: tooltip,
-        Upload: upload
+        Slideshow: slideshow
     });
 
     each(components$1, function (component, name) { return UIkit.component(name, component); }

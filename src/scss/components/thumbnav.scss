@@ -114,7 +114,22 @@ $thumbnav-margin-vertical:                       $thumbnav-margin-horizontal !de
 // Inverse
 // ========================================================================
 
+@mixin hook-inverse-component-thumbnav(){
 
+    .uk-thumbnav > * > * {
+        @if(mixin-exists(hook-inverse-thumbnav-item)) {@include hook-inverse-thumbnav-item();}
+    }
+
+    .uk-thumbnav > * > :hover,
+    .uk-thumbnav > * > :focus {
+        @if(mixin-exists(hook-inverse-thumbnav-item-hover)) {@include hook-inverse-thumbnav-item-hover();}
+    }
+
+    .uk-thumbnav > .uk-active > * {
+        @if(mixin-exists(hook-inverse-thumbnav-item-active)) {@include hook-inverse-thumbnav-item-active();}
+    }
+
+}
 
 // @mixin hook-inverse-thumbnav-item(){}
 // @mixin hook-inverse-thumbnav-item-hover(){}

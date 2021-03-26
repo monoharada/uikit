@@ -38,7 +38,10 @@ $table-striped-border:                           $global-border !default;
 
 // @mixin hook-table-divider(){}
 
-
+@mixin hook-table-striped(){
+    border-top: $table-striped-border-width solid $table-striped-border;
+    border-bottom: $table-striped-border-width solid $table-striped-border;
+}
 
 // @mixin hook-table-hover(){}
 
@@ -54,7 +57,11 @@ $table-striped-border:                           $global-border !default;
 // Miscellaneous
 // ========================================================================
 
+@mixin hook-table-misc(){
 
+    .uk-table tbody tr { transition: background-color 0.1s linear; }
+
+}
 
 
 // Inverse
@@ -64,5 +71,8 @@ $table-striped-border:                           $global-border !default;
 // @mixin hook-inverse-table-caption(){}
 // @mixin hook-inverse-table-row-active(){}
 // @mixin hook-inverse-table-divider(){}
-
+@mixin hook-inverse-table-striped(){
+    border-top-color: $inverse-global-border;
+    border-bottom-color: $inverse-global-border;
+}
 // @mixin hook-inverse-table-hover(){}

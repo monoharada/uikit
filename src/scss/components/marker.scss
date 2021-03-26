@@ -57,7 +57,21 @@ $inverse-marker-background:                   $global-muted-background !default;
 $inverse-marker-color:                        $global-color !default;
 $inverse-marker-hover-color:                  $global-color !default;
 
+@mixin hook-inverse-component-marker(){
 
+    .uk-marker {
+        background: $inverse-marker-background;
+        color: $inverse-marker-color;
+        @if(mixin-exists(hook-inverse-marker)) {@include hook-inverse-marker();}
+    }
+
+    .uk-marker:hover,
+    .uk-marker:focus {
+        color: $inverse-marker-hover-color;
+        @if(mixin-exists(hook-inverse-marker-hover)) {@include hook-inverse-marker-hover();}
+    }
+
+}
 
 // @mixin hook-inverse-marker(){}
 // @mixin hook-inverse-marker-hover(){}

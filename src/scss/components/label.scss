@@ -97,6 +97,14 @@ $label-danger-color:                             $global-inverse-color !default;
 $inverse-label-background:                      $inverse-global-primary-background !default;
 $inverse-label-color:                           $inverse-global-inverse-color !default;
 
+@mixin hook-inverse-component-label(){
 
+    .uk-label {
+        background-color: $inverse-label-background;
+        color: $inverse-label-color;
+        @if(mixin-exists(hook-inverse-label)) {@include hook-inverse-label();}
+    }
+
+}
 
 // @mixin hook-inverse-label(){}

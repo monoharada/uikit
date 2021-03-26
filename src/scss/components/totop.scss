@@ -64,7 +64,25 @@ $inverse-totop-color:                        $inverse-global-muted-color !defaul
 $inverse-totop-hover-color:                  $inverse-global-color !default;
 $inverse-totop-active-color:                 $inverse-global-emphasis-color !default;
 
+@mixin hook-inverse-component-totop(){
 
+    .uk-totop {
+        color: $inverse-totop-color;
+        @if(mixin-exists(hook-inverse-totop)) {@include hook-inverse-totop();}
+    }
+
+    .uk-totop:hover,
+    .uk-totop:focus {
+        color: $inverse-totop-hover-color;
+        @if(mixin-exists(hook-inverse-totop-hover)) {@include hook-inverse-totop-hover();}
+    }
+
+    .uk-totop:active {
+        color: $inverse-totop-active-color;
+        @if(mixin-exists(hook-inverse-totop-active)) {@include hook-inverse-totop-active();}
+    }
+
+}
 
 // @mixin hook-inverse-totop(){}
 // @mixin hook-inverse-totop-hover(){}
