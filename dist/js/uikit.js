@@ -1,4 +1,4 @@
-/* ! UIkit 3.6.19 | https://www.getuikit.com | (c) 2014 - 2021 YOOtheme | MIT License */
+/*! UIkit 3.6.19 | https://www.getuikit.com | (c) 2014 - 2021 YOOtheme | MIT License */
 
 (function (global, factory) {
   typeof exports === "object" && typeof module !== "undefined"
@@ -11,26 +11,26 @@
 })(this, function () {
   "use strict";
 
-  const objPrototype = Object.prototype;
-  const { hasOwnProperty } = objPrototype;
+  var objPrototype = Object.prototype;
+  var hasOwnProperty = objPrototype.hasOwnProperty;
 
   function hasOwn(obj, key) {
     return hasOwnProperty.call(obj, key);
   }
 
-  const hyphenateRe = /\B([A-Z])/g;
+  var hyphenateRe = /\B([A-Z])/g;
 
-  const hyphenate = memoize(function (str) {
+  var hyphenate = memoize(function (str) {
     return str.replace(hyphenateRe, "-$1").toLowerCase();
   });
 
-  const camelizeRe = /-(\w)/g;
+  var camelizeRe = /-(\w)/g;
 
-  const camelize = memoize(function (str) {
+  var camelize = memoize(function (str) {
     return str.replace(camelizeRe, toUpper);
   });
 
-  const ucfirst = memoize(function (str) {
+  var ucfirst = memoize(function (str) {
     return str.length ? toUpper(null, str.charAt(0)) + str.slice(1) : "";
   });
 
@@ -38,8 +38,8 @@
     return c ? c.toUpperCase() : "";
   }
 
-  const strPrototype = String.prototype;
-  const startsWithFn =
+  var strPrototype = String.prototype;
+  var startsWithFn =
     strPrototype.startsWith ||
     function (search) {
       return this.lastIndexOf(search, 0) === 0;
@@ -49,7 +49,7 @@
     return startsWithFn.call(str, search);
   }
 
-  const endsWithFn =
+  var endsWithFn =
     strPrototype.endsWith ||
     function (search) {
       return this.substr(-search.length) === search;
@@ -59,13 +59,13 @@
     return endsWithFn.call(str, search);
   }
 
-  const arrPrototype = Array.prototype;
+  var arrPrototype = Array.prototype;
 
-  const includesFn = function (search, i) {
+  var includesFn = function (search, i) {
     return !!~this.indexOf(search, i);
   };
-  const includesStr = strPrototype.includes || includesFn;
-  const includesArray = arrPrototype.includes || includesFn;
+  var includesStr = strPrototype.includes || includesFn;
+  var includesArray = arrPrototype.includes || includesFn;
 
   function includes(obj, search) {
     return (
@@ -73,12 +73,12 @@
     );
   }
 
-  const findIndexFn =
+  var findIndexFn =
     arrPrototype.findIndex ||
     function (predicate) {
-      const arguments$1 = arguments;
+      var arguments$1 = arguments;
 
-      for (let i = 0; i < this.length; i++) {
+      for (var i = 0; i < this.length; i++) {
         if (predicate.call(arguments$1[1], this[i], i, this)) {
           return i;
         }
@@ -90,7 +90,7 @@
     return findIndexFn.call(array, predicate);
   }
 
-  const { isArray } = Array;
+  var isArray = Array.isArray;
 
   function isFunction(obj) {
     return typeof obj === "function";
@@ -100,7 +100,7 @@
     return obj !== null && typeof obj === "object";
   }
 
-  const { toString } = objPrototype;
+  var toString = objPrototype.toString;
   function isPlainObject(obj) {
     return toString.call(obj) === "[object Object]";
   }
@@ -166,7 +166,7 @@
   }
 
   function toNumber(value) {
-    const number = Number(value);
+    var number = Number(value);
     return !isNaN(number) ? number : false;
   }
 
@@ -174,7 +174,7 @@
     return parseFloat(value) || 0;
   }
 
-  const toArray =
+  var toArray =
     Array.from ||
     function (value) {
       return arrPrototype.slice.call(value);
@@ -230,18 +230,18 @@
     });
   }
 
-  const assign =
+  var assign =
     Object.assign ||
     function (target) {
-      let args = [],
+      var args = [],
         len = arguments.length - 1;
       while (len-- > 0) args[len] = arguments[len + 1];
 
       target = Object(target);
-      for (let i = 0; i < args.length; i++) {
-        const source = args[i];
+      for (var i = 0; i < args.length; i++) {
+        var source = args[i];
         if (source !== null) {
-          for (const key in source) {
+          for (var key in source) {
             if (hasOwn(source, key)) {
               target[key] = source[key];
             }
@@ -256,7 +256,7 @@
   }
 
   function each(obj, cb) {
-    for (const key in obj) {
+    for (var key in obj) {
       if (false === cb(obj[key], key)) {
         return false;
       }
@@ -266,9 +266,9 @@
 
   function sortBy(array, prop) {
     return array.slice().sort(function (ref, ref$1) {
-      let propA = ref[prop];
+      var propA = ref[prop];
       if (propA === void 0) propA = 0;
-      let propB = ref$1[prop];
+      var propB = ref$1[prop];
       if (propB === void 0) propB = 0;
 
       return propA > propB ? 1 : propB > propA ? -1 : 0;
@@ -276,10 +276,10 @@
   }
 
   function uniqueBy(array, prop) {
-    const seen = new Set();
+    var seen = new Set();
     return array.filter(
       function (ref) {
-        const check = ref[prop];
+        var check = ref[prop];
 
         return seen.has(check) ? false : seen.add(check) || true;
       } // IE 11 does not return the Set object
@@ -296,7 +296,7 @@
   function noop() {}
 
   function intersectRect() {
-    let rects = [],
+    var rects = [],
       len = arguments.length;
     while (len--) rects[len] = arguments[len];
 
@@ -304,14 +304,14 @@
       ["bottom", "top"],
       ["right", "left"],
     ].every(function (ref) {
-      const minProp = ref[0];
-      const maxProp = ref[1];
+      var minProp = ref[0];
+      var maxProp = ref[1];
 
       return (
         Math.min.apply(
           Math,
           rects.map(function (ref) {
-            const min = ref[minProp];
+            var min = ref[minProp];
 
             return min;
           })
@@ -319,7 +319,7 @@
           Math.max.apply(
             Math,
             rects.map(function (ref) {
-              const max = ref[maxProp];
+              var max = ref[maxProp];
 
               return max;
             })
@@ -338,11 +338,11 @@
     );
   }
 
-  const Dimensions = {
-    ratio(dimensions, prop, value) {
-      let obj;
+  var Dimensions = {
+    ratio: function (dimensions, prop, value) {
+      var obj;
 
-      const aProp = prop === "width" ? "height" : "width";
+      var aProp = prop === "width" ? "height" : "width";
 
       return (
         (obj = {}),
@@ -354,8 +354,8 @@
       );
     },
 
-    contain(dimensions, maxDimensions) {
-      const this$1 = this;
+    contain: function (dimensions, maxDimensions) {
+      var this$1 = this;
 
       dimensions = assign({}, dimensions);
 
@@ -369,8 +369,8 @@
       return dimensions;
     },
 
-    cover(dimensions, maxDimensions) {
-      const this$1 = this;
+    cover: function (dimensions, maxDimensions) {
+      var this$1 = this;
 
       dimensions = this.contain(dimensions, maxDimensions);
 
@@ -391,7 +391,7 @@
 
     elements = toNodes(elements);
 
-    const { length } = elements;
+    var length = elements.length;
 
     i = isNumeric(i)
       ? toNumber(i)
@@ -411,7 +411,7 @@
   }
 
   function memoize(fn) {
-    const cache = Object.create(null);
+    var cache = Object.create(null);
     return function (key) {
       return cache[key] || (cache[key] = fn(key));
     };
@@ -419,7 +419,7 @@
 
   function attr(element, name, value) {
     if (isObject(name)) {
-      for (const key in name) {
+      for (var key in name) {
         attr(element, key, name[key]);
       }
       return;
@@ -460,7 +460,7 @@
 
   function data(element, attribute) {
     for (
-      let i = 0, attrs = [attribute, "data-" + attribute];
+      var i = 0, attrs = [attribute, "data-" + attribute];
       i < attrs.length;
       i++
     ) {
@@ -472,46 +472,46 @@
 
   /* global DocumentTouch */
 
-  const inBrowser = typeof window !== "undefined";
-  const isIE = inBrowser && /msie|trident/i.test(window.navigator.userAgent);
-  const isRtl = inBrowser && attr(document.documentElement, "dir") === "rtl";
+  var inBrowser = typeof window !== "undefined";
+  var isIE = inBrowser && /msie|trident/i.test(window.navigator.userAgent);
+  var isRtl = inBrowser && attr(document.documentElement, "dir") === "rtl";
 
-  const hasTouchEvents = inBrowser && "ontouchstart" in window;
-  const hasPointerEvents = inBrowser && window.PointerEvent;
-  const hasTouch =
+  var hasTouchEvents = inBrowser && "ontouchstart" in window;
+  var hasPointerEvents = inBrowser && window.PointerEvent;
+  var hasTouch =
     inBrowser &&
     (hasTouchEvents ||
       (window.DocumentTouch && document instanceof DocumentTouch) ||
       navigator.maxTouchPoints); // IE >=11
 
-  const pointerDown = hasPointerEvents
+  var pointerDown = hasPointerEvents
     ? "pointerdown"
     : hasTouchEvents
     ? "touchstart"
     : "mousedown";
-  const pointerMove = hasPointerEvents
+  var pointerMove = hasPointerEvents
     ? "pointermove"
     : hasTouchEvents
     ? "touchmove"
     : "mousemove";
-  const pointerUp = hasPointerEvents
+  var pointerUp = hasPointerEvents
     ? "pointerup"
     : hasTouchEvents
     ? "touchend"
     : "mouseup";
-  const pointerEnter = hasPointerEvents
+  var pointerEnter = hasPointerEvents
     ? "pointerenter"
     : hasTouchEvents
     ? ""
     : "mouseenter";
-  const pointerLeave = hasPointerEvents
+  var pointerLeave = hasPointerEvents
     ? "pointerleave"
     : hasTouchEvents
     ? ""
     : "mouseleave";
-  const pointerCancel = hasPointerEvents ? "pointercancel" : "touchcancel";
+  var pointerCancel = hasPointerEvents ? "pointercancel" : "touchcancel";
 
-  const voidElements = {
+  var voidElements = {
     area: true,
     base: true,
     br: true,
@@ -545,7 +545,7 @@
     });
   }
 
-  const selInput = "input,select,textarea,button";
+  var selInput = "input,select,textarea,button";
   function isInput(element) {
     return toNodes(element).some(function (element) {
       return matches(element, selInput);
@@ -563,8 +563,8 @@
     });
   }
 
-  const elProto = inBrowser ? Element.prototype : {};
-  const matchesFn =
+  var elProto = inBrowser ? Element.prototype : {};
+  var matchesFn =
     elProto.matches ||
     elProto.webkitMatchesSelector ||
     elProto.msMatchesSelector ||
@@ -576,10 +576,10 @@
     });
   }
 
-  const closestFn =
+  var closestFn =
     elProto.closest ||
     function (selector) {
-      let ancestor = this;
+      var ancestor = this;
 
       do {
         if (matches(ancestor, selector)) {
@@ -613,7 +613,7 @@
   }
 
   function parents(element, selector) {
-    const elements = [];
+    var elements = [];
 
     while ((element = parent(element))) {
       if (!selector || matches(element, selector)) {
@@ -626,7 +626,7 @@
 
   function children(element, selector) {
     element = toNode(element);
-    const children = element ? toNodes(element.children) : [];
+    var children = element ? toNodes(element.children) : [];
     return selector ? filter(children, selector) : children;
   }
 
@@ -641,7 +641,7 @@
   }
 
   function queryAll(selector, context) {
-    const nodes = toNodes(selector);
+    var nodes = toNodes(selector);
     return (
       (nodes.length && nodes) ||
       findAll(selector, getContext(selector, context))
@@ -677,17 +677,17 @@
     if (isContextSelector(selector)) {
       selector = splitSelector(selector)
         .map(function (selector, i) {
-          let ctx = context;
+          var ctx = context;
 
           if (selector[0] === "!") {
-            const selectors = selector.substr(1).trim().split(" ");
+            var selectors = selector.substr(1).trim().split(" ");
             ctx = closest(parent(context), selectors[0]);
             selector = selectors.slice(1).join(" ").trim();
           }
 
           if (selector[0] === "-") {
-            const selectors$1 = selector.substr(1).trim().split(" ");
-            const prev = (ctx || context).previousElementSibling;
+            var selectors$1 = selector.substr(1).trim().split(" ");
+            var prev = (ctx || context).previousElementSibling;
             ctx = matches(prev, selector.substr(1)) ? prev : null;
             selector = selectors$1.slice(1).join(" ");
           }
@@ -711,14 +711,14 @@
     }
   }
 
-  const contextSelectorRe = /(^|[^\\],)\s*[!>+~-]/;
+  var contextSelectorRe = /(^|[^\\],)\s*[!>+~-]/;
   var contextSanitizeRe = /([!>+~-])(?=\s+[!>+~-]|\s*$)/g;
 
   var isContextSelector = memoize(function (selector) {
     return selector.match(contextSelectorRe);
   });
 
-  const selectorRe = /.*?[^\\](?:,|$)/g;
+  var selectorRe = /.*?[^\\](?:,|$)/g;
 
   var splitSelector = memoize(function (selector) {
     return selector.match(selectorRe).map(function (selector) {
@@ -727,13 +727,13 @@
   });
 
   function domPath(element) {
-    const names = [];
+    var names = [];
     while (element.parentNode) {
       if (element.id) {
         names.unshift("#" + escape(element.id));
         break;
       } else {
-        let { tagName } = element;
+        var tagName = element.tagName;
         if (tagName !== "HTML") {
           tagName += ":nth-child(" + (index(element) + 1) + ")";
         }
@@ -744,7 +744,7 @@
     return names.join(" > ");
   }
 
-  const escapeFn =
+  var escapeFn =
     (inBrowser && window.CSS && CSS.escape) ||
     function (css) {
       return css.replace(/([^\x7f-\uFFFF\w-])/g, function (match) {
@@ -756,16 +756,16 @@
   }
 
   function on() {
-    let args = [],
+    var args = [],
       len = arguments.length;
     while (len--) args[len] = arguments[len];
 
-    const ref = getArgs(args);
-    let targets = ref[0];
-    const type = ref[1];
-    const selector = ref[2];
-    let listener = ref[3];
-    let useCapture = ref[4];
+    var ref = getArgs(args);
+    var targets = ref[0];
+    var type = ref[1];
+    var selector = ref[2];
+    var listener = ref[3];
+    var useCapture = ref[4];
 
     targets = toEventTargets(targets);
 
@@ -806,23 +806,23 @@
   }
 
   function once() {
-    let args = [],
+    var args = [],
       len = arguments.length;
     while (len--) args[len] = arguments[len];
 
-    const ref = getArgs(args);
-    const element = ref[0];
-    const type = ref[1];
-    const selector = ref[2];
-    const listener = ref[3];
-    const useCapture = ref[4];
-    const condition = ref[5];
+    var ref = getArgs(args);
+    var element = ref[0];
+    var type = ref[1];
+    var selector = ref[2];
+    var listener = ref[3];
+    var useCapture = ref[4];
+    var condition = ref[5];
     var off = on(
       element,
       type,
       selector,
       function (e) {
-        const result = !condition || condition(e);
+        var result = !condition || condition(e);
         if (result) {
           off();
           listener(e, result);
@@ -848,7 +848,7 @@
     if (cancelable === void 0) cancelable = false;
 
     if (isString(e)) {
-      const event = document.createEvent("CustomEvent"); // IE 11
+      var event = document.createEvent("CustomEvent"); // IE 11
       event.initCustomEvent(e, bubbles, cancelable, detail);
       e = event;
     }
@@ -864,10 +864,10 @@
   }
 
   function delegate(selector, listener) {
-    const this$1 = this;
+    var this$1 = this;
 
     return function (e) {
-      const current =
+      var current =
         selector[0] === ">"
           ? findAll(selector, e.currentTarget)
               .reverse()
@@ -926,22 +926,22 @@
   }
 
   function getEventPos(e) {
-    const { touches } = e;
-    const { changedTouches } = e;
-    const ref =
+    var touches = e.touches;
+    var changedTouches = e.changedTouches;
+    var ref =
       (touches && touches[0]) || (changedTouches && changedTouches[0]) || e;
-    const x = ref.clientX;
-    const y = ref.clientY;
+    var x = ref.clientX;
+    var y = ref.clientY;
 
-    return { x, y };
+    return { x: x, y: y };
   }
 
   /* global setImmediate */
 
-  const Promise = (inBrowser && window.Promise) || PromiseFn;
+  var Promise = (inBrowser && window.Promise) || PromiseFn;
 
-  const Deferred = function () {
-    const this$1 = this;
+  var Deferred = function () {
+    var this$1 = this;
 
     this.promise = new Promise(function (resolve, reject) {
       this$1.reject = reject;
@@ -953,18 +953,18 @@
    * Promises/A+ polyfill v1.1.4 (https://github.com/bramstein/promis)
    */
 
-  const RESOLVED = 0;
-  const REJECTED = 1;
-  const PENDING = 2;
+  var RESOLVED = 0;
+  var REJECTED = 1;
+  var PENDING = 2;
 
-  const async = (inBrowser && window.setImmediate) || setTimeout;
+  var async = (inBrowser && window.setImmediate) || setTimeout;
 
   function PromiseFn(executor) {
     this.state = PENDING;
     this.value = undefined;
     this.deferred = [];
 
-    const promise = this;
+    var promise = this;
 
     try {
       executor(
@@ -994,8 +994,8 @@
 
   PromiseFn.all = function all(iterable) {
     return new PromiseFn(function (resolve, reject) {
-      const result = [];
-      let count = 0;
+      var result = [];
+      var count = 0;
 
       if (iterable.length === 0) {
         resolve(result);
@@ -1012,7 +1012,7 @@
         };
       }
 
-      for (let i = 0; i < iterable.length; i += 1) {
+      for (var i = 0; i < iterable.length; i += 1) {
         PromiseFn.resolve(iterable[i]).then(resolver(i), reject);
       }
     });
@@ -1020,26 +1020,26 @@
 
   PromiseFn.race = function race(iterable) {
     return new PromiseFn(function (resolve, reject) {
-      for (let i = 0; i < iterable.length; i += 1) {
+      for (var i = 0; i < iterable.length; i += 1) {
         PromiseFn.resolve(iterable[i]).then(resolve, reject);
       }
     });
   };
 
-  const p = PromiseFn.prototype;
+  var p = PromiseFn.prototype;
 
   p.resolve = function resolve(x) {
-    const promise = this;
+    var promise = this;
 
     if (promise.state === PENDING) {
       if (x === promise) {
         throw new TypeError("Promise settled with itself.");
       }
 
-      let called = false;
+      var called = false;
 
       try {
-        const then = x && x.then;
+        var then = x && x.then;
 
         if (x !== null && isObject(x) && isFunction(then)) {
           then.call(
@@ -1073,7 +1073,7 @@
   };
 
   p.reject = function reject(reason) {
-    const promise = this;
+    var promise = this;
 
     if (promise.state === PENDING) {
       if (reason === promise) {
@@ -1087,16 +1087,16 @@
   };
 
   p.notify = function notify() {
-    const this$1 = this;
+    var this$1 = this;
 
     async(function () {
       if (this$1.state !== PENDING) {
         while (this$1.deferred.length) {
-          const ref = this$1.deferred.shift();
-          const onResolved = ref[0];
-          const onRejected = ref[1];
-          const resolve = ref[2];
-          const reject = ref[3];
+          var ref = this$1.deferred.shift();
+          var onResolved = ref[0];
+          var onRejected = ref[1];
+          var resolve = ref[2];
+          var reject = ref[3];
 
           try {
             if (this$1.state === RESOLVED) {
@@ -1121,7 +1121,7 @@
   };
 
   p.then = function then(onResolved, onRejected) {
-    const this$1 = this;
+    var this$1 = this;
 
     return new PromiseFn(function (resolve, reject) {
       this$1.deferred.push([onResolved, onRejected, resolve, reject]);
@@ -1134,7 +1134,7 @@
   };
 
   function ajax(url, options) {
-    const env = assign(
+    var env = assign(
       {
         data: null,
         method: "GET",
@@ -1157,9 +1157,9 @@
 
   function send(url, env) {
     return new Promise(function (resolve, reject) {
-      let { xhr } = env;
+      var xhr = env.xhr;
 
-      for (const prop in env) {
+      for (var prop in env) {
         if (prop in xhr) {
           try {
             xhr[prop] = env[prop];
@@ -1169,7 +1169,7 @@
 
       xhr.open(env.method.toUpperCase(), url);
 
-      for (const header in env.headers) {
+      for (var header in env.headers) {
         xhr.setRequestHeader(header, env.headers[header]);
       }
 
@@ -1188,7 +1188,7 @@
         } else {
           reject(
             assign(Error(xhr.statusText), {
-              xhr,
+              xhr: xhr,
               status: xhr.status,
             })
           );
@@ -1196,10 +1196,10 @@
       });
 
       on(xhr, "error", function () {
-        return reject(assign(Error("Network Error"), { xhr }));
+        return reject(assign(Error("Network Error"), { xhr: xhr }));
       });
       on(xhr, "timeout", function () {
-        return reject(assign(Error("Network Timeout"), { xhr }));
+        return reject(assign(Error("Network Timeout"), { xhr: xhr }));
       });
 
       xhr.send(env.data);
@@ -1208,7 +1208,7 @@
 
   function getImage(src, srcset, sizes) {
     return new Promise(function (resolve, reject) {
-      const img = new Image();
+      var img = new Image();
 
       img.onerror = function (e) {
         return reject(e);
@@ -1224,8 +1224,8 @@
   }
 
   function copyXhr(source) {
-    const target = {};
-    for (const key in source) {
+    var target = {};
+    for (var key in source) {
       target[key] = source[key];
     }
     return target;
@@ -1340,16 +1340,16 @@
       });
   }
 
-  const fragmentRe = /^\s*<(\w+|!)[^>]*>/;
-  const singleTagRe = /^<(\w+)\s*\/?>(?:<\/\1>)?$/;
+  var fragmentRe = /^\s*<(\w+|!)[^>]*>/;
+  var singleTagRe = /^<(\w+)\s*\/?>(?:<\/\1>)?$/;
 
   function fragment(html) {
-    const matches = singleTagRe.exec(html);
+    var matches = singleTagRe.exec(html);
     if (matches) {
       return document.createElement(matches[1]);
     }
 
-    const container = document.createElement("div");
+    var container = document.createElement("div");
     if (fragmentRe.test(html)) {
       container.insertAdjacentHTML("beforeend", html.trim());
     } else {
@@ -1369,7 +1369,7 @@
     fn(node);
     node = node.firstElementChild;
     while (node) {
-      const next = node.nextElementSibling;
+      var next = node.nextElementSibling;
       apply(node, fn);
       node = next;
     }
@@ -1396,7 +1396,7 @@
   }
 
   function addClass(element) {
-    let args = [],
+    var args = [],
       len = arguments.length - 1;
     while (len-- > 0) args[len] = arguments[len + 1];
 
@@ -1404,7 +1404,7 @@
   }
 
   function removeClass(element) {
-    let args = [],
+    var args = [],
       len = arguments.length - 1;
     while (len-- > 0) args[len] = arguments[len + 1];
 
@@ -1418,7 +1418,7 @@
   }
 
   function replaceClass(element) {
-    let args = [],
+    var args = [],
       len = arguments.length - 1;
     while (len-- > 0) args[len] = arguments[len + 1];
 
@@ -1427,11 +1427,11 @@
   }
 
   function hasClass(element, cls) {
-    let assign;
+    var assign;
 
     (assign = getClasses(cls)), (cls = assign[0]);
-    const nodes = toNodes(element);
-    for (let n = 0; n < nodes.length; n++) {
+    var nodes = toNodes(element);
+    for (var n = 0; n < nodes.length; n++) {
       if (cls && nodes[n].classList.contains(cls)) {
         return true;
       }
@@ -1442,10 +1442,10 @@
   function toggleClass(element, cls, force) {
     cls = getClasses(cls);
 
-    const nodes = toNodes(element);
-    for (let n = 0; n < nodes.length; n++) {
-      const list = nodes[n].classList;
-      for (let i = 0; i < cls.length; i++) {
+    var nodes = toNodes(element);
+    for (var n = 0; n < nodes.length; n++) {
+      var list = nodes[n].classList;
+      for (var i = 0; i < cls.length; i++) {
         if (isUndefined(force)) {
           list.toggle(cls[i]);
         } else if (supports.Force) {
@@ -1458,14 +1458,14 @@
   }
 
   function apply$1(element, args, fn) {
-    let ref;
+    var ref;
 
     args = args.reduce(function (args, arg) {
       return args.concat(getClasses(arg));
     }, []);
 
-    const nodes = toNodes(element);
-    const loop = function (n) {
+    var nodes = toNodes(element);
+    var loop = function (n) {
       if (supports.Multiple) {
         (ref = nodes[n].classList)[fn].apply(ref, args);
       } else {
@@ -1475,7 +1475,7 @@
       }
     };
 
-    for (let n = 0; n < nodes.length; n++) loop(n);
+    for (var n = 0; n < nodes.length; n++) loop(n);
   }
 
   function getClasses(str) {
@@ -1493,9 +1493,9 @@
       return this.get("Force");
     },
 
-    get(key) {
-      const ref = document.createElement("_");
-      const { classList } = ref;
+    get: function (key) {
+      var ref = document.createElement("_");
+      var classList = ref.classList;
       classList.add("a", "b");
       classList.toggle("c", false);
       supports = {
@@ -1507,7 +1507,7 @@
     },
   };
 
-  const cssNumber = {
+  var cssNumber = {
     "animation-iteration-count": true,
     "column-count": true,
     "fill-opacity": true,
@@ -1544,7 +1544,7 @@
           );
         }
       } else if (isArray(property)) {
-        const styles = getStyles(element);
+        var styles = getStyles(element);
 
         return property.reduce(function (props, property) {
           props[property] = styles[propName(property)];
@@ -1569,10 +1569,10 @@
     return getStyles(element, pseudoElt)[property];
   }
 
-  const parseCssVar = memoize(function (name) {
+  var parseCssVar = memoize(function (name) {
     /* usage in css: .mod-name:before { content:"xyz" } */
 
-    const element = append(
+    var element = append(
       document.documentElement,
       document.createElement("div")
     );
@@ -1600,19 +1600,19 @@
     return vendorPropName(name);
   });
 
-  const cssPrefixes = ["webkit", "moz", "ms"];
+  var cssPrefixes = ["webkit", "moz", "ms"];
 
   function vendorPropName(name) {
     name = hyphenate(name);
 
-    const ref = document.documentElement;
-    const { style } = ref;
+    var ref = document.documentElement;
+    var style = ref.style;
 
     if (name in style) {
       return name;
     }
 
-    let i = cssPrefixes.length,
+    var i = cssPrefixes.length,
       prefixedName;
 
     while (i--) {
@@ -1630,14 +1630,14 @@
     return Promise.all(
       toNodes(element).map(function (element) {
         return new Promise(function (resolve, reject) {
-          for (const name in props) {
-            const value = css(element, name);
+          for (var name in props) {
+            var value = css(element, name);
             if (value === "") {
               css(element, name, value);
             }
           }
 
-          const timer = setTimeout(function () {
+          var timer = setTimeout(function () {
             return trigger(element, "transitionend");
           }, duration);
 
@@ -1645,7 +1645,7 @@
             element,
             "transitionend transitioncanceled",
             function (ref) {
-              const { type } = ref;
+              var type = ref.type;
 
               clearTimeout(timer);
               removeClass(element, "mod-transition");
@@ -1676,24 +1676,24 @@
     );
   }
 
-  const Transition = {
+  var Transition = {
     start: transition,
 
-    stop(element) {
+    stop: function (element) {
       trigger(element, "transitionend");
       return Promise.resolve();
     },
 
-    cancel(element) {
+    cancel: function (element) {
       trigger(element, "transitioncanceled");
     },
 
-    inProgress(element) {
+    inProgress: function (element) {
       return hasClass(element, "mod-transition");
     },
   };
 
-  const animationPrefix = "mod-animation-";
+  var animationPrefix = "mod-animation-";
 
   function animate(element, animation, duration, origin, out) {
     if (duration === void 0) duration = 200;
@@ -1702,7 +1702,7 @@
       toNodes(element).map(function (element) {
         return new Promise(function (resolve, reject) {
           trigger(element, "animationcanceled");
-          const timer = setTimeout(function () {
+          var timer = setTimeout(function () {
             return trigger(element, "animationend");
           }, duration);
 
@@ -1710,7 +1710,7 @@
             element,
             "animationend animationcanceled",
             function (ref) {
-              const { type } = ref;
+              var type = ref.type;
 
               clearTimeout(timer);
 
@@ -1738,30 +1738,30 @@
     );
   }
 
-  const inProgress = new RegExp(animationPrefix + "(enter|leave)");
-  const Animation = {
+  var inProgress = new RegExp(animationPrefix + "(enter|leave)");
+  var Animation = {
     in: animate,
 
-    out(element, animation, duration, origin) {
+    out: function (element, animation, duration, origin) {
       return animate(element, animation, duration, origin, true);
     },
 
-    inProgress(element) {
+    inProgress: function (element) {
       return inProgress.test(attr(element, "class"));
     },
 
-    cancel(element) {
+    cancel: function (element) {
       trigger(element, "animationcanceled");
     },
   };
 
-  const dirs = {
+  var dirs = {
     width: ["left", "right"],
     height: ["top", "bottom"],
   };
 
   function dimensions(element) {
-    const rect = isElement(element)
+    var rect = isElement(element)
       ? toNode(element).getBoundingClientRect()
       : { height: height(element), width: width(element), top: 0, left: 0 };
 
@@ -1776,14 +1776,14 @@
   }
 
   function offset(element, coordinates) {
-    const currentOffset = dimensions(element);
-    const ref = toWindow(element);
-    const { pageYOffset } = ref;
-    const { pageXOffset } = ref;
-    const offsetBy = { height: pageYOffset, width: pageXOffset };
+    var currentOffset = dimensions(element);
+    var ref = toWindow(element);
+    var pageYOffset = ref.pageYOffset;
+    var pageXOffset = ref.pageXOffset;
+    var offsetBy = { height: pageYOffset, width: pageXOffset };
 
-    for (const dir in dirs) {
-      for (const i in dirs[dir]) {
+    for (var dir in dirs) {
+      for (var i in dirs[dir]) {
         currentOffset[dirs[dir][i]] += offsetBy[dir];
       }
     }
@@ -1792,7 +1792,7 @@
       return currentOffset;
     }
 
-    const pos = css(element, "position");
+    var pos = css(element, "position");
 
     each(css(element, ["left", "top"]), function (value, prop) {
       return css(
@@ -1810,16 +1810,16 @@
   }
 
   function position(element) {
-    const ref = offset(element);
-    let { top } = ref;
-    let { left } = ref;
+    var ref = offset(element);
+    var top = ref.top;
+    var left = ref.left;
 
-    const ref$1 = toNode(element);
-    const ref$1_ownerDocument = ref$1.ownerDocument;
-    const { body } = ref$1_ownerDocument;
-    const { documentElement } = ref$1_ownerDocument;
-    const { offsetParent } = ref$1;
-    let parent = offsetParent || documentElement;
+    var ref$1 = toNode(element);
+    var ref$1_ownerDocument = ref$1.ownerDocument;
+    var body = ref$1_ownerDocument.body;
+    var documentElement = ref$1_ownerDocument.documentElement;
+    var offsetParent = ref$1.offsetParent;
+    var parent = offsetParent || documentElement;
 
     while (
       parent &&
@@ -1830,7 +1830,7 @@
     }
 
     if (isElement(parent)) {
-      const parentOffset = offset(parent);
+      var parentOffset = offset(parent);
       top -= parentOffset.top + toFloat(css(parent, "borderTopWidth"));
       left -= parentOffset.left + toFloat(css(parent, "borderLeftWidth"));
     }
@@ -1842,7 +1842,7 @@
   }
 
   function offsetPosition(element) {
-    const offset = [0, 0];
+    var offset = [0, 0];
 
     element = toNode(element);
 
@@ -1851,7 +1851,7 @@
       offset[1] += element.offsetLeft;
 
       if (css(element, "position") === "fixed") {
-        const win = toWindow(element);
+        var win = toWindow(element);
         offset[0] += win.pageYOffset;
         offset[1] += win.pageXOffset;
         return offset;
@@ -1865,7 +1865,7 @@
   var width = dimension("width");
 
   function dimension(prop) {
-    const propName = ucfirst(prop);
+    var propName = ucfirst(prop);
     return function (element, value) {
       if (isUndefined(value)) {
         if (isWindow(element)) {
@@ -1873,7 +1873,7 @@
         }
 
         if (isDocument(element)) {
-          const doc = element.documentElement;
+          var doc = element.documentElement;
           return Math.max(doc["offset" + propName], doc["scroll" + propName]);
         }
 
@@ -1911,8 +1911,8 @@
   }
 
   function flipPosition(pos) {
-    for (const dir in dirs) {
-      for (const i in dirs[dir]) {
+    for (var dir in dirs) {
+      for (var i in dirs[dir]) {
         if (dirs[dir][i] === pos) {
           return dirs[dir][1 - i];
         }
@@ -1946,28 +1946,28 @@
         https://github.com/wilsonpage/fastdom
     */
 
-  const fastdom = {
+  var fastdom = {
     reads: [],
     writes: [],
 
-    read(task) {
+    read: function (task) {
       this.reads.push(task);
       scheduleFlush();
       return task;
     },
 
-    write(task) {
+    write: function (task) {
       this.writes.push(task);
       scheduleFlush();
       return task;
     },
 
-    clear(task) {
+    clear: function (task) {
       remove$1(this.reads, task);
       remove$1(this.writes, task);
     },
 
-    flush,
+    flush: flush,
   };
 
   function flush(recursion) {
@@ -1983,7 +1983,7 @@
     }
   }
 
-  const RECURSION_LIMIT = 4;
+  var RECURSION_LIMIT = 4;
   function scheduleFlush(recursion) {
     if (fastdom.scheduled) {
       return;
@@ -2002,7 +2002,7 @@
   }
 
   function runTasks(tasks) {
-    let task;
+    var task;
     while ((task = tasks.shift())) {
       try {
         task();
@@ -2013,7 +2013,7 @@
   }
 
   function remove$1(array, item) {
-    const index = array.indexOf(item);
+    var index = array.indexOf(item);
     return ~index && array.splice(index, 1);
   }
 
@@ -2022,12 +2022,12 @@
   MouseTracker.prototype = {
     positions: [],
 
-    init() {
-      const this$1 = this;
+    init: function () {
+      var this$1 = this;
 
       this.positions = [];
 
-      let position;
+      var position;
       this.unbind = on(document, "mousemove", function (e) {
         return (position = getEventPos(e));
       });
@@ -2044,32 +2044,32 @@
       }, 50);
     },
 
-    cancel() {
+    cancel: function () {
       this.unbind && this.unbind();
       this.interval && clearInterval(this.interval);
     },
 
-    movesTo(target) {
+    movesTo: function (target) {
       if (this.positions.length < 2) {
         return false;
       }
 
-      const p = target.getBoundingClientRect();
-      const { left } = p;
-      const { right } = p;
-      const { top } = p;
-      const { bottom } = p;
+      var p = target.getBoundingClientRect();
+      var left = p.left;
+      var right = p.right;
+      var top = p.top;
+      var bottom = p.bottom;
 
-      const ref = this.positions;
-      const prevPosition = ref[0];
-      const position = last(this.positions);
-      const path = [prevPosition, position];
+      var ref = this.positions;
+      var prevPosition = ref[0];
+      var position = last(this.positions);
+      var path = [prevPosition, position];
 
       if (pointInRect(position, p)) {
         return false;
       }
 
-      const diagonals = [
+      var diagonals = [
         [
           { x: left, y: top },
           { x: right, y: bottom },
@@ -2081,7 +2081,7 @@
       ];
 
       return diagonals.some(function (diagonal) {
-        const intersection = intersect(path, diagonal);
+        var intersection = intersect(path, diagonal);
         return intersection && pointInRect(intersection, p);
       });
     },
@@ -2089,27 +2089,27 @@
 
   // Inspired by http://paulbourke.net/geometry/pointlineplane/
   function intersect(ref, ref$1) {
-    const ref_0 = ref[0];
-    const x1 = ref_0.x;
-    const y1 = ref_0.y;
-    const ref_1 = ref[1];
-    const x2 = ref_1.x;
-    const y2 = ref_1.y;
-    const ref$1_0 = ref$1[0];
-    const x3 = ref$1_0.x;
-    const y3 = ref$1_0.y;
-    const ref$1_1 = ref$1[1];
-    const x4 = ref$1_1.x;
-    const y4 = ref$1_1.y;
+    var ref_0 = ref[0];
+    var x1 = ref_0.x;
+    var y1 = ref_0.y;
+    var ref_1 = ref[1];
+    var x2 = ref_1.x;
+    var y2 = ref_1.y;
+    var ref$1_0 = ref$1[0];
+    var x3 = ref$1_0.x;
+    var y3 = ref$1_0.y;
+    var ref$1_1 = ref$1[1];
+    var x4 = ref$1_1.x;
+    var y4 = ref$1_1.y;
 
-    const denominator = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
+    var denominator = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
 
     // Lines are parallel
     if (denominator === 0) {
       return false;
     }
 
-    const ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / denominator;
+    var ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / denominator;
 
     if (ua < 0) {
       return false;
@@ -2119,7 +2119,7 @@
     return { x: x1 + ua * (x2 - x1), y: y1 + ua * (y2 - y1) };
   }
 
-  const strats = {};
+  var strats = {};
 
   strats.events = strats.created = strats.beforeConnect = strats.connected = strats.beforeDisconnect = strats.disconnected = strats.destroy = concatStrat;
 
@@ -2205,7 +2205,7 @@
   }
 
   function mergeOptions(parent, child, vm) {
-    const options = {};
+    var options = {};
 
     if (isFunction(child)) {
       child = child.options;
@@ -2216,16 +2216,16 @@
     }
 
     if (child.mixins) {
-      for (let i = 0, l = child.mixins.length; i < l; i++) {
+      for (var i = 0, l = child.mixins.length; i < l; i++) {
         parent = mergeOptions(parent, child.mixins[i], vm);
       }
     }
 
-    for (const key in parent) {
+    for (var key in parent) {
       mergeKey(key);
     }
 
-    for (const key$1 in child) {
+    for (var key$1 in child) {
       if (!hasOwn(parent, key$1)) {
         mergeKey(key$1);
       }
@@ -2239,7 +2239,7 @@
   }
 
   function parseOptions(options, args) {
-    let obj;
+    var obj;
 
     if (args === void 0) args = [];
 
@@ -2251,9 +2251,9 @@
         : args.length && !includes(options, ":")
         ? ((obj = {}), (obj[args[0]] = options), obj)
         : options.split(";").reduce(function (options, option) {
-            const ref = option.split(/:(.*)/);
-            const key = ref[0];
-            const value = ref[1];
+            var ref = option.split(/:(.*)/);
+            var key = ref[0];
+            var value = ref[1];
             if (key && !isUndefined(value)) {
               options[key.trim()] = value.trim();
             }
@@ -2329,31 +2329,31 @@
     } catch (e) {}
   }
 
-  const stateKey = "_ukPlayer";
-  let counter = 0;
+  var stateKey = "_ukPlayer";
+  var counter = 0;
   function enableApi(el) {
     if (el[stateKey]) {
       return el[stateKey];
     }
 
-    const youtube = isYoutube(el);
-    const vimeo = isVimeo(el);
+    var youtube = isYoutube(el);
+    var vimeo = isVimeo(el);
 
-    const id = ++counter;
-    let poller;
+    var id = ++counter;
+    var poller;
 
     return (el[stateKey] = new Promise(function (resolve) {
       youtube &&
         once(el, "load", function () {
-          const listener = function () {
-            return post(el, { event: "listening", id });
+          var listener = function () {
+            return post(el, { event: "listening", id: id });
           };
           poller = setInterval(listener, 100);
           listener();
         });
 
       once(window, "message", resolve, false, function (ref) {
-        let { data } = ref;
+        var data = ref.data;
 
         try {
           data = JSON.parse(data);
@@ -2387,11 +2387,11 @@
       void 0,
       scrollParents(element)
         .map(function (parent) {
-          const ref = offset(getViewport(parent));
-          const { top } = ref;
-          const { left } = ref;
-          const { bottom } = ref;
-          const { right } = ref;
+          var ref = offset(getViewport(parent));
+          var top = ref.top;
+          var left = ref.left;
+          var bottom = ref.bottom;
+          var right = ref.right;
 
           return {
             top: top - offsetTop,
@@ -2416,22 +2416,22 @@
 
   function scrollIntoView(element, ref) {
     if (ref === void 0) ref = {};
-    let offsetBy = ref.offset;
+    var offsetBy = ref.offset;
     if (offsetBy === void 0) offsetBy = 0;
 
     if (!isVisible(element)) {
       return;
     }
 
-    const parents = scrollParents(element);
-    let diff = 0;
+    var parents = scrollParents(element);
+    var diff = 0;
     return parents.reduce(
       function (fn, scrollElement, i) {
-        const { scrollTop } = scrollElement;
-        const { scrollHeight } = scrollElement;
-        const maxScroll = scrollHeight - getViewportClientHeight(scrollElement);
+        var scrollTop = scrollElement.scrollTop;
+        var scrollHeight = scrollElement.scrollHeight;
+        var maxScroll = scrollHeight - getViewportClientHeight(scrollElement);
 
-        let top = Math.ceil(
+        var top = Math.ceil(
           offset(parents[i - 1] || element).top -
             offset(getViewport(scrollElement)).top -
             offsetBy +
@@ -2457,12 +2457,12 @@
 
     function scrollTo(element, top) {
       return new Promise(function (resolve) {
-        const scroll = element.scrollTop;
-        const duration = getDuration(Math.abs(top));
-        const start = Date.now();
+        var scroll = element.scrollTop;
+        var duration = getDuration(Math.abs(top));
+        var start = Date.now();
 
         (function step() {
-          const percent = ease(clamp((Date.now() - start) / duration));
+          var percent = ease(clamp((Date.now() - start) / duration));
 
           scrollTop(element, scroll + top * percent);
 
@@ -2492,17 +2492,17 @@
       return 0;
     }
 
-    const ref = scrollParents(element, /auto|scroll/, true);
-    const scrollElement = ref[0];
-    const { scrollHeight } = scrollElement;
-    const { scrollTop } = scrollElement;
-    const clientHeight = getViewportClientHeight(scrollElement);
-    const viewportTop =
+    var ref = scrollParents(element, /auto|scroll/, true);
+    var scrollElement = ref[0];
+    var scrollHeight = scrollElement.scrollHeight;
+    var scrollTop = scrollElement.scrollTop;
+    var clientHeight = getViewportClientHeight(scrollElement);
+    var viewportTop =
       offsetPosition(element)[0] - scrollTop - offsetPosition(scrollElement)[0];
-    const viewportDist = Math.min(clientHeight, viewportTop + scrollTop);
+    var viewportDist = Math.min(clientHeight, viewportTop + scrollTop);
 
-    const top = viewportTop - viewportDist;
-    const dist = Math.min(
+    var top = viewportTop - viewportDist;
+    var dist = Math.min(
       element.offsetHeight + heightOffset + viewportDist,
       scrollHeight - (viewportTop + scrollTop),
       scrollHeight - clientHeight
@@ -2515,12 +2515,12 @@
     if (overflowRe === void 0) overflowRe = /auto|scroll|hidden/;
     if (scrollable === void 0) scrollable = false;
 
-    const scrollEl = getScrollingElement(element);
+    var scrollEl = getScrollingElement(element);
 
-    let ancestors = parents(element).reverse();
+    var ancestors = parents(element).reverse();
     ancestors = ancestors.slice(ancestors.indexOf(scrollEl) + 1);
 
-    const fixedIndex = findIndex(ancestors, function (el) {
+    var fixedIndex = findIndex(ancestors, function (el) {
       return css(el, "position") === "fixed";
     });
     if (~fixedIndex) {
@@ -2555,12 +2555,12 @@
   }
 
   function getScrollingElement(element) {
-    const ref = toWindow(element);
-    const { document } = ref;
+    var ref = toWindow(element);
+    var document = ref.document;
     return document.scrollingElement || document.documentElement;
   }
 
-  const dirs$1 = {
+  var dirs$1 = {
     width: ["x", "left", "right"],
     height: ["y", "top", "bottom"],
   };
@@ -2578,15 +2578,15 @@
     elAttach = getPos(elAttach);
     targetAttach = getPos(targetAttach);
 
-    const flipped = { element: elAttach, target: targetAttach };
+    var flipped = { element: elAttach, target: targetAttach };
 
     if (!element || !target) {
       return flipped;
     }
 
-    const dim = offset(element);
-    const targetDim = offset(target);
-    const position = targetDim;
+    var dim = offset(element);
+    var targetDim = offset(target);
+    var position = targetDim;
 
     moveTo(position, elAttach, dim, -1);
     moveTo(position, targetAttach, targetDim, 1);
@@ -2601,7 +2601,7 @@
     position.top += elOffset["y"];
 
     if (flip) {
-      let boundaries = scrollParents(element).map(getViewport);
+      var boundaries = scrollParents(element).map(getViewport);
 
       if (boundary && includes(boundaries, boundary)) {
         boundaries.unshift(boundary);
@@ -2612,23 +2612,23 @@
       });
 
       each(dirs$1, function (ref, prop) {
-        const dir = ref[0];
-        const align = ref[1];
-        const alignFlip = ref[2];
+        var dir = ref[0];
+        var align = ref[1];
+        var alignFlip = ref[2];
 
         if (!(flip === true || includes(flip, dir))) {
           return;
         }
 
         boundaries.some(function (boundary) {
-          const elemOffset =
+          var elemOffset =
             elAttach[dir] === align
               ? -dim[prop]
               : elAttach[dir] === alignFlip
               ? dim[prop]
               : 0;
 
-          const targetOffset =
+          var targetOffset =
             targetAttach[dir] === align
               ? targetDim[prop]
               : targetAttach[dir] === alignFlip
@@ -2639,8 +2639,8 @@
             position[align] < boundary[align] ||
             position[align] + dim[prop] > boundary[alignFlip]
           ) {
-            const centerOffset = dim[prop] / 2;
-            const centerTargetOffset =
+            var centerOffset = dim[prop] / 2;
+            var centerTargetOffset =
               targetAttach[dir] === "center" ? -targetDim[prop] / 2 : 0;
 
             return (
@@ -2652,7 +2652,7 @@
           }
 
           function apply(elemOffset, targetOffset) {
-            const newVal = toFloat(
+            var newVal = toFloat(
               (
                 position[align] +
                 elemOffset +
@@ -2689,9 +2689,9 @@
 
   function moveTo(position, attach, dim, factor) {
     each(dirs$1, function (ref, prop) {
-      const dir = ref[0];
-      const align = ref[1];
-      const alignFlip = ref[2];
+      var dir = ref[0];
+      var align = ref[1];
+      var alignFlip = ref[2];
 
       if (attach[dir] === alignFlip) {
         position[align] += dim[prop] * factor;
@@ -2702,8 +2702,8 @@
   }
 
   function getPos(pos) {
-    const x = /left|center|right/;
-    const y = /top|center|bottom/;
+    var x = /left|center|right/;
+    var y = /top|center|bottom/;
 
     pos = (pos || "").split(" ");
 
@@ -2722,9 +2722,9 @@
   }
 
   function getOffsets(offsets, width, height) {
-    const ref = (offsets || "").split(" ");
-    const x = ref[0];
-    const y = ref[1];
+    var ref = (offsets || "").split(" ");
+    var x = ref[0];
+    var y = ref[1];
 
     return {
       x: x ? toFloat(x) * (endsWith(x, "%") ? width / 100 : 1) : 0,
@@ -2732,151 +2732,151 @@
     };
   }
 
-  const util = /* #__PURE__*/ Object.freeze({
+  var util = /*#__PURE__*/ Object.freeze({
     __proto__: null,
-    ajax,
-    getImage,
-    transition,
-    Transition,
-    animate,
-    Animation,
-    attr,
-    hasAttr,
-    removeAttr,
-    data,
-    addClass,
-    removeClass,
-    removeClasses,
-    replaceClass,
-    hasClass,
-    toggleClass,
-    dimensions,
-    offset,
-    position,
-    offsetPosition,
-    height,
-    width,
-    boxModelAdjust,
-    flipPosition,
-    toPx,
-    ready,
-    empty,
-    html,
-    prepend,
-    append,
-    before,
-    after,
-    remove,
-    wrapAll,
-    wrapInner,
-    unwrap,
-    fragment,
-    apply,
-    $,
-    $$,
-    inBrowser,
-    isIE,
-    isRtl,
-    hasTouch,
-    pointerDown,
-    pointerMove,
-    pointerUp,
-    pointerEnter,
-    pointerLeave,
-    pointerCancel,
-    on,
-    off,
-    once,
-    trigger,
-    createEvent,
-    toEventTargets,
-    isTouch,
-    getEventPos,
-    fastdom,
-    isVoidElement,
-    isVisible,
-    selInput,
-    isInput,
-    parent,
-    filter,
-    matches,
-    closest,
-    within,
-    parents,
-    children,
-    index,
-    hasOwn,
-    hyphenate,
-    camelize,
-    ucfirst,
-    startsWith,
-    endsWith,
-    includes,
-    findIndex,
-    isArray,
-    isFunction,
-    isObject,
-    isPlainObject,
-    isWindow,
-    isDocument,
-    isNode,
-    isElement,
-    isBoolean,
-    isString,
-    isNumber,
-    isNumeric,
-    isEmpty,
-    isUndefined,
-    toBoolean,
-    toNumber,
-    toFloat,
-    toArray,
-    toNode,
-    toNodes,
-    toWindow,
-    toMs,
-    isEqual,
-    swap,
-    assign,
-    last,
-    each,
-    sortBy,
-    uniqueBy,
-    clamp,
-    noop,
-    intersectRect,
-    pointInRect,
-    Dimensions,
-    getIndex,
-    memoize,
-    MouseTracker,
-    mergeOptions,
-    parseOptions,
-    play,
-    pause,
-    mute,
-    positionAt,
-    Promise,
-    Deferred,
-    query,
-    queryAll,
-    find,
-    findAll,
-    escape,
-    css,
-    getCssVar,
-    propName,
-    isInView,
-    scrollTop,
-    scrollIntoView,
-    scrolledOver,
-    scrollParents,
-    getViewport,
-    getViewportClientHeight,
+    ajax: ajax,
+    getImage: getImage,
+    transition: transition,
+    Transition: Transition,
+    animate: animate,
+    Animation: Animation,
+    attr: attr,
+    hasAttr: hasAttr,
+    removeAttr: removeAttr,
+    data: data,
+    addClass: addClass,
+    removeClass: removeClass,
+    removeClasses: removeClasses,
+    replaceClass: replaceClass,
+    hasClass: hasClass,
+    toggleClass: toggleClass,
+    dimensions: dimensions,
+    offset: offset,
+    position: position,
+    offsetPosition: offsetPosition,
+    height: height,
+    width: width,
+    boxModelAdjust: boxModelAdjust,
+    flipPosition: flipPosition,
+    toPx: toPx,
+    ready: ready,
+    empty: empty,
+    html: html,
+    prepend: prepend,
+    append: append,
+    before: before,
+    after: after,
+    remove: remove,
+    wrapAll: wrapAll,
+    wrapInner: wrapInner,
+    unwrap: unwrap,
+    fragment: fragment,
+    apply: apply,
+    $: $,
+    $$: $$,
+    inBrowser: inBrowser,
+    isIE: isIE,
+    isRtl: isRtl,
+    hasTouch: hasTouch,
+    pointerDown: pointerDown,
+    pointerMove: pointerMove,
+    pointerUp: pointerUp,
+    pointerEnter: pointerEnter,
+    pointerLeave: pointerLeave,
+    pointerCancel: pointerCancel,
+    on: on,
+    off: off,
+    once: once,
+    trigger: trigger,
+    createEvent: createEvent,
+    toEventTargets: toEventTargets,
+    isTouch: isTouch,
+    getEventPos: getEventPos,
+    fastdom: fastdom,
+    isVoidElement: isVoidElement,
+    isVisible: isVisible,
+    selInput: selInput,
+    isInput: isInput,
+    parent: parent,
+    filter: filter,
+    matches: matches,
+    closest: closest,
+    within: within,
+    parents: parents,
+    children: children,
+    index: index,
+    hasOwn: hasOwn,
+    hyphenate: hyphenate,
+    camelize: camelize,
+    ucfirst: ucfirst,
+    startsWith: startsWith,
+    endsWith: endsWith,
+    includes: includes,
+    findIndex: findIndex,
+    isArray: isArray,
+    isFunction: isFunction,
+    isObject: isObject,
+    isPlainObject: isPlainObject,
+    isWindow: isWindow,
+    isDocument: isDocument,
+    isNode: isNode,
+    isElement: isElement,
+    isBoolean: isBoolean,
+    isString: isString,
+    isNumber: isNumber,
+    isNumeric: isNumeric,
+    isEmpty: isEmpty,
+    isUndefined: isUndefined,
+    toBoolean: toBoolean,
+    toNumber: toNumber,
+    toFloat: toFloat,
+    toArray: toArray,
+    toNode: toNode,
+    toNodes: toNodes,
+    toWindow: toWindow,
+    toMs: toMs,
+    isEqual: isEqual,
+    swap: swap,
+    assign: assign,
+    last: last,
+    each: each,
+    sortBy: sortBy,
+    uniqueBy: uniqueBy,
+    clamp: clamp,
+    noop: noop,
+    intersectRect: intersectRect,
+    pointInRect: pointInRect,
+    Dimensions: Dimensions,
+    getIndex: getIndex,
+    memoize: memoize,
+    MouseTracker: MouseTracker,
+    mergeOptions: mergeOptions,
+    parseOptions: parseOptions,
+    play: play,
+    pause: pause,
+    mute: mute,
+    positionAt: positionAt,
+    Promise: Promise,
+    Deferred: Deferred,
+    query: query,
+    queryAll: queryAll,
+    find: find,
+    findAll: findAll,
+    escape: escape,
+    css: css,
+    getCssVar: getCssVar,
+    propName: propName,
+    isInView: isInView,
+    scrollTop: scrollTop,
+    scrollIntoView: scrollIntoView,
+    scrolledOver: scrolledOver,
+    scrollParents: scrollParents,
+    getViewport: getViewport,
+    getViewportClientHeight: getViewportClientHeight,
   });
 
   function globalAPI(UIkit) {
-    const DATA = UIkit.data;
+    var DATA = UIkit.data;
 
     UIkit.use = function (plugin) {
       if (plugin.installed) {
@@ -2898,8 +2898,8 @@
     UIkit.extend = function (options) {
       options = options || {};
 
-      const Super = this;
-      const Sub = function UIkitComponent(options) {
+      var Super = this;
+      var Sub = function UIkitComponent(options) {
         this._init(options);
       };
 
@@ -2926,13 +2926,13 @@
       });
     };
 
-    let container;
+    var container;
     Object.defineProperty(UIkit, "container", {
-      get() {
+      get: function () {
         return container || document.body;
       },
 
-      set(element) {
+      set: function (element) {
         container = $(element);
       },
     });
@@ -2942,7 +2942,7 @@
         return;
       }
 
-      for (const name in data) {
+      for (var name in data) {
         if (data[name]._connected) {
           data[name]._callUpdate(e);
         }
@@ -2952,9 +2952,9 @@
 
   function hooksAPI(UIkit) {
     UIkit.prototype._callHook = function (hook) {
-      const this$1 = this;
+      var this$1 = this;
 
-      const handlers = this.$options[hook];
+      var handlers = this.$options[hook];
 
       if (handlers) {
         handlers.forEach(function (handler) {
@@ -2998,7 +2998,7 @@
     };
 
     UIkit.prototype._callUpdate = function (e) {
-      const this$1 = this;
+      var this$1 = this;
       if (e === void 0) e = "update";
 
       if (!this._connected) {
@@ -3025,28 +3025,28 @@
     };
 
     UIkit.prototype._callWatches = function () {
-      const this$1 = this;
+      var this$1 = this;
 
       if (this._watch) {
         return;
       }
 
-      const initital = !hasOwn(this, "_watch");
+      var initital = !hasOwn(this, "_watch");
 
       this._watch = fastdom.read(function () {
-        const ref = this$1;
-        const { computed } = ref.$options;
-        const { _computeds } = ref;
+        var ref = this$1;
+        var computed = ref.$options.computed;
+        var _computeds = ref._computeds;
 
-        for (const key in computed) {
-          const hasPrev = hasOwn(_computeds, key);
-          const prev = _computeds[key];
+        for (var key in computed) {
+          var hasPrev = hasOwn(_computeds, key);
+          var prev = _computeds[key];
 
           delete _computeds[key];
 
-          const ref$1 = computed[key];
-          const { watch } = ref$1;
-          const { immediate } = ref$1;
+          var ref$1 = computed[key];
+          var watch = ref$1.watch;
+          var immediate = ref$1.immediate;
           if (
             watch &&
             ((initital && immediate) ||
@@ -3061,15 +3061,15 @@
     };
 
     function runUpdates(types) {
-      const this$1 = this;
+      var this$1 = this;
 
-      const updates = this.$options.update;
+      var updates = this.$options.update;
 
-      const loop = function (i) {
-        const ref = updates[i];
-        const { read } = ref;
-        const { write } = ref;
-        const { events } = ref;
+      var loop = function (i) {
+        var ref = updates[i];
+        var read = ref.read;
+        var write = ref.write;
+        var events = ref.events;
 
         if (
           !types.has("update") &&
@@ -3081,7 +3081,7 @@
           return;
         }
 
-        let result = void 0;
+        var result = void 0;
         if (read) {
           result = read.call(this$1, this$1._data, types);
 
@@ -3097,12 +3097,12 @@
         }
       };
 
-      for (let i = 0; i < updates.length; i++) loop(i);
+      for (var i = 0; i < updates.length; i++) loop(i);
     }
   }
 
   function stateAPI(UIkit) {
-    let uid = 0;
+    var uid = 0;
 
     UIkit.prototype._init = function (options) {
       options = options || {};
@@ -3124,41 +3124,41 @@
     };
 
     UIkit.prototype._initData = function () {
-      const ref = this.$options;
-      let { data } = ref;
+      var ref = this.$options;
+      var data = ref.data;
       if (data === void 0) data = {};
 
-      for (const key in data) {
+      for (var key in data) {
         this.$props[key] = this[key] = data[key];
       }
     };
 
     UIkit.prototype._initMethods = function () {
-      const ref = this.$options;
-      const { methods } = ref;
+      var ref = this.$options;
+      var methods = ref.methods;
 
       if (methods) {
-        for (const key in methods) {
+        for (var key in methods) {
           this[key] = methods[key].bind(this);
         }
       }
     };
 
     UIkit.prototype._initComputeds = function () {
-      const ref = this.$options;
-      const { computed } = ref;
+      var ref = this.$options;
+      var computed = ref.computed;
 
       this._computeds = {};
 
       if (computed) {
-        for (const key in computed) {
+        for (var key in computed) {
           registerComputed(this, key, computed[key]);
         }
       }
     };
 
     UIkit.prototype._initProps = function (props) {
-      let key;
+      var key;
 
       props = props || getProps(this.$options, this.$name);
 
@@ -3168,7 +3168,7 @@
         }
       }
 
-      const exclude = [this.$options.computed, this.$options.methods];
+      var exclude = [this.$options.computed, this.$options.methods];
       for (key in this.$props) {
         if (key in props && notIn(exclude, key)) {
           this[key] = this.$props[key];
@@ -3177,17 +3177,17 @@
     };
 
     UIkit.prototype._initEvents = function () {
-      const this$1 = this;
+      var this$1 = this;
 
       this._events = [];
 
-      const ref = this.$options;
-      const { events } = ref;
+      var ref = this.$options;
+      var events = ref.events;
 
       if (events) {
         events.forEach(function (event) {
           if (!hasOwn(event, "handler")) {
-            for (const key in event) {
+            for (var key in event) {
               registerEvent(this$1, event[key], key);
             }
           } else {
@@ -3215,20 +3215,20 @@
     };
 
     function getProps(opts, name) {
-      const data$1 = {};
-      let { args } = opts;
+      var data$1 = {};
+      var args = opts.args;
       if (args === void 0) args = [];
-      let { props } = opts;
+      var props = opts.props;
       if (props === void 0) props = {};
-      const { el } = opts;
+      var el = opts.el;
 
       if (!props) {
         return data$1;
       }
 
-      for (const key in props) {
-        const prop = hyphenate(key);
-        let value = data(el, prop);
+      for (var key in props) {
+        var prop = hyphenate(key);
+        var value = data(el, prop);
 
         if (isUndefined(value)) {
           continue;
@@ -3246,10 +3246,10 @@
         data$1[key] = value;
       }
 
-      const options = parseOptions(data(el, name), args);
+      var options = parseOptions(data(el, name), args);
 
-      for (const key$1 in options) {
-        const prop$1 = camelize(key$1);
+      for (var key$1 in options) {
+        var prop$1 = camelize(key$1);
         if (props[prop$1] !== undefined) {
           data$1[prop$1] = coerce(props[prop$1], options[key$1]);
         }
@@ -3262,10 +3262,10 @@
       Object.defineProperty(component, key, {
         enumerable: true,
 
-        get() {
-          const { _computeds } = component;
-          const { $props } = component;
-          const { $el } = component;
+        get: function () {
+          var _computeds = component._computeds;
+          var $props = component.$props;
+          var $el = component.$el;
 
           if (!hasOwn(_computeds, key)) {
             _computeds[key] = (cb.get || cb).call(component, $props, $el);
@@ -3274,8 +3274,8 @@
           return _computeds[key];
         },
 
-        set(value) {
-          const { _computeds } = component;
+        set: function (value) {
+          var _computeds = component._computeds;
 
           _computeds[key] = cb.set ? cb.set.call(component, value) : value;
 
@@ -3291,19 +3291,19 @@
         event = { name: key, handler: event };
       }
 
-      const { name } = event;
-      let { el } = event;
-      const { handler } = event;
-      const { capture } = event;
-      const { passive } = event;
-      const { delegate } = event;
-      const { filter } = event;
-      const { self } = event;
+      var name = event.name;
+      var el = event.el;
+      var handler = event.handler;
+      var capture = event.capture;
+      var passive = event.passive;
+      var delegate = event.delegate;
+      var filter = event.filter;
+      var self = event.self;
       el = isFunction(el) ? el.call(component) : el || component.$el;
 
       if (isArray(el)) {
         el.forEach(function (el) {
-          return registerEvent(component, assign({}, event, { el }), key);
+          return registerEvent(component, assign({}, event, { el: el }), key);
         });
         return;
       }
@@ -3322,7 +3322,7 @@
             ? delegate
             : delegate.call(component),
           isString(handler) ? component[handler] : handler.bind(component),
-          { passive, capture, self }
+          { passive: passive, capture: capture, self: self }
         )
       );
     }
@@ -3356,9 +3356,9 @@
     }
 
     function normalizeData(ref, ref$1) {
-      let { data } = ref;
-      const { args } = ref$1;
-      let { props } = ref$1;
+      var data = ref.data;
+      var args = ref$1.args;
+      var props = ref$1.props;
       if (props === void 0) props = {};
 
       data = isArray(data)
@@ -3375,7 +3375,7 @@
         : data;
 
       if (data) {
-        for (const key in data) {
+        for (var key in data) {
           if (isUndefined(data[key])) {
             delete data[key];
           } else {
@@ -3388,10 +3388,10 @@
     }
 
     function initChildListObserver(component) {
-      const ref = component.$options;
-      const { el } = ref;
+      var ref = component.$options;
+      var el = ref.el;
 
-      const observer = new MutationObserver(function () {
+      var observer = new MutationObserver(function () {
         return component.$emit();
       });
       observer.observe(el, {
@@ -3403,31 +3403,31 @@
     }
 
     function initPropsObserver(component) {
-      const { $name } = component;
-      const { $options } = component;
-      const { $props } = component;
-      const { attrs } = $options;
-      const { props } = $options;
-      const { el } = $options;
+      var $name = component.$name;
+      var $options = component.$options;
+      var $props = component.$props;
+      var attrs = $options.attrs;
+      var props = $options.props;
+      var el = $options.el;
 
       if (!props || attrs === false) {
         return;
       }
 
-      const attributes = isArray(attrs) ? attrs : Object.keys(props);
-      const filter = attributes
+      var attributes = isArray(attrs) ? attrs : Object.keys(props);
+      var filter = attributes
         .map(function (key) {
           return hyphenate(key);
         })
         .concat($name);
 
-      const observer = new MutationObserver(function (records) {
-        const data = getProps($options, $name);
+      var observer = new MutationObserver(function (records) {
+        var data = getProps($options, $name);
         if (
           records.some(function (ref) {
-            const { attributeName } = ref;
+            var attributeName = ref.attributeName;
 
-            const prop = attributeName.replace("data-", "");
+            var prop = attributeName.replace("data-", "");
             return (prop === $name
               ? attributes
               : [camelize(prop), camelize(attributeName)]
@@ -3454,15 +3454,15 @@
   }
 
   function instanceAPI(UIkit) {
-    const DATA = UIkit.data;
+    var DATA = UIkit.data;
 
     UIkit.prototype.$create = function (component, element, data) {
       return UIkit[component](element, data);
     };
 
     UIkit.prototype.$mount = function (el) {
-      const ref = this.$options;
-      const { name } = ref;
+      var ref = this.$options;
+      var name = ref.name;
 
       if (!el[DATA]) {
         el[DATA] = {};
@@ -3489,9 +3489,9 @@
     UIkit.prototype.$destroy = function (removeEl) {
       if (removeEl === void 0) removeEl = false;
 
-      const ref = this.$options;
-      const { el } = ref;
-      const { name } = ref;
+      var ref = this.$options;
+      var el = ref.el;
+      var name = ref.name;
 
       if (el) {
         this._callDisconnected();
@@ -3526,14 +3526,14 @@
 
     UIkit.prototype.$getComponent = UIkit.getComponent;
 
-    const componentName = memoize(function (name) {
+    var componentName = memoize(function (name) {
       return UIkit.prefix + hyphenate(name);
     });
     Object.defineProperties(UIkit.prototype, {
       $container: Object.getOwnPropertyDescriptor(UIkit, "container"),
 
       $name: {
-        get() {
+        get: function () {
           return componentName(this.$options.name);
         },
       },
@@ -3541,12 +3541,12 @@
   }
 
   function componentAPI(UIkit) {
-    const DATA = UIkit.data;
+    var DATA = UIkit.data;
 
-    const components = {};
+    var components = {};
 
     UIkit.component = function (name, options) {
-      const id = hyphenate(name);
+      var id = hyphenate(name);
 
       name = camelize(id);
 
@@ -3559,11 +3559,11 @@
       }
 
       UIkit[name] = function (element, data) {
-        let i = arguments.length,
+        var i = arguments.length,
           argsArray = Array(i);
         while (i--) argsArray[i] = arguments[i];
 
-        const component = UIkit.component(name);
+        var component = UIkit.component(name);
 
         return component.options.functional
           ? new component({
@@ -3574,7 +3574,7 @@
           : $$(element).map(init)[0];
 
         function init(element) {
-          const instance = UIkit.getComponent(element, name);
+          var instance = UIkit.getComponent(element, name);
 
           if (instance) {
             if (!data) {
@@ -3584,13 +3584,11 @@
             }
           }
 
-          return new component({ el: element, data });
+          return new component({ el: element, data: data });
         }
       };
 
-      const opt = isPlainObject(options)
-        ? assign({}, options)
-        : options.options;
+      var opt = isPlainObject(options) ? assign({}, options) : options.options;
 
       opt.name = name;
 
@@ -3616,13 +3614,13 @@
 
     UIkit.connect = function (node) {
       if (node[DATA]) {
-        for (const name in node[DATA]) {
+        for (var name in node[DATA]) {
           node[DATA][name]._callConnected();
         }
       }
 
-      for (let i = 0; i < node.attributes.length; i++) {
-        const name$1 = getComponentName(node.attributes[i].name);
+      for (var i = 0; i < node.attributes.length; i++) {
+        var name$1 = getComponentName(node.attributes[i].name);
 
         if (name$1 && name$1 in components) {
           UIkit[name$1](node);
@@ -3631,7 +3629,7 @@
     };
 
     UIkit.disconnect = function (node) {
-      for (const name in node[DATA]) {
+      for (var name in node[DATA]) {
         node[DATA][name]._callDisconnected();
       }
     };
@@ -3643,7 +3641,7 @@
       : false;
   });
 
-  const UIkit = function (options) {
+  var UIkit = function (options) {
     this._init(options);
   };
 
@@ -3660,8 +3658,8 @@
   instanceAPI(UIkit);
 
   function boot(UIkit) {
-    const { connect } = UIkit;
-    const { disconnect } = UIkit;
+    var connect = UIkit.connect;
+    var disconnect = UIkit.disconnect;
 
     if (!inBrowser || !window.MutationObserver) {
       return;
@@ -3690,23 +3688,23 @@
     });
 
     function applyChildListMutation(ref) {
-      const { addedNodes } = ref;
-      const { removedNodes } = ref;
+      var addedNodes = ref.addedNodes;
+      var removedNodes = ref.removedNodes;
 
-      for (let i = 0; i < addedNodes.length; i++) {
+      for (var i = 0; i < addedNodes.length; i++) {
         apply(addedNodes[i], connect);
       }
 
-      for (let i$1 = 0; i$1 < removedNodes.length; i$1++) {
+      for (var i$1 = 0; i$1 < removedNodes.length; i$1++) {
         apply(removedNodes[i$1], disconnect);
       }
     }
 
     function applyAttributeMutation(ref) {
-      const { target } = ref;
-      const { attributeName } = ref;
+      var target = ref.target;
+      var attributeName = ref.attributeName;
 
-      const name = getComponentName(attributeName);
+      var name = getComponentName(attributeName);
 
       if (!name || !(name in UIkit)) {
         return;
@@ -3717,7 +3715,7 @@
         return;
       }
 
-      const component = UIkit.getComponent(target, name);
+      var component = UIkit.getComponent(target, name);
 
       if (component) {
         component.$destroy();
@@ -3725,13 +3723,13 @@
     }
   }
 
-  const Class = {
-    connected() {
+  var Class = {
+    connected: function () {
       !hasClass(this.$el, this.$name) && addClass(this.$el, this.$name);
     },
   };
 
-  const Togglable = {
+  var Togglable = {
     props: {
       cls: Boolean,
       animation: "list",
@@ -3769,33 +3767,33 @@
     },
 
     computed: {
-      hasAnimation(ref) {
-        const { animation } = ref;
+      hasAnimation: function (ref) {
+        var animation = ref.animation;
 
         return !!animation[0];
       },
 
-      hasTransition(ref) {
-        const { animation } = ref;
+      hasTransition: function (ref) {
+        var animation = ref.animation;
 
         return this.hasAnimation && animation[0] === true;
       },
     },
 
     methods: {
-      toggleElement(targets, toggle, animate) {
-        const this$1 = this;
+      toggleElement: function (targets, toggle, animate) {
+        var this$1 = this;
 
         return new Promise(function (resolve) {
           return Promise.all(
             toNodes(targets).map(function (el) {
-              const show = isBoolean(toggle) ? toggle : !this$1.isToggled(el);
+              var show = isBoolean(toggle) ? toggle : !this$1.isToggled(el);
 
               if (!trigger(el, "before" + (show ? "show" : "hide"), [this$1])) {
                 return Promise.reject();
               }
 
-              const promise = (isFunction(animate)
+              var promise = (isFunction(animate)
                 ? animate
                 : animate === false || !this$1.hasAnimation
                 ? this$1._toggle
@@ -3803,13 +3801,13 @@
                 ? toggleHeight(this$1)
                 : toggleAnimation(this$1))(el, show);
 
-              const cls = show ? this$1.clsEnter : this$1.clsLeave;
+              var cls = show ? this$1.clsEnter : this$1.clsLeave;
 
               addClass(el, cls);
 
               trigger(el, show ? "show" : "hide", [this$1]);
 
-              const done = function () {
+              var done = function () {
                 removeClass(el, cls);
                 trigger(el, show ? "shown" : "hidden", [this$1]);
                 this$1.$update(el);
@@ -3826,7 +3824,7 @@
         });
       },
 
-      isToggled(el) {
+      isToggled: function (el) {
         if (el === void 0) el = this.$el;
 
         return hasClass(el, this.clsEnter)
@@ -3838,14 +3836,14 @@
           : !hasAttr(el, "hidden");
       },
 
-      _toggle(el, toggled) {
+      _toggle: function (el, toggled) {
         if (!el) {
           return;
         }
 
         toggled = Boolean(toggled);
 
-        let changed;
+        var changed;
         if (this.cls) {
           changed =
             includes(this.cls, " ") || toggled !== hasClass(el, this.cls);
@@ -3873,20 +3871,20 @@
   };
 
   function toggleHeight(ref) {
-    const { isToggled } = ref;
-    const { duration } = ref;
-    const { initProps } = ref;
-    const { hideProps } = ref;
-    const { transition } = ref;
-    const { _toggle } = ref;
+    var isToggled = ref.isToggled;
+    var duration = ref.duration;
+    var initProps = ref.initProps;
+    var hideProps = ref.hideProps;
+    var transition = ref.transition;
+    var _toggle = ref._toggle;
 
     return function (el, show) {
-      const inProgress = Transition.inProgress(el);
-      const inner = el.hasChildNodes
+      var inProgress = Transition.inProgress(el);
+      var inner = el.hasChildNodes
         ? toFloat(css(el.firstElementChild, "marginTop")) +
           toFloat(css(el.lastElementChild, "marginBottom"))
         : 0;
-      const currentHeight = isVisible(el)
+      var currentHeight = isVisible(el)
         ? height(el) + (inProgress ? 0 : inner)
         : 0;
 
@@ -3901,7 +3899,7 @@
       // Update child components first
       fastdom.flush();
 
-      const endHeight = height(el) + (inProgress ? 0 : inner);
+      var endHeight = height(el) + (inProgress ? 0 : inner);
       height(el, currentHeight);
 
       return (show
@@ -3929,9 +3927,9 @@
     return function (el, show) {
       Animation.cancel(el);
 
-      const { animation } = cmp;
-      const { duration } = cmp;
-      const { _toggle } = cmp;
+      var animation = cmp.animation;
+      var duration = cmp.duration;
+      var _toggle = cmp._toggle;
 
       if (show) {
         _toggle(el, true);
@@ -3949,7 +3947,7 @@
     };
   }
 
-  const accordion = {
+  var accordion = {
     mixins: [Class, Togglable],
 
     props: {
@@ -3978,14 +3976,14 @@
 
     computed: {
       items: {
-        get(ref, $el) {
-          const { targets } = ref;
+        get: function (ref, $el) {
+          var targets = ref.targets;
 
           return $$(targets, $el);
         },
 
-        watch(items, prev) {
-          const this$1 = this;
+        watch: function (items, prev) {
+          var this$1 = this;
 
           items.forEach(function (el) {
             return hide($(this$1.content, el), !hasClass(el, this$1.clsOpen));
@@ -3995,7 +3993,7 @@
             return;
           }
 
-          const active =
+          var active =
             (this.active !== false && items[Number(this.active)]) ||
             (!this.collapsible && items[0]);
 
@@ -4007,8 +4005,8 @@
         immediate: true,
       },
 
-      toggles(ref) {
-        const { toggle } = ref;
+      toggles: function (ref) {
+        var toggle = ref.toggle;
 
         return this.items.map(function (item) {
           return $(toggle, item);
@@ -4020,11 +4018,11 @@
       {
         name: "click",
 
-        delegate() {
+        delegate: function () {
           return this.targets + " " + this.$props.toggle;
         },
 
-        handler(e) {
+        handler: function (e) {
           e.preventDefault();
           this.toggle(index(this.toggles, e.current));
         },
@@ -4032,11 +4030,11 @@
     ],
 
     methods: {
-      toggle(item, animate) {
-        const this$1 = this;
+      toggle: function (item, animate) {
+        var this$1 = this;
 
-        let items = [this.items[getIndex(item, this.items)]];
-        const activeItems = filter(this.items, "." + this.clsOpen);
+        var items = [this.items[getIndex(item, this.items)]];
+        var activeItems = filter(this.items, "." + this.clsOpen);
 
         if (!this.multiple && !includes(activeItems, items[0])) {
           items = items.concat(activeItems);
@@ -4058,7 +4056,7 @@
               toggleClass(el, this$1.clsOpen, show);
               attr($(this$1.$props.toggle, el), "aria-expanded", show);
 
-              const content = $(
+              var content = $(
                 "" + (el._wrapper ? "> * " : "") + this$1.content,
                 el
               );
@@ -4082,7 +4080,7 @@
                 unwrap(content);
 
                 if (show) {
-                  const toggle = $(this$1.$props.toggle, el);
+                  var toggle = $(this$1.$props.toggle, el);
                   if (!isInView(toggle)) {
                     scrollIntoView(toggle, { offset: this$1.offset });
                   }
@@ -4099,7 +4097,7 @@
     el && (el.hidden = hide);
   }
 
-  const alert = {
+  var alert = {
     mixins: [Class, Togglable],
 
     args: "animation",
@@ -4119,11 +4117,11 @@
       {
         name: "click",
 
-        delegate() {
+        delegate: function () {
           return this.selClose;
         },
 
-        handler(e) {
+        handler: function (e) {
           e.preventDefault();
           this.close();
         },
@@ -4131,8 +4129,8 @@
     ],
 
     methods: {
-      close() {
-        const this$1 = this;
+      close: function () {
+        var this$1 = this;
 
         this.toggleElement(this.$el).then(function () {
           return this$1.$destroy(true);
@@ -4141,7 +4139,7 @@
     },
   };
 
-  const Video = {
+  var Video = {
     args: "autoplay",
 
     props: {
@@ -4155,14 +4153,14 @@
     },
 
     computed: {
-      inView(ref) {
-        const { autoplay } = ref;
+      inView: function (ref) {
+        var autoplay = ref.autoplay;
 
         return autoplay === "inview";
       },
     },
 
-    connected() {
+    connected: function () {
       if (this.inView && !hasAttr(this.$el, "preload")) {
         this.$el.preload = "none";
       }
@@ -4173,7 +4171,7 @@
     },
 
     update: {
-      read() {
+      read: function () {
         return {
           visible:
             isVisible(this.$el) && css(this.$el, "visibility") !== "hidden",
@@ -4181,9 +4179,9 @@
         };
       },
 
-      write(ref) {
-        const { visible } = ref;
-        const { inView } = ref;
+      write: function (ref) {
+        var visible = ref.visible;
+        var inView = ref.inView;
 
         if (!visible || (this.inView && !inView)) {
           pause(this.$el);
@@ -4196,7 +4194,7 @@
     },
   };
 
-  const cover = {
+  var cover = {
     mixins: [Class, Video],
 
     props: {
@@ -4209,12 +4207,12 @@
     },
 
     update: {
-      read() {
-        const el = this.$el;
-        const ref = getPositionedParent(el) || parent(el);
-        const height = ref.offsetHeight;
-        const width = ref.offsetWidth;
-        const dim = Dimensions.cover(
+      read: function () {
+        var el = this.$el;
+        var ref = getPositionedParent(el) || parent(el);
+        var height = ref.offsetHeight;
+        var width = ref.offsetWidth;
+        var dim = Dimensions.cover(
           {
             width:
               this.width || el.naturalWidth || el.videoWidth || el.clientWidth,
@@ -4237,11 +4235,11 @@
         return dim;
       },
 
-      write(ref) {
-        const { height } = ref;
-        const { width } = ref;
+      write: function (ref) {
+        var height = ref.height;
+        var width = ref.width;
 
-        css(this.$el, { height, width });
+        css(this.$el, { height: height, width: width });
       },
 
       events: ["resize"],
@@ -4256,7 +4254,7 @@
     }
   }
 
-  const Position = {
+  var Position = {
     props: {
       pos: String,
       offset: null,
@@ -4272,41 +4270,41 @@
     },
 
     computed: {
-      pos(ref) {
-        const { pos } = ref;
+      pos: function (ref) {
+        var pos = ref.pos;
 
         return (pos + (!includes(pos, "-") ? "-center" : "")).split("-");
       },
 
-      dir() {
+      dir: function () {
         return this.pos[0];
       },
 
-      align() {
+      align: function () {
         return this.pos[1];
       },
     },
 
     methods: {
-      positionAt(element, target, boundary) {
+      positionAt: function (element, target, boundary) {
         removeClasses(
           element,
           this.clsPos + "-(top|bottom|left|right)(-[a-z]+)?"
         );
 
-        const ref = this;
-        let offset$1 = ref.offset;
-        const axis = this.getAxis();
+        var ref = this;
+        var offset$1 = ref.offset;
+        var axis = this.getAxis();
 
         if (!isNumeric(offset$1)) {
-          const node = $(offset$1);
+          var node = $(offset$1);
           offset$1 = node
             ? offset(node)[axis === "x" ? "left" : "top"] -
               offset(target)[axis === "x" ? "right" : "bottom"]
             : 0;
         }
 
-        const ref$1 = positionAt(
+        var ref$1 = positionAt(
           element,
           target,
           axis === "x"
@@ -4322,8 +4320,8 @@
           this.flip,
           boundary
         ).target;
-        const { x } = ref$1;
-        const { y } = ref$1;
+        var x = ref$1.x;
+        var y = ref$1.y;
 
         this.dir = axis === "x" ? x : y;
         this.align = axis === "x" ? y : x;
@@ -4335,15 +4333,15 @@
         );
       },
 
-      getAxis() {
+      getAxis: function () {
         return this.dir === "top" || this.dir === "bottom" ? "y" : "x";
       },
     },
   };
 
-  let active;
+  var active;
 
-  const drop = {
+  var drop = {
     mixins: [Position, Togglable],
 
     args: "pos",
@@ -4371,32 +4369,32 @@
     },
 
     computed: {
-      boundary(ref, $el) {
-        const { boundary } = ref;
+      boundary: function (ref, $el) {
+        var boundary = ref.boundary;
 
         return boundary === true ? window : query(boundary, $el);
       },
 
-      clsDrop(ref) {
-        const { clsDrop } = ref;
+      clsDrop: function (ref) {
+        var clsDrop = ref.clsDrop;
 
         return clsDrop || "mod-" + this.$options.name;
       },
 
-      clsPos() {
+      clsPos: function () {
         return this.clsDrop;
       },
     },
 
-    created() {
+    created: function () {
       this.tracker = new MouseTracker();
     },
 
-    connected() {
+    connected: function () {
       addClass(this.$el, this.clsDrop);
 
-      const ref = this.$props;
-      const { toggle } = ref;
+      var ref = this.$props;
+      var toggle = ref.toggle;
       this.toggle =
         toggle &&
         this.$create("toggle", query(toggle, this.$el), {
@@ -4405,7 +4403,7 @@
         });
     },
 
-    disconnected() {
+    disconnected: function () {
       if (this.isActive()) {
         active = null;
       }
@@ -4415,11 +4413,11 @@
       {
         name: "click",
 
-        delegate() {
+        delegate: function () {
           return "." + this.clsDrop + "-close";
         },
 
-        handler(e) {
+        handler: function (e) {
           e.preventDefault();
           this.hide(false);
         },
@@ -4428,13 +4426,13 @@
       {
         name: "click",
 
-        delegate() {
+        delegate: function () {
           return 'a[href^="#"]';
         },
 
-        handler(ref) {
-          const { defaultPrevented } = ref;
-          const { hash } = ref.current;
+        handler: function (ref) {
+          var defaultPrevented = ref.defaultPrevented;
+          var hash = ref.current.hash;
 
           if (!defaultPrevented && hash && !within(hash, this.$el)) {
             this.hide(false);
@@ -4445,7 +4443,7 @@
       {
         name: "beforescroll",
 
-        handler() {
+        handler: function () {
           this.hide(false);
         },
       },
@@ -4455,7 +4453,7 @@
 
         self: true,
 
-        handler(e, toggle) {
+        handler: function (e, toggle) {
           e.preventDefault();
 
           if (this.isToggled()) {
@@ -4471,7 +4469,7 @@
 
         self: true,
 
-        handler(e, toggle) {
+        handler: function (e, toggle) {
           e.preventDefault();
           this.show(toggle);
         },
@@ -4482,7 +4480,7 @@
 
         self: true,
 
-        handler(e) {
+        handler: function (e) {
           e.preventDefault();
           this.hide();
         },
@@ -4491,11 +4489,11 @@
       {
         name: pointerEnter,
 
-        filter() {
+        filter: function () {
           return includes(this.mode, "hover");
         },
 
-        handler(e) {
+        handler: function (e) {
           if (!isTouch(e)) {
             this.clearTimers();
           }
@@ -4505,11 +4503,11 @@
       {
         name: pointerLeave,
 
-        filter() {
+        filter: function () {
           return includes(this.mode, "hover");
         },
 
-        handler(e) {
+        handler: function (e) {
           if (!isTouch(e) && e.relatedTarget) {
             this.hide();
           }
@@ -4521,7 +4519,7 @@
 
         self: true,
 
-        handler(e, toggled) {
+        handler: function (e, toggled) {
           if (!toggled) {
             return;
           }
@@ -4536,8 +4534,8 @@
 
         self: true,
 
-        handler() {
-          const this$1 = this;
+        handler: function () {
+          var this$1 = this;
 
           active = this;
 
@@ -4547,7 +4545,7 @@
             this.$el,
             "hide",
             on(document, pointerDown, function (ref) {
-              const { target } = ref;
+              var target = ref.target;
 
               return (
                 !within(target, this$1.$el) &&
@@ -4555,9 +4553,9 @@
                   document,
                   pointerUp + " " + pointerCancel + " scroll",
                   function (ref) {
-                    const { defaultPrevented } = ref;
-                    const { type } = ref;
-                    const newTarget = ref.target;
+                    var defaultPrevented = ref.defaultPrevented;
+                    var type = ref.type;
+                    var newTarget = ref.target;
 
                     if (
                       !defaultPrevented &&
@@ -4593,7 +4591,7 @@
 
         self: true,
 
-        handler() {
+        handler: function () {
           this.clearTimers();
         },
       },
@@ -4601,8 +4599,8 @@
       {
         name: "hide",
 
-        handler(ref) {
-          const { target } = ref;
+        handler: function (ref) {
+          var target = ref.target;
 
           if (this.$el !== target) {
             active =
@@ -4619,7 +4617,7 @@
     ],
 
     update: {
-      write() {
+      write: function () {
         if (this.isToggled() && !hasClass(this.$el, this.clsEnter)) {
           this.position();
         }
@@ -4629,8 +4627,8 @@
     },
 
     methods: {
-      show(toggle, delay) {
-        const this$1 = this;
+      show: function (toggle, delay) {
+        var this$1 = this;
         if (toggle === void 0) toggle = this.toggle;
         if (delay === void 0) delay = true;
 
@@ -4657,7 +4655,7 @@
             return;
           }
 
-          let prev;
+          var prev;
           while (active && prev !== active && !within(this.$el, active.$el)) {
             prev = active;
             active.hide(false);
@@ -4669,11 +4667,11 @@
         }, (delay && this.delayShow) || 0);
       },
 
-      hide(delay) {
-        const this$1 = this;
+      hide: function (delay) {
+        var this$1 = this;
         if (delay === void 0) delay = true;
 
-        const hide = function () {
+        var hide = function () {
           return this$1.toggleElement(this$1.$el, false, false);
         };
 
@@ -4692,7 +4690,7 @@
         }
       },
 
-      clearTimers() {
+      clearTimers: function () {
         clearTimeout(this.showTimer);
         clearTimeout(this.hideTimer);
         this.showTimer = null;
@@ -4700,19 +4698,19 @@
         this.isDelaying = false;
       },
 
-      isActive() {
+      isActive: function () {
         return active === this;
       },
 
-      position() {
+      position: function () {
         removeClass(this.$el, this.clsDrop + "-stack");
         toggleClass(this.$el, this.clsDrop + "-boundary", this.boundaryAlign);
 
-        const boundary = offset(this.boundary);
-        const alignTo = this.boundaryAlign ? boundary : offset(this.toggle.$el);
+        var boundary = offset(this.boundary);
+        var alignTo = this.boundaryAlign ? boundary : offset(this.toggle.$el);
 
         if (this.align === "justify") {
-          const prop = this.getAxis() === "y" ? "width" : "height";
+          var prop = this.getAxis() === "y" ? "width" : "height";
           css(this.$el, prop, alignTo[prop]);
         } else if (
           this.boundary &&
@@ -4735,14 +4733,14 @@
   };
 
   function getPositionedElements(el) {
-    const result = [];
+    var result = [];
     apply(el, function (el) {
       return css(el, "position") !== "static" && result.push(el);
     });
     return result;
   }
 
-  const formCustom = {
+  var formCustom = {
     mixins: [Class],
 
     args: "target",
@@ -4756,16 +4754,16 @@
     },
 
     computed: {
-      input(_, $el) {
+      input: function (_, $el) {
         return $(selInput, $el);
       },
 
-      state() {
+      state: function () {
         return this.input.nextElementSibling;
       },
 
-      target(ref, $el) {
-        const { target } = ref;
+      target: function (ref, $el) {
+        var target = ref.target;
 
         return (
           target &&
@@ -4777,19 +4775,19 @@
       },
     },
 
-    update() {
-      const ref = this;
-      const { target } = ref;
-      const { input } = ref;
+    update: function () {
+      var ref = this;
+      var target = ref.target;
+      var input = ref.input;
 
       if (!target) {
         return;
       }
 
-      let option;
-      const prop = isInput(target) ? "value" : "textContent";
-      const prev = target[prop];
-      const value =
+      var option;
+      var prop = isInput(target) ? "value" : "textContent";
+      var prev = target[prop];
+      var value =
         input.files && input.files[0]
           ? input.files[0].name
           : matches(input, "select") &&
@@ -4808,7 +4806,7 @@
       {
         name: "change",
 
-        handler() {
+        handler: function () {
           this.$update();
         },
       },
@@ -4816,11 +4814,11 @@
       {
         name: "reset",
 
-        el() {
+        el: function () {
           return closest(this.$el, "form");
         },
 
-        handler() {
+        handler: function () {
           this.$update();
         },
       },
@@ -4828,10 +4826,10 @@
   };
 
   // Deprecated
-  const gif = {
+  var gif = {
     update: {
-      read(data) {
-        const inview = isInView(this.$el);
+      read: function (data) {
+        var inview = isInView(this.$el);
 
         if (!inview || data.isInView === inview) {
           return false;
@@ -4840,7 +4838,7 @@
         data.isInView = inview;
       },
 
-      write() {
+      write: function () {
         this.$el.src = "" + this.$el.src; // force self-assign
       },
 
@@ -4848,7 +4846,7 @@
     },
   };
 
-  const Margin = {
+  var Margin = {
     props: {
       margin: String,
       firstColumn: Boolean,
@@ -4860,21 +4858,21 @@
     },
 
     update: {
-      read() {
-        const rows = getRows(this.$el.children);
+      read: function () {
+        var rows = getRows(this.$el.children);
 
         return {
-          rows,
+          rows: rows,
           columns: getColumns(rows),
         };
       },
 
-      write(ref) {
-        const { columns } = ref;
-        const { rows } = ref;
+      write: function (ref) {
+        var columns = ref.columns;
+        var rows = ref.rows;
 
-        for (let i = 0; i < rows.length; i++) {
-          for (let j = 0; j < rows[i].length; j++) {
+        for (var i = 0; i < rows.length; i++) {
+          for (var j = 0; j < rows[i].length; j++) {
             toggleClass(rows[i][j], this.margin, i !== 0);
             toggleClass(
               rows[i][j],
@@ -4894,11 +4892,11 @@
   }
 
   function getColumns(rows) {
-    const columns = [];
+    var columns = [];
 
-    for (let i = 0; i < rows.length; i++) {
-      const sorted = sortBy$1(rows[i], "left", "right");
-      for (let j = 0; j < sorted.length; j++) {
+    for (var i = 0; i < rows.length; i++) {
+      var sorted = sortBy$1(rows[i], "left", "right");
+      for (var j = 0; j < sorted.length; j++) {
         columns[j] = !columns[j] ? sorted[j] : columns[j].concat(sorted[j]);
       }
     }
@@ -4907,26 +4905,26 @@
   }
 
   function sortBy$1(items, startProp, endProp) {
-    const sorted = [[]];
+    var sorted = [[]];
 
-    for (let i = 0; i < items.length; i++) {
-      const el = items[i];
+    for (var i = 0; i < items.length; i++) {
+      var el = items[i];
 
       if (!isVisible(el)) {
         continue;
       }
 
-      let dim = getOffset(el);
+      var dim = getOffset(el);
 
-      for (let j = sorted.length - 1; j >= 0; j--) {
-        const current = sorted[j];
+      for (var j = sorted.length - 1; j >= 0; j--) {
+        var current = sorted[j];
 
         if (!current[0]) {
           current.push(el);
           break;
         }
 
-        let startDim = void 0;
+        var startDim = void 0;
         if (current[0].offsetParent === el.offsetParent) {
           startDim = getOffset(current[0]);
         } else {
@@ -4961,14 +4959,14 @@
   }
 
   function getOffset(element, offset) {
-    let assign;
+    var assign;
 
     if (offset === void 0) offset = false;
 
-    let { offsetTop } = element;
-    let { offsetLeft } = element;
-    const { offsetHeight } = element;
-    const { offsetWidth } = element;
+    var offsetTop = element.offsetTop;
+    var offsetLeft = element.offsetLeft;
+    var offsetHeight = element.offsetHeight;
+    var offsetWidth = element.offsetWidth;
 
     if (offset) {
       (assign = offsetPosition(element)),
@@ -4984,7 +4982,7 @@
     };
   }
 
-  const grid = {
+  var grid = {
     extends: Margin,
 
     mixins: [Class],
@@ -5003,14 +5001,14 @@
       parallax: 0,
     },
 
-    connected() {
+    connected: function () {
       this.masonry && addClass(this.$el, "mod-flex-top mod-flex-wrap-top");
     },
 
     update: [
       {
-        write(ref) {
-          const { columns } = ref;
+        write: function (ref) {
+          var columns = ref.columns;
 
           toggleClass(this.$el, this.clsStack, columns.length < 2);
         },
@@ -5019,9 +5017,9 @@
       },
 
       {
-        read(data) {
-          let { columns } = data;
-          const { rows } = data;
+        read: function (data) {
+          var columns = data.columns;
+          var rows = data.rows;
 
           // Filter component makes elements positioned absolute
           if (
@@ -5033,12 +5031,12 @@
             return false;
           }
 
-          let translates = false;
+          var translates = false;
 
-          const nodes = children(this.$el);
-          const columnHeights = getColumnHeights(columns);
-          const margin = getMarginTop(nodes, this.margin) * (rows.length - 1);
-          const elHeight = Math.max.apply(Math, columnHeights) + margin;
+          var nodes = children(this.$el);
+          var columnHeights = getColumnHeights(columns);
+          var margin = getMarginTop(nodes, this.margin) * (rows.length - 1);
+          var elHeight = Math.max.apply(Math, columnHeights) + margin;
 
           if (this.masonry) {
             columns = columns.map(function (column) {
@@ -5047,7 +5045,7 @@
             translates = getTranslates(rows, columns);
           }
 
-          let padding = Math.abs(this.parallax);
+          var padding = Math.abs(this.parallax);
           if (padding) {
             padding = columnHeights.reduce(function (newPadding, hgt, i) {
               return Math.max(
@@ -5058,16 +5056,16 @@
           }
 
           return {
-            padding,
-            columns,
-            translates,
+            padding: padding,
+            columns: columns,
+            translates: translates,
             height: translates ? elHeight : "",
           };
         },
 
-        write(ref) {
-          const { height } = ref;
-          const { padding } = ref;
+        write: function (ref) {
+          var height = ref.height;
+          var padding = ref.padding;
 
           css(this.$el, "paddingBottom", padding || "");
           height !== false && css(this.$el, "height", height);
@@ -5077,8 +5075,8 @@
       },
 
       {
-        read(ref) {
-          const height$1 = ref.height;
+        read: function (ref) {
+          var height$1 = ref.height;
 
           if (positionedAbsolute(this.$el)) {
             return false;
@@ -5094,10 +5092,10 @@
           };
         },
 
-        write(ref) {
-          const { columns } = ref;
-          const { scrolled } = ref;
-          const { translates } = ref;
+        write: function (ref) {
+          var columns = ref.columns;
+          var scrolled = ref.scrolled;
+          var translates = ref.translates;
 
           if (scrolled === false && !translates) {
             return;
@@ -5131,7 +5129,7 @@
   }
 
   function getTranslates(rows, columns) {
-    const rowHeights = rows.map(function (row) {
+    var rowHeights = rows.map(function (row) {
       return Math.max.apply(
         Math,
         row.map(function (el) {
@@ -5141,7 +5139,7 @@
     });
 
     return columns.map(function (elements) {
-      let prev = 0;
+      var prev = 0;
       return elements.map(function (element, row) {
         return (prev += row
           ? rowHeights[row - 1] - elements[row - 1].offsetHeight
@@ -5151,10 +5149,10 @@
   }
 
   function getMarginTop(nodes, cls) {
-    const ref = nodes.filter(function (el) {
+    var ref = nodes.filter(function (el) {
       return hasClass(el, cls);
     });
-    const node = ref[0];
+    var node = ref[0];
 
     return toFloat(
       node ? css(node, "marginTop") : css(nodes[0], "paddingLeft")
@@ -5170,7 +5168,7 @@
   }
 
   // IE 11 fix (min-height on a flex container won't apply to its flex items)
-  const FlexBug = isIE
+  var FlexBug = isIE
     ? {
         props: {
           selMinHeight: String,
@@ -5182,8 +5180,8 @@
         },
 
         computed: {
-          elements(ref, $el) {
-            const { selMinHeight } = ref;
+          elements: function (ref, $el) {
+            var selMinHeight = ref.selMinHeight;
 
             return selMinHeight ? $$(selMinHeight, $el) : [$el];
           },
@@ -5191,7 +5189,7 @@
 
         update: [
           {
-            read() {
+            read: function () {
               css(this.elements, "height", "");
             },
 
@@ -5201,11 +5199,11 @@
           },
 
           {
-            write() {
-              const this$1 = this;
+            write: function () {
+              var this$1 = this;
 
               this.elements.forEach(function (el) {
-                const height = toFloat(css(el, "minHeight"));
+                var height = toFloat(css(el, "minHeight"));
                 if (
                   height &&
                   (this$1.forceHeight ||
@@ -5226,7 +5224,7 @@
       }
     : {};
 
-  const heightMatch = {
+  var heightMatch = {
     mixins: [FlexBug],
 
     args: "target",
@@ -5243,15 +5241,15 @@
     },
 
     computed: {
-      elements(ref, $el) {
-        const { target } = ref;
+      elements: function (ref, $el) {
+        var target = ref.target;
 
         return $$(target, $el);
       },
     },
 
     update: {
-      read() {
+      read: function () {
         return {
           rows: (this.row ? getRows(this.elements) : [this.elements]).map(
             match
@@ -5259,12 +5257,12 @@
         };
       },
 
-      write(ref) {
-        const { rows } = ref;
+      write: function (ref) {
+        var rows = ref.rows;
 
         rows.forEach(function (ref) {
-          const { heights } = ref;
-          const { elements } = ref;
+          var heights = ref.heights;
+          var elements = ref.elements;
 
           return elements.forEach(function (el, i) {
             return css(el, "minHeight", heights[i]);
@@ -5278,15 +5276,15 @@
 
   function match(elements) {
     if (elements.length < 2) {
-      return { heights: [""], elements };
+      return { heights: [""], elements: elements };
     }
 
-    let heights = elements.map(getHeight);
-    let max = Math.max.apply(Math, heights);
-    const hasMinHeight = elements.some(function (el) {
+    var heights = elements.map(getHeight);
+    var max = Math.max.apply(Math, heights);
+    var hasMinHeight = elements.some(function (el) {
       return el.style.minHeight;
     });
-    const hasShrunk = elements.some(function (el, i) {
+    var hasShrunk = elements.some(function (el, i) {
       return !el.style.minHeight && heights[i] < max;
     });
 
@@ -5303,17 +5301,17 @@
         : max;
     });
 
-    return { heights, elements };
+    return { heights: heights, elements: elements };
   }
 
   function getHeight(element) {
-    let style = false;
+    var style = false;
     if (!isVisible(element)) {
       style = element.style.display;
       css(element, "display", "block", "important");
     }
 
-    const height =
+    var height =
       dimensions(element).height -
       boxModelAdjust(element, "height", "content-box");
 
@@ -5324,7 +5322,7 @@
     return height;
   }
 
-  const heightViewport = {
+  var heightViewport = {
     mixins: [FlexBug],
 
     props: {
@@ -5342,15 +5340,15 @@
     },
 
     update: {
-      read(ref) {
-        const prev = ref.minHeight;
+      read: function (ref) {
+        var prev = ref.minHeight;
 
         if (!isVisible(this.$el)) {
           return false;
         }
 
-        let minHeight = "";
-        const box = boxModelAdjust(this.$el, "height", "content-box");
+        var minHeight = "";
+        var box = boxModelAdjust(this.$el, "height", "content-box");
 
         if (this.expand) {
           minHeight =
@@ -5363,8 +5361,8 @@
           minHeight = "calc(100vh";
 
           if (this.offsetTop) {
-            const ref$1 = offset(this.$el);
-            const { top } = ref$1;
+            var ref$1 = offset(this.$el);
+            var top = ref$1.top;
             minHeight +=
               top > 0 && top < height(window) / 2 ? " - " + top + "px" : "";
           }
@@ -5386,14 +5384,14 @@
           minHeight += (box ? " - " + box + "px" : "") + ")";
         }
 
-        return { minHeight, prev };
+        return { minHeight: minHeight, prev: prev };
       },
 
-      write(ref) {
-        const { minHeight } = ref;
-        const { prev } = ref;
+      write: function (ref) {
+        var minHeight = ref.minHeight;
+        var prev = ref.prev;
 
-        css(this.$el, { minHeight });
+        css(this.$el, { minHeight: minHeight });
 
         if (minHeight !== prev) {
           this.$update(this.$el, "resize");
@@ -5411,7 +5409,7 @@
     },
   };
 
-  const img = {
+  var img = {
     args: "dataSrc",
 
     props: {
@@ -5437,63 +5435,63 @@
     },
 
     computed: {
-      cacheKey(ref) {
-        const { dataSrc } = ref;
+      cacheKey: function (ref) {
+        var dataSrc = ref.dataSrc;
 
         return this.$name + "." + dataSrc;
       },
 
-      width(ref) {
-        const { width } = ref;
-        const { dataWidth } = ref;
+      width: function (ref) {
+        var width = ref.width;
+        var dataWidth = ref.dataWidth;
 
         return width || dataWidth;
       },
 
-      height(ref) {
-        const { height } = ref;
-        const { dataHeight } = ref;
+      height: function (ref) {
+        var height = ref.height;
+        var dataHeight = ref.dataHeight;
 
         return height || dataHeight;
       },
 
-      sizes(ref) {
-        const { sizes } = ref;
-        const { dataSizes } = ref;
+      sizes: function (ref) {
+        var sizes = ref.sizes;
+        var dataSizes = ref.dataSizes;
 
         return sizes || dataSizes;
       },
 
-      isImg(_, $el) {
+      isImg: function (_, $el) {
         return isImg($el);
       },
 
       target: {
-        get(ref) {
-          const { target } = ref;
+        get: function (ref) {
+          var target = ref.target;
 
           return [this.$el].concat(queryAll(target, this.$el));
         },
 
-        watch() {
+        watch: function () {
           this.observe();
         },
       },
 
-      offsetTop(ref) {
-        const { offsetTop } = ref;
+      offsetTop: function (ref) {
+        var offsetTop = ref.offsetTop;
 
         return toPx(offsetTop, "height");
       },
 
-      offsetLeft(ref) {
-        const { offsetLeft } = ref;
+      offsetLeft: function (ref) {
+        var offsetLeft = ref.offsetLeft;
 
         return toPx(offsetLeft, "width");
       },
     },
 
-    connected() {
+    connected: function () {
       if (!window.IntersectionObserver) {
         setSrcAttrs(this.$el, this.dataSrc, this.dataSrcset, this.sizes);
         return;
@@ -5520,14 +5518,14 @@
       requestAnimationFrame(this.observe);
     },
 
-    disconnected() {
+    disconnected: function () {
       this.observer && this.observer.disconnect();
     },
 
     update: {
-      read(ref) {
-        const this$1 = this;
-        const { image } = ref;
+      read: function (ref) {
+        var this$1 = this;
+        var image = ref.image;
 
         if (!this.observer) {
           return false;
@@ -5551,9 +5549,9 @@
           });
       },
 
-      write(data) {
+      write: function (data) {
         if (this.dataSrcset && window.devicePixelRatio !== 1) {
-          const bgSize = css(this.$el, "backgroundSize");
+          var bgSize = css(this.$el, "backgroundSize");
           if (bgSize.match(/^(auto\s?)+$/) || toFloat(bgSize) === data.bgSize) {
             data.bgSize = getSourceSize(this.dataSrcset, this.sizes);
             css(this.$el, "backgroundSize", data.bgSize + "px");
@@ -5565,8 +5563,8 @@
     },
 
     methods: {
-      load(entries) {
-        const this$1 = this;
+      load: function (entries) {
+        var this$1 = this;
 
         // Old chromium based browsers (UC Browser) did not implement `isIntersecting`
         if (
@@ -5595,8 +5593,8 @@
         this.observer.disconnect();
       },
 
-      observe() {
-        const this$1 = this;
+      observe: function () {
+        var this$1 = this;
 
         if (this._connected && !this._data.image) {
           this.target.forEach(function (el) {
@@ -5613,7 +5611,7 @@
       srcset && (el.srcset = srcset);
       src && (el.src = src);
     } else if (src) {
-      const change = !includes(el.style.backgroundImage, src);
+      var change = !includes(el.style.backgroundImage, src);
       if (change) {
         css(el, "backgroundImage", "url(" + escape(src) + ")");
         trigger(el, createEvent("load", false));
@@ -5622,11 +5620,11 @@
   }
 
   function getPlaceholderImage(width, height, sizes) {
-    let assign;
+    var assign;
 
     if (sizes) {
       (assign = Dimensions.ratio(
-        { width, height },
+        { width: width, height: height },
         "width",
         toPx(sizesToPixel(sizes))
       )),
@@ -5643,9 +5641,9 @@
     );
   }
 
-  const sizesRe = /\s*(.*?)\s*(\w+|calc\(.*?\))\s*(?:,|$)/g;
+  var sizesRe = /\s*(.*?)\s*(\w+|calc\(.*?\))\s*(?:,|$)/g;
   function sizesToPixel(sizes) {
-    let matches;
+    var matches;
 
     sizesRe.lastIndex = 0;
 
@@ -5659,8 +5657,8 @@
     return matches || "100vw";
   }
 
-  const sizeRe = /\d+(?:\w+|%)/g;
-  const additionRe = /[+-]?(\d+)/g;
+  var sizeRe = /\d+(?:\w+|%)/g;
+  var additionRe = /[+-]?(\d+)/g;
   function evaluateSize(size) {
     return startsWith(size, "calc")
       ? size
@@ -5676,10 +5674,10 @@
       : size;
   }
 
-  const srcSetRe = /\s+\d+w\s*(?:,|$)/g;
+  var srcSetRe = /\s+\d+w\s*(?:,|$)/g;
   function getSourceSize(srcset, sizes) {
-    const srcSize = toPx(sizesToPixel(sizes));
-    const descriptors = (srcset.match(srcSetRe) || [])
+    var srcSize = toPx(sizesToPixel(sizes));
+    var descriptors = (srcset.match(srcSetRe) || [])
       .map(toFloat)
       .sort(function (a, b) {
         return a - b;
@@ -5702,8 +5700,8 @@
     return el.currentSrc || el.src;
   }
 
-  const key = "__test__";
-  let storage;
+  var key = "__test__";
+  var storage;
 
   // workaround for Safari's private browsing mode and accessing sessionStorage in Blink
   try {
@@ -5714,7 +5712,7 @@
     storage = {};
   }
 
-  const Container = {
+  var Container = {
     props: {
       container: Boolean,
     },
@@ -5724,8 +5722,8 @@
     },
 
     computed: {
-      container(ref) {
-        const { container } = ref;
+      container: function (ref) {
+        var container = ref.container;
 
         return (
           (container === true && this.$container) || (container && $(container))
@@ -5734,9 +5732,9 @@
     },
   };
 
-  const active$1 = [];
+  var active$1 = [];
 
-  const Modal = {
+  var Modal = {
     mixins: [Class, Container, Togglable],
 
     props: {
@@ -5756,24 +5754,24 @@
     },
 
     computed: {
-      panel(ref, $el) {
-        const { selPanel } = ref;
+      panel: function (ref, $el) {
+        var selPanel = ref.selPanel;
 
         return $(selPanel, $el);
       },
 
-      transitionElement() {
+      transitionElement: function () {
         return this.panel;
       },
 
-      bgClose(ref) {
-        const { bgClose } = ref;
+      bgClose: function (ref) {
+        var bgClose = ref.bgClose;
 
         return bgClose && this.panel;
       },
     },
 
-    beforeDisconnect() {
+    beforeDisconnect: function () {
       if (this.isToggled()) {
         this.toggleElement(this.$el, false, false);
       }
@@ -5783,11 +5781,11 @@
       {
         name: "click",
 
-        delegate() {
+        delegate: function () {
           return this.selClose;
         },
 
-        handler(e) {
+        handler: function (e) {
           e.preventDefault();
           this.hide();
         },
@@ -5798,7 +5796,7 @@
 
         self: true,
 
-        handler(e) {
+        handler: function (e) {
           if (e.defaultPrevented) {
             return;
           }
@@ -5816,7 +5814,7 @@
 
         self: true,
 
-        handler(e) {
+        handler: function (e) {
           if (includes(active$1, this)) {
             return false;
           }
@@ -5839,10 +5837,10 @@
 
         self: true,
 
-        handler() {
-          const this$1 = this;
+        handler: function () {
+          var this$1 = this;
 
-          const docEl = document.documentElement;
+          var docEl = document.documentElement;
 
           if (width(window) > docEl.clientWidth && this.overlay) {
             css(document.body, "overflowY", "scroll");
@@ -5863,7 +5861,7 @@
               this.$el,
               "hide",
               on(document, pointerDown, function (ref) {
-                const { target } = ref;
+                var target = ref.target;
 
                 if (
                   last(active$1) !== this$1 ||
@@ -5877,9 +5875,9 @@
                   document,
                   pointerUp + " " + pointerCancel + " scroll",
                   function (ref) {
-                    const { defaultPrevented } = ref;
-                    const { type } = ref;
-                    const newTarget = ref.target;
+                    var defaultPrevented = ref.defaultPrevented;
+                    var type = ref.type;
+                    var newTarget = ref.target;
 
                     if (
                       !defaultPrevented &&
@@ -5916,8 +5914,8 @@
 
         self: true,
 
-        handler() {
-          const this$1 = this;
+        handler: function () {
+          var this$1 = this;
 
           if (includes(active$1, this)) {
             active$1.splice(active$1.indexOf(this), 1);
@@ -5941,12 +5939,12 @@
     ],
 
     methods: {
-      toggle() {
+      toggle: function () {
         return this.isToggled() ? this.hide() : this.show();
       },
 
-      show() {
-        const this$1 = this;
+      show: function () {
+        var this$1 = this;
 
         if (this.container && parent(this.$el) !== this.container) {
           append(this.container, this.$el);
@@ -5960,15 +5958,15 @@
         return this.toggleElement(this.$el, true, animate$1(this));
       },
 
-      hide() {
+      hide: function () {
         return this.toggleElement(this.$el, false, animate$1(this));
       },
     },
   };
 
   function animate$1(ref) {
-    const { transitionElement } = ref;
-    const { _toggle } = ref;
+    var transitionElement = ref.transitionElement;
+    var _toggle = ref._toggle;
 
     return function (el, show) {
       return new Promise(function (resolve, reject) {
@@ -5978,7 +5976,7 @@
 
           _toggle(el, show);
 
-          const off = once(
+          var off = once(
             transitionElement,
             "transitionstart",
             function () {
@@ -6004,8 +6002,8 @@
     };
   }
 
-  const modal = {
-    install,
+  var modal = {
+    install: install,
 
     mixins: [Modal],
 
@@ -6022,7 +6020,7 @@
 
         self: true,
 
-        handler() {
+        handler: function () {
           if (hasClass(this.panel, "mod-margin-auto-vertical")) {
             addClass(this.$el, "mod-flex");
           } else {
@@ -6038,7 +6036,7 @@
 
         self: true,
 
-        handler() {
+        handler: function () {
           css(this.$el, "display", "");
           removeClass(this.$el, "mod-flex");
         },
@@ -6047,10 +6045,10 @@
   };
 
   function install(ref) {
-    const { modal } = ref;
+    var modal = ref.modal;
 
     modal.dialog = function (content, options) {
-      const dialog = modal(
+      var dialog = modal(
         '<div class="mod-modal"> <div class="mod-modal-dialog">' +
           content +
           "</div> </div>",
@@ -6076,7 +6074,7 @@
     modal.alert = function (message, options) {
       return openDialog(
         function (ref) {
-          const { labels } = ref;
+          var labels = ref.labels;
 
           return (
             '<div class="mod-modal-body">' +
@@ -6096,7 +6094,7 @@
     modal.confirm = function (message, options) {
       return openDialog(
         function (ref) {
-          const { labels } = ref;
+          var labels = ref.labels;
 
           return (
             '<form> <div class="mod-modal-body">' +
@@ -6118,7 +6116,7 @@
     modal.prompt = function (message, value, options) {
       return openDialog(
         function (ref) {
-          const { labels } = ref;
+          var labels = ref.labels;
 
           return (
             '<form class="mod-form-stacked"> <div class="mod-modal-body"> <label>' +
@@ -6153,10 +6151,10 @@
         options
       );
 
-      const dialog = modal.dialog(tmpl(options), options);
-      const deferred = new Deferred();
+      var dialog = modal.dialog(tmpl(options), options);
+      var deferred = new Deferred();
 
-      let resolved = false;
+      var resolved = false;
 
       on(dialog.$el, "submit", "form", function (e) {
         e.preventDefault();
@@ -6175,7 +6173,7 @@
     }
   }
 
-  const offcanvas = {
+  var offcanvas = {
     mixins: [Modal],
 
     args: "mode",
@@ -6203,52 +6201,52 @@
     },
 
     computed: {
-      clsFlip(ref) {
-        const { flip } = ref;
-        const { clsFlip } = ref;
+      clsFlip: function (ref) {
+        var flip = ref.flip;
+        var clsFlip = ref.clsFlip;
 
         return flip ? clsFlip : "";
       },
 
-      clsOverlay(ref) {
-        const { overlay } = ref;
-        const { clsOverlay } = ref;
+      clsOverlay: function (ref) {
+        var overlay = ref.overlay;
+        var clsOverlay = ref.clsOverlay;
 
         return overlay ? clsOverlay : "";
       },
 
-      clsMode(ref) {
-        const { mode } = ref;
-        const { clsMode } = ref;
+      clsMode: function (ref) {
+        var mode = ref.mode;
+        var clsMode = ref.clsMode;
 
         return clsMode + "-" + mode;
       },
 
-      clsSidebarAnimation(ref) {
-        const { mode } = ref;
-        const { clsSidebarAnimation } = ref;
+      clsSidebarAnimation: function (ref) {
+        var mode = ref.mode;
+        var clsSidebarAnimation = ref.clsSidebarAnimation;
 
         return mode === "none" || mode === "reveal" ? "" : clsSidebarAnimation;
       },
 
-      clsContainerAnimation(ref) {
-        const { mode } = ref;
-        const { clsContainerAnimation } = ref;
+      clsContainerAnimation: function (ref) {
+        var mode = ref.mode;
+        var clsContainerAnimation = ref.clsContainerAnimation;
 
         return mode !== "push" && mode !== "reveal"
           ? ""
           : clsContainerAnimation;
       },
 
-      transitionElement(ref) {
-        const { mode } = ref;
+      transitionElement: function (ref) {
+        var mode = ref.mode;
 
         return mode === "reveal" ? parent(this.panel) : this.panel;
       },
     },
 
     update: {
-      read() {
+      read: function () {
         if (this.isToggled() && !isVisible(this.$el)) {
           this.hide();
         }
@@ -6261,13 +6259,13 @@
       {
         name: "click",
 
-        delegate() {
+        delegate: function () {
           return 'a[href^="#"]';
         },
 
-        handler(ref) {
-          const { hash } = ref.current;
-          const { defaultPrevented } = ref;
+        handler: function (ref) {
+          var hash = ref.current.hash;
+          var defaultPrevented = ref.defaultPrevented;
 
           if (!defaultPrevented && hash && $(hash, document.body)) {
             this.hide();
@@ -6280,12 +6278,12 @@
 
         passive: true,
 
-        el() {
+        el: function () {
           return this.panel;
         },
 
-        handler(ref) {
-          const { targetTouches } = ref;
+        handler: function (ref) {
+          var targetTouches = ref.targetTouches;
 
           if (targetTouches.length === 1) {
             this.clientY = targetTouches[0].clientY;
@@ -6299,11 +6297,11 @@
         self: true,
         passive: false,
 
-        filter() {
+        filter: function () {
           return this.overlay;
         },
 
-        handler(e) {
+        handler: function (e) {
           e.cancelable && e.preventDefault();
         },
       },
@@ -6313,20 +6311,20 @@
 
         passive: false,
 
-        el() {
+        el: function () {
           return this.panel;
         },
 
-        handler(e) {
+        handler: function (e) {
           if (e.targetTouches.length !== 1) {
             return;
           }
 
-          const clientY = event.targetTouches[0].clientY - this.clientY;
-          const ref = this.panel;
-          const { scrollTop } = ref;
-          const { scrollHeight } = ref;
-          const { clientHeight } = ref;
+          var clientY = event.targetTouches[0].clientY - this.clientY;
+          var ref = this.panel;
+          var scrollTop = ref.scrollTop;
+          var scrollHeight = ref.scrollHeight;
+          var clientHeight = ref.clientHeight;
 
           if (
             clientHeight >= scrollHeight ||
@@ -6343,7 +6341,7 @@
 
         self: true,
 
-        handler() {
+        handler: function () {
           if (
             this.mode === "reveal" &&
             !hasClass(parent(this.panel), this.clsMode)
@@ -6379,7 +6377,7 @@
 
         self: true,
 
-        handler() {
+        handler: function () {
           removeClass(document.body, this.clsContainerAnimation);
           css(document.body, "touch-action", "");
         },
@@ -6390,7 +6388,7 @@
 
         self: true,
 
-        handler() {
+        handler: function () {
           this.clsContainerAnimation && resumeUserScale();
 
           if (this.mode === "reveal") {
@@ -6409,7 +6407,7 @@
       {
         name: "swipeLeft swipeRight",
 
-        handler(e) {
+        handler: function (e) {
           if (this.isToggled() && endsWith(e.type, "Left") ^ this.flip) {
             this.hide();
           }
@@ -6424,7 +6422,7 @@
   }
 
   function resumeUserScale() {
-    const viewport = getViewport$1();
+    var viewport = getViewport$1();
     viewport.content = viewport.content.replace(/,user-scalable=0$/, "");
   }
 
@@ -6435,7 +6433,7 @@
     );
   }
 
-  const overflowAuto = {
+  var overflowAuto = {
     mixins: [Class],
 
     props: {
@@ -6449,25 +6447,25 @@
     },
 
     computed: {
-      container(ref, $el) {
-        const { selContainer } = ref;
+      container: function (ref, $el) {
+        var selContainer = ref.selContainer;
 
         return closest($el, selContainer);
       },
 
-      content(ref, $el) {
-        const { selContent } = ref;
+      content: function (ref, $el) {
+        var selContent = ref.selContent;
 
         return closest($el, selContent);
       },
     },
 
-    connected() {
+    connected: function () {
       css(this.$el, "minHeight", 150);
     },
 
     update: {
-      read() {
+      read: function () {
         if (!this.content || !this.container || !isVisible(this.$el)) {
           return false;
         }
@@ -6482,9 +6480,9 @@
         };
       },
 
-      write(ref) {
-        const { current } = ref;
-        const { max } = ref;
+      write: function (ref) {
+        var current = ref.current;
+        var max = ref.max;
 
         css(this.$el, "maxHeight", max);
         if (Math.round(current) !== Math.round(max)) {
@@ -6496,21 +6494,21 @@
     },
   };
 
-  const responsive = {
+  var responsive = {
     props: ["width", "height"],
 
-    connected() {
+    connected: function () {
       addClass(this.$el, "mod-responsive-width");
     },
 
     update: {
-      read() {
+      read: function () {
         return isVisible(this.$el) && this.width && this.height
           ? { width: width(parent(this.$el)), height: this.height }
           : false;
       },
 
-      write(dim) {
+      write: function (dim) {
         height(
           this.$el,
           Dimensions.contain(
@@ -6527,7 +6525,7 @@
     },
   };
 
-  const scroll = {
+  var scroll = {
     props: {
       offset: Number,
     },
@@ -6537,8 +6535,8 @@
     },
 
     methods: {
-      scrollTo(el) {
-        const this$1 = this;
+      scrollTo: function (el) {
+        var this$1 = this;
 
         el = (el && $(el)) || document.body;
 
@@ -6551,7 +6549,7 @@
     },
 
     events: {
-      click(e) {
+      click: function (e) {
         if (e.defaultPrevented) {
           return;
         }
@@ -6564,8 +6562,8 @@
     },
   };
 
-  const stateKey$1 = "_ukScrollspy";
-  const scrollspy = {
+  var stateKey$1 = "_ukScrollspy";
+  var scrollspy = {
     args: "cls",
 
     props: {
@@ -6578,7 +6576,7 @@
       delay: Number,
     },
 
-    data() {
+    data: function () {
       return {
         cls: false,
         target: false,
@@ -6593,13 +6591,13 @@
 
     computed: {
       elements: {
-        get(ref, $el) {
-          const { target } = ref;
+        get: function (ref, $el) {
+          var target = ref.target;
 
           return target ? $$(target, $el) : [$el];
         },
 
-        watch(elements) {
+        watch: function (elements) {
           if (this.hidden) {
             css(
               filter(elements, ":not(." + this.inViewClass + ")"),
@@ -6613,8 +6611,8 @@
       },
     },
 
-    disconnected() {
-      const this$1 = this;
+    disconnected: function () {
+      var this$1 = this;
 
       this.elements.forEach(function (el) {
         removeClass(
@@ -6628,9 +6626,9 @@
 
     update: [
       {
-        read(ref) {
-          const this$1 = this;
-          const { update } = ref;
+        read: function (ref) {
+          var this$1 = this;
+          var update = ref.update;
 
           if (!update) {
             return;
@@ -6651,8 +6649,8 @@
           });
         },
 
-        write(data) {
-          const this$1 = this;
+        write: function (data) {
+          var this$1 = this;
 
           // Let child components be applied at least once first
           if (!data.update) {
@@ -6661,8 +6659,8 @@
           }
 
           this.elements.forEach(function (el) {
-            const state = el[stateKey$1];
-            const toggle = function (inview) {
+            var state = el[stateKey$1];
+            var toggle = function (inview) {
               css(el, "visibility", !inview && this$1.hidden ? "hidden" : "");
 
               toggleClass(el, this$1.inViewClass, inview);
@@ -6707,7 +6705,7 @@
     ],
   };
 
-  const scrollspyNav = {
+  var scrollspyNav = {
     props: {
       cls: String,
       closest: String,
@@ -6726,13 +6724,13 @@
 
     computed: {
       links: {
-        get(_, $el) {
+        get: function (_, $el) {
           return $$('a[href^="#"]', $el).filter(function (el) {
             return el.hash;
           });
         },
 
-        watch(links) {
+        watch: function (links) {
           if (this.scroll) {
             this.$create("scroll", links, { offset: this.offset || 0 });
           }
@@ -6741,7 +6739,7 @@
         immediate: true,
       },
 
-      targets() {
+      targets: function () {
         return $$(
           this.links
             .map(function (el) {
@@ -6751,8 +6749,8 @@
         );
       },
 
-      elements(ref) {
-        const selector = ref.closest;
+      elements: function (ref) {
+        var selector = ref.closest;
 
         return closest(this.links, selector || "*");
       },
@@ -6760,22 +6758,22 @@
 
     update: [
       {
-        read() {
-          const this$1 = this;
+        read: function () {
+          var this$1 = this;
 
-          const ref = this.targets;
-          const { length } = ref;
+          var ref = this.targets;
+          var length = ref.length;
 
           if (!length || !isVisible(this.$el)) {
             return false;
           }
 
-          const ref$1 = scrollParents(this.targets, /auto|scroll/, true);
-          const scrollElement = ref$1[0];
-          const { scrollTop } = scrollElement;
-          const { scrollHeight } = scrollElement;
-          const max = scrollHeight - getViewportClientHeight(scrollElement);
-          let active = false;
+          var ref$1 = scrollParents(this.targets, /auto|scroll/, true);
+          var scrollElement = ref$1[0];
+          var scrollTop = scrollElement.scrollTop;
+          var scrollHeight = scrollElement.scrollHeight;
+          var max = scrollHeight - getViewportClientHeight(scrollElement);
+          var active = false;
 
           if (scrollTop === max) {
             active = length - 1;
@@ -6797,11 +6795,11 @@
             }
           }
 
-          return { active };
+          return { active: active };
         },
 
-        write(ref) {
-          const { active } = ref;
+        write: function (ref) {
+          var active = ref.active;
 
           this.links.forEach(function (el) {
             return el.blur();
@@ -6821,7 +6819,7 @@
     ],
   };
 
-  const Media = {
+  var Media = {
     props: {
       media: Boolean,
     },
@@ -6831,8 +6829,8 @@
     },
 
     computed: {
-      matchMedia() {
-        const media = toMedia(this.media);
+      matchMedia: function () {
+        var media = toMedia(this.media);
         return !media || window.matchMedia(media).matches;
       },
     },
@@ -6841,7 +6839,7 @@
   function toMedia(value) {
     if (isString(value)) {
       if (value[0] === "@") {
-        const name = "breakpoint-" + value.substr(1);
+        var name = "breakpoint-" + value.substr(1);
         value = toFloat(getCssVar(name));
       } else if (isNaN(value)) {
         return value;
@@ -6851,7 +6849,7 @@
     return value && !isNaN(value) ? "(min-width: " + value + "px)" : false;
   }
 
-  const sticky = {
+  var sticky = {
     mixins: [Class, Media],
 
     props: {
@@ -6885,30 +6883,30 @@
     },
 
     computed: {
-      offset(ref) {
-        const { offset } = ref;
+      offset: function (ref) {
+        var offset = ref.offset;
 
         return toPx(offset);
       },
 
-      selTarget(ref, $el) {
-        const { selTarget } = ref;
+      selTarget: function (ref, $el) {
+        var selTarget = ref.selTarget;
 
         return (selTarget && $(selTarget, $el)) || $el;
       },
 
-      widthElement(ref, $el) {
-        const { widthElement } = ref;
+      widthElement: function (ref, $el) {
+        var widthElement = ref.widthElement;
 
         return query(widthElement, $el) || this.placeholder;
       },
 
       isActive: {
-        get() {
+        get: function () {
           return hasClass(this.selTarget, this.clsActive);
         },
 
-        set(value) {
+        set: function (value) {
           if (value && !this.isActive) {
             replaceClass(this.selTarget, this.clsInactive, this.clsActive);
             trigger(this.$el, "active");
@@ -6920,7 +6918,7 @@
       },
     },
 
-    connected() {
+    connected: function () {
       this.placeholder =
         $("+ .mod-sticky-placeholder", this.$el) ||
         $('<div class="mod-sticky-placeholder"></div>');
@@ -6928,7 +6926,7 @@
       this.isActive = false;
     },
 
-    disconnected() {
+    disconnected: function () {
       if (this.isFixed) {
         this.hide();
         removeClass(this.selTarget, this.clsInactive);
@@ -6943,12 +6941,12 @@
       {
         name: "load hashchange popstate",
 
-        el() {
+        el: function () {
           return window;
         },
 
-        handler() {
-          const this$1 = this;
+        handler: function () {
+          var this$1 = this;
 
           if (
             !(
@@ -6960,14 +6958,14 @@
             return;
           }
 
-          const target = $(location.hash);
+          var target = $(location.hash);
 
           if (target) {
             fastdom.read(function () {
-              const ref = offset(target);
-              const { top } = ref;
-              const elTop = offset(this$1.$el).top;
-              const elHeight = this$1.$el.offsetHeight;
+              var ref = offset(target);
+              var top = ref.top;
+              var elTop = offset(this$1.$el).top;
+              var elHeight = this$1.$el.offsetHeight;
 
               if (
                 this$1.isFixed &&
@@ -6990,8 +6988,8 @@
 
     update: [
       {
-        read(ref, types) {
-          let { height } = ref;
+        read: function (ref, types) {
+          var height = ref.height;
 
           this.inactive = !this.matchMedia || !isVisible(this.$el);
 
@@ -7012,7 +7010,7 @@
           ).top;
           this.bottomOffset = this.topOffset + height;
 
-          const bottom = parseProp("bottom", this);
+          var bottom = parseProp("bottom", this);
 
           this.top =
             Math.max(toFloat(parseProp("top", this)), this.topOffset) -
@@ -7023,7 +7021,7 @@
           ).width;
 
           return {
-            height,
+            height: height,
             top: offsetPosition(this.placeholder)[0],
             margins: css(this.$el, [
               "marginTop",
@@ -7034,14 +7032,14 @@
           };
         },
 
-        write(ref) {
-          const { height } = ref;
-          const { margins } = ref;
+        write: function (ref) {
+          var height = ref.height;
+          var margins = ref.margins;
 
-          const ref$1 = this;
-          const { placeholder } = ref$1;
+          var ref$1 = this;
+          var placeholder = ref$1.placeholder;
 
-          css(placeholder, assign({ height }, margins));
+          css(placeholder, assign({ height: height }, margins));
 
           if (!within(placeholder, document)) {
             after(this.$el, placeholder);
@@ -7055,8 +7053,8 @@
       },
 
       {
-        read(ref) {
-          let { scroll } = ref;
+        read: function (ref) {
+          var scroll = ref.scroll;
           if (scroll === void 0) scroll = 0;
 
           this.scroll = window.pageYOffset;
@@ -7067,18 +7065,18 @@
           };
         },
 
-        write(data, types) {
-          const this$1 = this;
+        write: function (data, types) {
+          var this$1 = this;
 
-          const now = Date.now();
-          const isScrollUpdate = types.has("scroll");
-          let { initTimestamp } = data;
+          var now = Date.now();
+          var isScrollUpdate = types.has("scroll");
+          var initTimestamp = data.initTimestamp;
           if (initTimestamp === void 0) initTimestamp = 0;
-          const { dir } = data;
-          const { lastDir } = data;
-          const { lastScroll } = data;
-          const { scroll } = data;
-          const { top } = data;
+          var dir = data.dir;
+          var lastDir = data.lastDir;
+          var lastScroll = data.lastScroll;
+          var scroll = data.scroll;
+          var top = data.top;
 
           data.lastScroll = scroll;
 
@@ -7149,22 +7147,22 @@
     ],
 
     methods: {
-      show() {
+      show: function () {
         this.isFixed = true;
         this.update();
         this.placeholder.hidden = false;
       },
 
-      hide() {
+      hide: function () {
         this.isActive = false;
         removeClass(this.$el, this.clsFixed, this.clsBelow);
         css(this.$el, { position: "", top: "", width: "" });
         this.placeholder.hidden = true;
       },
 
-      update() {
-        const active = this.top !== 0 || this.scroll > this.top;
-        let top = Math.max(0, this.offset);
+      update: function () {
+        var active = this.top !== 0 || this.scroll > this.top;
+        var top = Math.max(0, this.offset);
 
         if (isNumeric(this.bottom) && this.scroll > this.bottom - this.offset) {
           top = this.bottom - this.scroll;
@@ -7184,11 +7182,11 @@
   };
 
   function parseProp(prop, ref) {
-    const { $props } = ref;
-    const { $el } = ref;
-    const propOffset = ref[prop + "Offset"];
+    var $props = ref.$props;
+    var $el = ref.$el;
+    var propOffset = ref[prop + "Offset"];
 
-    const value = $props[prop];
+    var value = $props[prop];
 
     if (!value) {
       return;
@@ -7201,7 +7199,7 @@
     }
   }
 
-  const SVG = {
+  var SVG = {
     args: "src",
 
     props: {
@@ -7225,13 +7223,13 @@
       strokeAnimation: false,
     },
 
-    beforeConnect() {
+    beforeConnect: function () {
       this.class += " mod-svg";
     },
 
-    connected() {
-      const this$1 = this;
-      let assign;
+    connected: function () {
+      var this$1 = this;
+      var assign;
 
       if (!this.icon && includes(this.src, "#")) {
         (assign = this.src.split("#")),
@@ -7241,7 +7239,7 @@
 
       this.svg = this.getSvg().then(function (el) {
         if (this$1._connected) {
-          const svg = insertSVG(el, this$1.$el);
+          var svg = insertSVG(el, this$1.$el);
 
           if (this$1.svgEl && svg !== this$1.svgEl) {
             remove(this$1.svgEl);
@@ -7254,8 +7252,8 @@
       }, noop);
     },
 
-    disconnected() {
-      const this$1 = this;
+    disconnected: function () {
+      var this$1 = this;
 
       this.svg.then(function (svg) {
         if (!this$1._connected) {
@@ -7272,11 +7270,11 @@
     },
 
     update: {
-      read() {
+      read: function () {
         return !!(this.strokeAnimation && this.svgEl && isVisible(this.svgEl));
       },
 
-      write() {
+      write: function () {
         applyAnimation(this.svgEl);
       },
 
@@ -7284,27 +7282,27 @@
     },
 
     methods: {
-      getSvg() {
-        const this$1 = this;
+      getSvg: function () {
+        var this$1 = this;
 
         return loadSVG(this.src).then(function (svg) {
           return parseSVG(svg, this$1.icon) || Promise.reject("SVG not found.");
         });
       },
 
-      applyAttributes(el, ref) {
-        const this$1 = this;
+      applyAttributes: function (el, ref) {
+        var this$1 = this;
 
-        for (const prop in this.$options.props) {
+        for (var prop in this.$options.props) {
           if (includes(this.include, prop) && prop in this) {
             attr(el, prop, this[prop]);
           }
         }
 
-        for (const attribute in this.attributes) {
-          const ref$1 = this.attributes[attribute].split(":", 2);
-          const prop$1 = ref$1[0];
-          const value = ref$1[1];
+        for (var attribute in this.attributes) {
+          var ref$1 = this.attributes[attribute].split(":", 2);
+          var prop$1 = ref$1[0];
+          var value = ref$1[1];
           attr(el, prop$1, value);
         }
 
@@ -7312,8 +7310,8 @@
           removeAttr(el, "id");
         }
 
-        const props = ["width", "height"];
-        let dimensions = props.map(function (prop) {
+        var props = ["width", "height"];
+        var dimensions = props.map(function (prop) {
           return this$1[prop];
         });
 
@@ -7327,7 +7325,7 @@
           });
         }
 
-        const viewBox = attr(ref, "viewBox");
+        var viewBox = attr(ref, "viewBox");
         if (
           viewBox &&
           !dimensions.some(function (val) {
@@ -7375,8 +7373,8 @@
     return svg && svg.hasChildNodes() && svg;
   }
 
-  const symbolRe = /<symbol([^]*?id=(['"])(.+?)\2[^]*?<\/)symbol>/g;
-  const symbols = {};
+  var symbolRe = /<symbol([^]*?id=(['"])(.+?)\2[^]*?<\/)symbol>/g;
+  var symbols = {};
 
   function parseSymbols(svg, icon) {
     if (!symbols[svg]) {
@@ -7384,7 +7382,7 @@
 
       symbolRe.lastIndex = 0;
 
-      let match;
+      var match;
       while ((match = symbolRe.exec(svg))) {
         symbols[svg][match[3]] =
           '<svg xmlns="http://www.w3.org/2000/svg"' + match[1] + "svg>";
@@ -7395,7 +7393,7 @@
   }
 
   function applyAnimation(el) {
-    const length = getMaxPathLength(el);
+    var length = getMaxPathLength(el);
 
     if (length) {
       el.style.setProperty("--mod-animation-stroke", length);
@@ -7423,11 +7421,11 @@
     if (isVoidElement(root) || root.tagName === "CANVAS") {
       root.hidden = true;
 
-      const next = root.nextElementSibling;
+      var next = root.nextElementSibling;
       return equals(el, next) ? next : after(root, el);
     }
 
-    const last = root.lastElementChild;
+    var last = root.lastElementChild;
     return equals(el, last) ? last : append(root, el);
   }
 
@@ -7448,7 +7446,7 @@
     ).replace(/\s/g, "");
   }
 
-  const Switcher = {
+  var Switcher = {
     mixins: [Togglable],
 
     args: "connect",
@@ -7471,20 +7469,20 @@
 
     computed: {
       connects: {
-        get(ref, $el) {
-          const { connect } = ref;
+        get: function (ref, $el) {
+          var connect = ref.connect;
 
           return queryAll(connect, $el);
         },
 
-        watch(connects) {
-          const this$1 = this;
+        watch: function (connects) {
+          var this$1 = this;
 
           if (this.swiping) {
             css(connects, "touch-action", "pan-y pinch-zoom");
           }
 
-          const index = this.index();
+          var index = this.index();
           this.connects.forEach(function (el) {
             return children(el).forEach(function (child, i) {
               return toggleClass(child, this$1.cls, i === index);
@@ -7496,24 +7494,24 @@
       },
 
       toggles: {
-        get(ref, $el) {
-          const { toggle } = ref;
+        get: function (ref, $el) {
+          var toggle = ref.toggle;
 
           return $$(toggle, $el).filter(function (el) {
             return !matches(el, ".mod-disabled *, .mod-disabled, [disabled]");
           });
         },
 
-        watch(toggles) {
-          const active = this.index();
+        watch: function (toggles) {
+          var active = this.index();
           this.show(~active ? active : toggles[this.active] || toggles[0]);
         },
 
         immediate: true,
       },
 
-      children() {
-        const this$1 = this;
+      children: function () {
+        var this$1 = this;
 
         return children(this.$el).filter(function (child) {
           return this$1.toggles.some(function (toggle) {
@@ -7527,11 +7525,11 @@
       {
         name: "click",
 
-        delegate() {
+        delegate: function () {
           return this.toggle;
         },
 
-        handler(e) {
+        handler: function (e) {
           e.preventDefault();
           this.show(e.current);
         },
@@ -7540,15 +7538,15 @@
       {
         name: "click",
 
-        el() {
+        el: function () {
           return this.connects;
         },
 
-        delegate() {
+        delegate: function () {
           return "[" + this.attrItem + "],[data-" + this.attrItem + "]";
         },
 
-        handler(e) {
+        handler: function (e) {
           e.preventDefault();
           this.show(data(e.current, this.attrItem));
         },
@@ -7557,16 +7555,16 @@
       {
         name: "swipeRight swipeLeft",
 
-        filter() {
+        filter: function () {
           return this.swiping;
         },
 
-        el() {
+        el: function () {
           return this.connects;
         },
 
-        handler(ref) {
-          const { type } = ref;
+        handler: function (ref) {
+          var type = ref.type;
 
           this.show(endsWith(type, "Left") ? "next" : "previous");
         },
@@ -7574,19 +7572,19 @@
     ],
 
     methods: {
-      index() {
-        const this$1 = this;
+      index: function () {
+        var this$1 = this;
 
         return findIndex(this.children, function (el) {
           return hasClass(el, this$1.cls);
         });
       },
 
-      show(item) {
-        const this$1 = this;
+      show: function (item) {
+        var this$1 = this;
 
-        const prev = this.index();
-        const next = getIndex(
+        var prev = this.index();
+        var next = getIndex(
           this.children[getIndex(item, this.toggles, prev)],
           children(this.$el)
         );
@@ -7601,7 +7599,7 @@
         });
 
         this.connects.forEach(function (ref) {
-          const { children } = ref;
+          var children = ref.children;
 
           return this$1
             .toggleElement(
@@ -7619,7 +7617,7 @@
     },
   };
 
-  const tab = {
+  var tab = {
     mixins: [Class],
 
     extends: Switcher,
@@ -7633,8 +7631,8 @@
       attrItem: "mod-tab-item",
     },
 
-    connected() {
-      const cls = hasClass(this.$el, "mod-tab-left")
+    connected: function () {
+      var cls = hasClass(this.$el, "mod-tab-left")
         ? "mod-tab-left"
         : hasClass(this.$el, "mod-tab-right")
         ? "mod-tab-right"
@@ -7642,7 +7640,7 @@
 
       if (cls) {
         this.$create("toggle", this.$el, {
-          cls,
+          cls: cls,
           mode: "media",
           media: this.media,
         });
@@ -7650,7 +7648,7 @@
     },
   };
 
-  const toggle = {
+  var toggle = {
     mixins: [Media, Togglable],
 
     args: "target",
@@ -7671,15 +7669,15 @@
 
     computed: {
       target: {
-        get(ref, $el) {
-          const { href } = ref;
-          let { target } = ref;
+        get: function (ref, $el) {
+          var href = ref.href;
+          var target = ref.target;
 
           target = queryAll(target || href, $el);
           return (target.length && target) || [$el];
         },
 
-        watch() {
+        watch: function () {
           this.updateAria();
         },
 
@@ -7691,11 +7689,11 @@
       {
         name: pointerEnter + " " + pointerLeave,
 
-        filter() {
+        filter: function () {
           return includes(this.mode, "hover");
         },
 
-        handler(e) {
+        handler: function (e) {
           if (!isTouch(e)) {
             this.toggle("toggle" + (e.type === pointerEnter ? "show" : "hide"));
           }
@@ -7705,15 +7703,15 @@
       {
         name: "click",
 
-        filter() {
+        filter: function () {
           return (
             includes(this.mode, "click") ||
             (hasTouch && includes(this.mode, "hover"))
           );
         },
 
-        handler(e) {
-          let link;
+        handler: function (e) {
+          var link;
           if (
             closest(e.target, 'a[href="#"], a[href=""]') ||
             ((link = closest(e.target, "a[href]")) &&
@@ -7732,27 +7730,27 @@
 
         self: true,
 
-        el() {
+        el: function () {
           return this.target;
         },
 
-        handler(e, toggled) {
+        handler: function (e, toggled) {
           this.updateAria(toggled);
         },
       },
     ],
 
     update: {
-      read() {
+      read: function () {
         return includes(this.mode, "media") && this.media
           ? { match: this.matchMedia }
           : false;
       },
 
-      write(ref) {
-        const { match } = ref;
+      write: function (ref) {
+        var match = ref.match;
 
-        const toggled = this.isToggled(this.target);
+        var toggled = this.isToggled(this.target);
         if (match ? !toggled : toggled) {
           this.toggle();
         }
@@ -7762,8 +7760,8 @@
     },
 
     methods: {
-      toggle(type) {
-        const this$1 = this;
+      toggle: function (type) {
+        var this$1 = this;
 
         if (!trigger(this.target, type || "toggle", [this])) {
           return;
@@ -7773,19 +7771,19 @@
           return this.toggleElement(this.target);
         }
 
-        const leaving = this.target.filter(function (el) {
+        var leaving = this.target.filter(function (el) {
           return hasClass(el, this$1.clsLeave);
         });
 
         if (leaving.length) {
           this.target.forEach(function (el) {
-            const isLeaving = includes(leaving, el);
+            var isLeaving = includes(leaving, el);
             this$1.toggleElement(el, isLeaving, isLeaving);
           });
           return;
         }
 
-        const toggled = this.target.filter(this.isToggled);
+        var toggled = this.target.filter(this.isToggled);
         this.toggleElement(toggled, false).then(function () {
           return this$1.toggleElement(
             this$1.target.filter(function (el) {
@@ -7796,7 +7794,7 @@
         });
       },
 
-      updateAria(toggled) {
+      updateAria: function (toggled) {
         attr(
           this.$el,
           "aria-expanded",
@@ -7811,58 +7809,58 @@
     return cls ? hasClass(target, cls.split(" ")[0]) : isVisible(target);
   }
 
-  const closeIcon =
+  var closeIcon =
     '<svg width="14" height="14" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg"><line fill="none" stroke="#000" stroke-width="1.1" x1="1" y1="1" x2="13" y2="13"/><line fill="none" stroke="#000" stroke-width="1.1" x1="13" y1="1" x2="1" y2="13"/></svg>';
 
-  const closeLarge =
+  var closeLarge =
     '<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><line fill="none" stroke="#000" stroke-width="1.4" x1="1" y1="1" x2="19" y2="19"/><line fill="none" stroke="#000" stroke-width="1.4" x1="19" y1="1" x2="1" y2="19"/></svg>';
 
-  const marker =
+  var marker =
     '<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><rect x="9" y="4" width="1" height="11"/><rect x="4" y="9" width="11" height="1"/></svg>';
 
-  const navbarToggleIcon =
+  var navbarToggleIcon =
     '<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><rect y="9" width="20" height="2"/><rect y="3" width="20" height="2"/><rect y="15" width="20" height="2"/></svg>';
 
-  const overlayIcon =
+  var overlayIcon =
     '<svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="19" y="0" width="1" height="40"/><rect x="0" y="19" width="40" height="1"/></svg>';
 
-  const paginationNext =
+  var paginationNext =
     '<svg width="7" height="12" viewBox="0 0 7 12" xmlns="http://www.w3.org/2000/svg"><polyline fill="none" stroke="#000" stroke-width="1.2" points="1 1 6 6 1 11"/></svg>';
 
-  const paginationPrevious =
+  var paginationPrevious =
     '<svg width="7" height="12" viewBox="0 0 7 12" xmlns="http://www.w3.org/2000/svg"><polyline fill="none" stroke="#000" stroke-width="1.2" points="6 1 1 6 6 11"/></svg>';
 
-  const searchIcon =
+  var searchIcon =
     '<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><circle fill="none" stroke="#000" stroke-width="1.1" cx="9" cy="9" r="7"/><path fill="none" stroke="#000" stroke-width="1.1" d="M14,14 L18,18 L14,14 Z"/></svg>';
 
-  const searchLarge =
+  var searchLarge =
     '<svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><circle fill="none" stroke="#000" stroke-width="1.8" cx="17.5" cy="17.5" r="16.5"/><line fill="none" stroke="#000" stroke-width="1.8" x1="38" y1="39" x2="29" y2="30"/></svg>';
 
-  const searchNavbar =
+  var searchNavbar =
     '<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle fill="none" stroke="#000" stroke-width="1.1" cx="10.5" cy="10.5" r="9.5"/><line fill="none" stroke="#000" stroke-width="1.1" x1="23" y1="23" x2="17" y2="17"/></svg>';
 
-  const slidenavNext =
+  var slidenavNext =
     '<svg width="14" height="24" viewBox="0 0 14 24" xmlns="http://www.w3.org/2000/svg"><polyline fill="none" stroke="#000" stroke-width="1.4" points="1.225,23 12.775,12 1.225,1 "/></svg>';
 
-  const slidenavNextLarge =
+  var slidenavNextLarge =
     '<svg width="25" height="40" viewBox="0 0 25 40" xmlns="http://www.w3.org/2000/svg"><polyline fill="none" stroke="#000" stroke-width="2" points="4.002,38.547 22.527,20.024 4,1.5 "/></svg>';
 
-  const slidenavPrevious =
+  var slidenavPrevious =
     '<svg width="14" height="24" viewBox="0 0 14 24" xmlns="http://www.w3.org/2000/svg"><polyline fill="none" stroke="#000" stroke-width="1.4" points="12.775,1 1.225,12 12.775,23 "/></svg>';
 
-  const slidenavPreviousLarge =
+  var slidenavPreviousLarge =
     '<svg width="25" height="40" viewBox="0 0 25 40" xmlns="http://www.w3.org/2000/svg"><polyline fill="none" stroke="#000" stroke-width="2" points="20.527,1.5 2,20.024 20.525,38.547 "/></svg>';
 
-  const spinner =
+  var spinner =
     '<svg width="30" height="30" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg"><circle fill="none" stroke="#000" cx="15" cy="15" r="14"/></svg>';
 
-  const totop =
+  var totop =
     '<svg width="18" height="10" viewBox="0 0 18 10" xmlns="http://www.w3.org/2000/svg"><polyline fill="none" stroke="#000" stroke-width="1.2" points="1 9 9 1 17 9 "/></svg>';
 
-  const icons = {
-    spinner,
-    totop,
-    marker,
+  var icons = {
+    spinner: spinner,
+    totop: totop,
+    marker: marker,
     "close-icon": closeIcon,
     "close-large": closeLarge,
     "navbar-toggle-icon": navbarToggleIcon,
@@ -7878,7 +7876,7 @@
     "slidenav-previous-large": slidenavPreviousLarge,
   };
 
-  const Icon = {
+  var Icon = {
     install: install$1,
 
     extends: SVG,
@@ -7893,13 +7891,13 @@
 
     isIcon: true,
 
-    beforeConnect() {
+    beforeConnect: function () {
       addClass(this.$el, "mod-icon");
     },
 
     methods: {
-      getSvg() {
-        const icon = getIcon(this.icon);
+      getSvg: function () {
+        var icon = getIcon(this.icon);
 
         if (!icon) {
           return Promise.reject("Icon not found.");
@@ -7910,44 +7908,44 @@
     },
   };
 
-  const IconComponent = {
+  var IconComponent = {
     args: false,
 
     extends: Icon,
 
-    data(vm) {
+    data: function (vm) {
       return {
         icon: hyphenate(vm.constructor.options.name),
       };
     },
 
-    beforeConnect() {
+    beforeConnect: function () {
       addClass(this.$el, this.$name);
     },
   };
 
-  const Slidenav = {
+  var Slidenav = {
     extends: IconComponent,
 
-    beforeConnect() {
+    beforeConnect: function () {
       addClass(this.$el, "mod-slidenav");
     },
 
     computed: {
-      icon(ref, $el) {
-        const { icon } = ref;
+      icon: function (ref, $el) {
+        var icon = ref.icon;
 
         return hasClass($el, "mod-slidenav-large") ? icon + "-large" : icon;
       },
     },
   };
 
-  const Search = {
+  var Search = {
     extends: IconComponent,
 
     computed: {
-      icon(ref, $el) {
-        const { icon } = ref;
+      icon: function (ref, $el) {
+        var icon = ref.icon;
 
         return hasClass($el, "mod-search-icon") &&
           parents($el, ".mod-search-large").length
@@ -7959,11 +7957,11 @@
     },
   };
 
-  const Close = {
+  var Close = {
     extends: IconComponent,
 
     computed: {
-      icon() {
+      icon: function () {
         return (
           "close-" + (hasClass(this.$el, "mod-close-large") ? "large" : "icon")
         );
@@ -7971,11 +7969,11 @@
     },
   };
 
-  const Spinner = {
+  var Spinner = {
     extends: IconComponent,
 
-    connected() {
-      const this$1 = this;
+    connected: function () {
+      var this$1 = this;
 
       this.svg.then(function (svg) {
         return (
@@ -7987,14 +7985,12 @@
     },
   };
 
-  const parsed = {};
+  var parsed = {};
   function install$1(UIkit) {
     UIkit.icon.add = function (name, svg) {
-      let obj;
+      var obj;
 
-      const added = isString(name)
-        ? ((obj = {}), (obj[name] = svg), obj)
-        : name;
+      var added = isString(name) ? ((obj = {}), (obj[name] = svg), obj) : name;
       each(added, function (svg, name) {
         icons[name] = svg;
         delete parsed[name];
@@ -8026,7 +8022,7 @@
     return isRtl ? swap(swap(icon, "left", "right"), "previous", "next") : icon;
   }
 
-  const components = /* #__PURE__*/ Object.freeze({
+  var components = /*#__PURE__*/ Object.freeze({
     __proto__: null,
     Accordion: accordion,
     Alert: alert,
@@ -8039,7 +8035,7 @@
     HeightMatch: heightMatch,
     HeightViewport: heightViewport,
     Img: img,
-    Margin,
+    Margin: Margin,
     Modal: modal,
     Offcanvas: offcanvas,
     OverflowAuto: overflowAuto,
@@ -8049,12 +8045,12 @@
     ScrollspyNav: scrollspyNav,
     Sticky: sticky,
     Svg: SVG,
-    Switcher,
+    Switcher: Switcher,
     Tab: tab,
     Toggle: toggle,
-    Video,
-    Close,
-    Spinner,
+    Video: Video,
+    Close: Close,
+    Spinner: Spinner,
     SlidenavNext: Slidenav,
     SlidenavPrevious: Slidenav,
     SearchIcon: Search,
@@ -8076,7 +8072,7 @@
 
   boot(UIkit);
 
-  const countdown = {
+  var countdown = {
     mixins: [Class],
 
     props: {
@@ -8090,38 +8086,38 @@
     },
 
     computed: {
-      date(ref) {
-        const { date } = ref;
+      date: function (ref) {
+        var date = ref.date;
 
         return Date.parse(date);
       },
 
-      days(ref, $el) {
-        const { clsWrapper } = ref;
+      days: function (ref, $el) {
+        var clsWrapper = ref.clsWrapper;
 
         return $(clsWrapper.replace("%unit%", "days"), $el);
       },
 
-      hours(ref, $el) {
-        const { clsWrapper } = ref;
+      hours: function (ref, $el) {
+        var clsWrapper = ref.clsWrapper;
 
         return $(clsWrapper.replace("%unit%", "hours"), $el);
       },
 
-      minutes(ref, $el) {
-        const { clsWrapper } = ref;
+      minutes: function (ref, $el) {
+        var clsWrapper = ref.clsWrapper;
 
         return $(clsWrapper.replace("%unit%", "minutes"), $el);
       },
 
-      seconds(ref, $el) {
-        const { clsWrapper } = ref;
+      seconds: function (ref, $el) {
+        var clsWrapper = ref.clsWrapper;
 
         return $(clsWrapper.replace("%unit%", "seconds"), $el);
       },
 
-      units() {
-        const this$1 = this;
+      units: function () {
+        var this$1 = this;
 
         return ["days", "hours", "minutes", "seconds"].filter(function (unit) {
           return this$1[unit];
@@ -8129,12 +8125,12 @@
       },
     },
 
-    connected() {
+    connected: function () {
       this.start();
     },
 
-    disconnected() {
-      const this$1 = this;
+    disconnected: function () {
+      var this$1 = this;
 
       this.stop();
       this.units.forEach(function (unit) {
@@ -8146,11 +8142,11 @@
       {
         name: "visibilitychange",
 
-        el() {
+        el: function () {
           return document;
         },
 
-        handler() {
+        handler: function () {
           if (document.hidden) {
             this.stop();
           } else {
@@ -8161,10 +8157,10 @@
     ],
 
     update: {
-      write() {
-        const this$1 = this;
+      write: function () {
+        var this$1 = this;
 
-        const timespan = getTimeSpan(this.date);
+        var timespan = getTimeSpan(this.date);
 
         if (timespan.total <= 0) {
           this.stop();
@@ -8173,11 +8169,11 @@
         }
 
         this.units.forEach(function (unit) {
-          let digits = String(Math.floor(timespan[unit]));
+          var digits = String(Math.floor(timespan[unit]));
 
           digits = digits.length < 2 ? "0" + digits : digits;
 
-          const el = this$1[unit];
+          var el = this$1[unit];
           if (el.textContent !== digits) {
             digits = digits.split("");
 
@@ -8201,7 +8197,7 @@
     },
 
     methods: {
-      start() {
+      start: function () {
         this.stop();
 
         if (this.date && this.units.length) {
@@ -8210,7 +8206,7 @@
         }
       },
 
-      stop() {
+      stop: function () {
         if (this.timer) {
           clearInterval(this.timer);
           this.timer = null;
@@ -8220,10 +8216,10 @@
   };
 
   function getTimeSpan(date) {
-    const total = date - Date.now();
+    var total = date - Date.now();
 
     return {
-      total,
+      total: total,
       seconds: (total / 1000) % 60,
       minutes: (total / 1000 / 60) % 60,
       hours: (total / 1000 / 60 / 60) % 24,
@@ -8231,23 +8227,23 @@
     };
   }
 
-  const clsLeave = "mod-transition-leave";
-  const clsEnter = "mod-transition-enter";
+  var clsLeave = "mod-transition-leave";
+  var clsEnter = "mod-transition-enter";
 
   function fade(action, target, duration, stagger) {
     if (stagger === void 0) stagger = 0;
 
-    const index = transitionIndex(target, true);
-    const propsIn = { opacity: 1 };
-    const propsOut = { opacity: 0 };
+    var index = transitionIndex(target, true);
+    var propsIn = { opacity: 1 };
+    var propsOut = { opacity: 0 };
 
-    const wrapIndexFn = function (fn) {
+    var wrapIndexFn = function (fn) {
       return function () {
         return index === transitionIndex(target) ? fn() : Promise.reject();
       };
     };
 
-    const leaveFn = wrapIndexFn(function () {
+    var leaveFn = wrapIndexFn(function () {
       addClass(target, clsLeave);
 
       return Promise.all(
@@ -8268,8 +8264,8 @@
       });
     });
 
-    const enterFn = wrapIndexFn(function () {
-      const oldHeight = height(target);
+    var enterFn = wrapIndexFn(function () {
+      var oldHeight = height(target);
 
       addClass(target, clsEnter);
       action();
@@ -8279,17 +8275,17 @@
       // Ensure UIkit updates have propagated
       return new Promise(function (resolve) {
         return requestAnimationFrame(function () {
-          const nodes = children(target);
-          const newHeight = height(target);
+          var nodes = children(target);
+          var newHeight = height(target);
 
           // Ensure Grid cells do not stretch when height is applied
           css(target, "alignContent", "flex-start");
           height(target, oldHeight);
 
-          const transitionNodes = getTransitionNodes(target);
+          var transitionNodes = getTransitionNodes(target);
           css(nodes, propsOut);
 
-          const transitions = transitionNodes.map(function (child, i) {
+          var transitions = transitionNodes.map(function (child, i) {
             return new Promise(function (resolve) {
               return setTimeout(function () {
                 return Transition.start(
@@ -8369,13 +8365,13 @@
   function slide(action, target, duration) {
     return new Promise(function (resolve) {
       return requestAnimationFrame(function () {
-        let nodes = children(target);
+        var nodes = children(target);
 
         // Get current state
-        const currentProps = nodes.map(function (el) {
+        var currentProps = nodes.map(function (el) {
           return getProps(el, true);
         });
-        const targetProps = css(target, ["height", "padding"]);
+        var targetProps = css(target, ["height", "padding"]);
 
         // Cancel previous animations
         Transition.cancel(target);
@@ -8398,10 +8394,10 @@
           fastdom.flush();
 
           // Get new state
-          const targetPropsTo = css(target, ["height", "padding"]);
-          const ref = getTransitionProps(target, nodes, currentProps);
-          const propsTo = ref[0];
-          const propsFrom = ref[1];
+          var targetPropsTo = css(target, ["height", "padding"]);
+          var ref = getTransitionProps(target, nodes, currentProps);
+          var propsTo = ref[0];
+          var propsFrom = ref[1];
 
           // Reset to previous state
           nodes.forEach(function (el, i) {
@@ -8411,7 +8407,7 @@
 
           // Start transitions on next frame
           requestAnimationFrame(function () {
-            const transitions = nodes
+            var transitions = nodes
               .map(function (el, i) {
                 return (
                   parent(el) === target &&
@@ -8440,7 +8436,7 @@
   }
 
   function getProps(el, opacity) {
-    const zIndex = css(el, "zIndex");
+    var zIndex = css(el, "zIndex");
 
     return isVisible(el)
       ? assign(
@@ -8457,7 +8453,7 @@
   }
 
   function getTransitionProps(target, nodes, currentProps) {
-    const propsTo = nodes.map(function (el, i) {
+    var propsTo = nodes.map(function (el, i) {
       return parent(el) && i in currentProps
         ? currentProps[i]
           ? isVisible(el)
@@ -8467,8 +8463,8 @@
         : false;
     });
 
-    const propsFrom = propsTo.map(function (props, i) {
-      const from =
+    var propsFrom = propsTo.map(function (props, i) {
+      var from =
         parent(nodes[i]) === target && (currentProps[i] || getProps(nodes[i]));
 
       if (!from) {
@@ -8478,7 +8474,7 @@
       if (!props) {
         delete from.opacity;
       } else if (!("opacity" in props)) {
-        const { opacity } = from;
+        var opacity = from.opacity;
 
         if (opacity % 1) {
           props.opacity = 1;
@@ -8511,20 +8507,28 @@
   }
 
   function getPositionWithMargin(el) {
-    const ref = offset(el);
-    const { height } = ref;
-    const { width } = ref;
-    const ref$1 = position(el);
-    const { top } = ref$1;
-    const { left } = ref$1;
-    const ref$2 = css(el, ["marginTop", "marginLeft"]);
-    const { marginLeft } = ref$2;
-    const { marginTop } = ref$2;
+    var ref = offset(el);
+    var height = ref.height;
+    var width = ref.width;
+    var ref$1 = position(el);
+    var top = ref$1.top;
+    var left = ref$1.left;
+    var ref$2 = css(el, ["marginTop", "marginLeft"]);
+    var marginLeft = ref$2.marginLeft;
+    var marginTop = ref$2.marginTop;
 
-    return { top, left, height, width, marginLeft, marginTop, transform: "" };
+    return {
+      top: top,
+      left: left,
+      height: height,
+      width: width,
+      marginLeft: marginLeft,
+      marginTop: marginTop,
+      transform: "",
+    };
   }
 
-  const Animate = {
+  var Animate = {
     props: {
       duration: Number,
       animation: Boolean,
@@ -8536,17 +8540,17 @@
     },
 
     methods: {
-      animate(action, target) {
-        const this$1 = this;
+      animate: function (action, target) {
+        var this$1 = this;
         if (target === void 0) target = this.$el;
 
-        const name = this.animation;
-        const animationFn =
+        var name = this.animation;
+        var animationFn =
           name === "fade"
             ? fade
             : name === "delayed-fade"
             ? function () {
-                let args = [],
+                var args = [],
                   len = arguments.length;
                 while (len--) args[len] = arguments[len];
 
@@ -8561,7 +8565,7 @@
     },
   };
 
-  const filter$1 = {
+  var filter$1 = {
     mixins: [Animate],
 
     args: "target",
@@ -8581,19 +8585,19 @@
 
     computed: {
       toggles: {
-        get(ref, $el) {
-          const { attrItem } = ref;
+        get: function (ref, $el) {
+          var attrItem = ref.attrItem;
 
           return $$("[" + attrItem + "],[data-" + attrItem + "]", $el);
         },
 
-        watch() {
-          const this$1 = this;
+        watch: function () {
+          var this$1 = this;
 
           this.updateState();
 
           if (this.selActive !== false) {
-            const actives = $$(this.selActive, this.$el);
+            var actives = $$(this.selActive, this.$el);
             this.toggles.forEach(function (el) {
               return toggleClass(el, this$1.cls, includes(actives, el));
             });
@@ -8604,13 +8608,13 @@
       },
 
       children: {
-        get(ref, $el) {
-          const { target } = ref;
+        get: function (ref, $el) {
+          var target = ref.target;
 
           return $$(target + " > *", $el);
         },
 
-        watch(list, old) {
+        watch: function (list, old) {
           if (old && !isEqualList(list, old)) {
             this.updateState();
           }
@@ -8624,11 +8628,11 @@
       {
         name: "click",
 
-        delegate() {
+        delegate: function () {
           return "[" + this.attrItem + "],[data-" + this.attrItem + "]";
         },
 
-        handler(e) {
+        handler: function (e) {
           e.preventDefault();
           this.apply(e.current);
         },
@@ -8636,17 +8640,17 @@
     ],
 
     methods: {
-      apply(el) {
-        const prevState = this.getState();
-        const newState = mergeState(el, this.attrItem, this.getState());
+      apply: function (el) {
+        var prevState = this.getState();
+        var newState = mergeState(el, this.attrItem, this.getState());
 
         if (!isEqualState(prevState, newState)) {
           this.setState(newState);
         }
       },
 
-      getState() {
-        const this$1 = this;
+      getState: function () {
+        var this$1 = this;
 
         return this.toggles
           .filter(function (item) {
@@ -8660,8 +8664,8 @@
           );
       },
 
-      setState(state, animate) {
-        const this$1 = this;
+      setState: function (state, animate) {
+        var this$1 = this;
         if (animate === void 0) animate = true;
 
         state = assign({ filter: { "": "" }, sort: [] }, state);
@@ -8678,7 +8682,7 @@
 
         Promise.all(
           $$(this.target, this.$el).map(function (target) {
-            const filterFn = function () {
+            var filterFn = function () {
               applyState(state, target, children(target));
               this$1.$update(this$1.$el);
             };
@@ -8689,8 +8693,8 @@
         });
       },
 
-      updateState() {
-        const this$1 = this;
+      updateState: function () {
+        var this$1 = this;
 
         fastdom.write(function () {
           return this$1.setState(this$1.getState(), false);
@@ -8710,7 +8714,7 @@
   }
 
   function applyState(state, target, children) {
-    const selector = getSelector(state);
+    var selector = getSelector(state);
 
     children.forEach(function (el) {
       return css(
@@ -8720,12 +8724,12 @@
       );
     });
 
-    const ref = state.sort;
-    const sort = ref[0];
-    const order = ref[1];
+    var ref = state.sort;
+    var sort = ref[0];
+    var order = ref[1];
 
     if (sort) {
-      const sorted = sortItems(children, sort, order);
+      var sorted = sortItems(children, sort, order);
       if (!isEqual(sorted, children)) {
         append(target, sorted);
       }
@@ -8733,11 +8737,11 @@
   }
 
   function mergeState(el, attr, state) {
-    const filterBy = getFilter(el, attr);
-    const { filter } = filterBy;
-    const { group } = filterBy;
-    const { sort } = filterBy;
-    let { order } = filterBy;
+    var filterBy = getFilter(el, attr);
+    var filter = filterBy.filter;
+    var group = filterBy.group;
+    var sort = filterBy.sort;
+    var order = filterBy.order;
     if (order === void 0) order = "asc";
 
     if (filter || isUndefined(sort)) {
@@ -8765,19 +8769,19 @@
   }
 
   function matchFilter(el, attr, ref) {
-    let stateFilter = ref.filter;
+    var stateFilter = ref.filter;
     if (stateFilter === void 0) stateFilter = { "": "" };
-    const ref_sort = ref.sort;
-    const stateSort = ref_sort[0];
-    const stateOrder = ref_sort[1];
+    var ref_sort = ref.sort;
+    var stateSort = ref_sort[0];
+    var stateOrder = ref_sort[1];
 
-    const ref$1 = getFilter(el, attr);
-    let { filter } = ref$1;
+    var ref$1 = getFilter(el, attr);
+    var filter = ref$1.filter;
     if (filter === void 0) filter = "";
-    let { group } = ref$1;
+    var group = ref$1.group;
     if (group === void 0) group = "";
-    const { sort } = ref$1;
-    let { order } = ref$1;
+    var sort = ref$1.sort;
+    var order = ref$1.order;
     if (order === void 0) order = "asc";
 
     return isUndefined(sort)
@@ -8796,9 +8800,9 @@
   }
 
   function getSelector(ref) {
-    const { filter } = ref;
+    var filter = ref.filter;
 
-    let selector = "";
+    var selector = "";
     each(filter, function (value) {
       return (selector += value || "");
     });
@@ -8815,20 +8819,20 @@
     });
   }
 
-  const Animations = {
+  var Animations = {
     slide: {
-      show(dir) {
+      show: function (dir) {
         return [
           { transform: translate(dir * -100) },
           { transform: translate() },
         ];
       },
 
-      percent(current) {
+      percent: function (current) {
         return translated(current);
       },
 
-      translate(percent, dir) {
+      translate: function (percent, dir) {
         return [
           { transform: translate(dir * -100 * percent) },
           { transform: translate(dir * 100 * (1 - percent)) },
@@ -8855,34 +8859,34 @@
     return "scale3d(" + value + ", " + value + ", 1)";
   }
 
-  const Animations$1 = assign({}, Animations, {
+  var Animations$1 = assign({}, Animations, {
     fade: {
-      show() {
+      show: function () {
         return [{ opacity: 0 }, { opacity: 1 }];
       },
 
-      percent(current) {
+      percent: function (current) {
         return 1 - css(current, "opacity");
       },
 
-      translate(percent) {
+      translate: function (percent) {
         return [{ opacity: 1 - percent }, { opacity: percent }];
       },
     },
 
     scale: {
-      show() {
+      show: function () {
         return [
           { opacity: 0, transform: scale3d(1 - 0.2) },
           { opacity: 1, transform: scale3d(1) },
         ];
       },
 
-      percent(current) {
+      percent: function (current) {
         return 1 - css(current, "opacity");
       },
 
-      translate(percent) {
+      translate: function (percent) {
         return [
           { opacity: 1 - percent, transform: scale3d(1 - 0.2 * percent) },
           { opacity: percent, transform: scale3d(1 - 0.2 + 0.2 * percent) },
@@ -8892,34 +8896,39 @@
   });
 
   function Transitioner(prev, next, dir, ref) {
-    const { animation } = ref;
-    const { easing } = ref;
+    var animation = ref.animation;
+    var easing = ref.easing;
 
-    const { percent } = animation;
-    const { translate } = animation;
-    let { show } = animation;
+    var percent = animation.percent;
+    var translate = animation.translate;
+    var show = animation.show;
     if (show === void 0) show = noop;
-    const props = show(dir);
-    const deferred = new Deferred();
+    var props = show(dir);
+    var deferred = new Deferred();
 
     return {
-      dir,
+      dir: dir,
 
-      show(duration, percent, linear) {
-        const this$1 = this;
+      show: function (duration, percent, linear) {
+        var this$1 = this;
         if (percent === void 0) percent = 0;
 
-        const timing = linear ? "linear" : easing;
+        var timing = linear ? "linear" : easing;
         duration -= Math.round(duration * clamp(percent, -1, 1));
 
         this.translate(percent);
 
-        triggerUpdate(next, "itemin", { percent, duration, timing, dir });
+        triggerUpdate(next, "itemin", {
+          percent: percent,
+          duration: duration,
+          timing: timing,
+          dir: dir,
+        });
         triggerUpdate(prev, "itemout", {
           percent: 1 - percent,
-          duration,
-          timing,
-          dir,
+          duration: duration,
+          timing: timing,
+          dir: dir,
         });
 
         Promise.all([
@@ -8933,38 +8942,41 @@
         return deferred.promise;
       },
 
-      cancel() {
+      cancel: function () {
         Transition.cancel([next, prev]);
       },
 
-      reset() {
-        for (const prop in props[0]) {
+      reset: function () {
+        for (var prop in props[0]) {
           css([next, prev], prop, "");
         }
       },
 
-      forward(duration, percent) {
+      forward: function (duration, percent) {
         if (percent === void 0) percent = this.percent();
 
         Transition.cancel([next, prev]);
         return this.show(duration, percent, true);
       },
 
-      translate(percent) {
+      translate: function (percent) {
         this.reset();
 
-        const props = translate(percent, dir);
+        var props = translate(percent, dir);
         css(next, props[1]);
         css(prev, props[0]);
-        triggerUpdate(next, "itemtranslatein", { percent, dir });
-        triggerUpdate(prev, "itemtranslateout", { percent: 1 - percent, dir });
+        triggerUpdate(next, "itemtranslatein", { percent: percent, dir: dir });
+        triggerUpdate(prev, "itemtranslateout", {
+          percent: 1 - percent,
+          dir: dir,
+        });
       },
 
-      percent() {
+      percent: function () {
         return percent(prev || next, next, dir);
       },
 
-      getDistance() {
+      getDistance: function () {
         return prev && prev.offsetWidth;
       },
     };
@@ -8974,7 +8986,7 @@
     trigger(el, createEvent(type, false, false, data));
   }
 
-  const SliderAutoplay = {
+  var SliderAutoplay = {
     props: {
       autoplay: Boolean,
       autoplayInterval: Number,
@@ -8987,15 +8999,15 @@
       pauseOnHover: true,
     },
 
-    connected() {
+    connected: function () {
       this.autoplay && this.startAutoplay();
     },
 
-    disconnected() {
+    disconnected: function () {
       this.stopAutoplay();
     },
 
-    update() {
+    update: function () {
       attr(this.slides, "tabindex", "-1");
     },
 
@@ -9003,15 +9015,15 @@
       {
         name: "visibilitychange",
 
-        el() {
+        el: function () {
           return document;
         },
 
-        filter() {
+        filter: function () {
           return this.autoplay;
         },
 
-        handler() {
+        handler: function () {
           if (document.hidden) {
             this.stopAutoplay();
           } else {
@@ -9022,8 +9034,8 @@
     ],
 
     methods: {
-      startAutoplay() {
-        const this$1 = this;
+      startAutoplay: function () {
+        var this$1 = this;
 
         this.stopAutoplay();
 
@@ -9037,13 +9049,13 @@
         }, this.autoplayInterval);
       },
 
-      stopAutoplay() {
+      stopAutoplay: function () {
         this.interval && clearInterval(this.interval);
       },
     },
   };
 
-  const SliderDrag = {
+  var SliderDrag = {
     props: {
       draggable: Boolean,
     },
@@ -9053,13 +9065,13 @@
       threshold: 10,
     },
 
-    created() {
-      const this$1 = this;
+    created: function () {
+      var this$1 = this;
 
       ["start", "move", "end"].forEach(function (key) {
-        const fn = this$1[key];
+        var fn = this$1[key];
         this$1[key] = function (e) {
-          const pos = getEventPos(e).x * (isRtl ? -1 : 1);
+          var pos = getEventPos(e).x * (isRtl ? -1 : 1);
 
           this$1.prevPos = pos !== this$1.pos ? this$1.pos : this$1.prevPos;
           this$1.pos = pos;
@@ -9073,11 +9085,11 @@
       {
         name: pointerDown,
 
-        delegate() {
+        delegate: function () {
           return this.selSlides;
         },
 
-        handler(e) {
+        handler: function (e) {
           if (
             !this.draggable ||
             (!isTouch(e) && hasTextNodesOnly(e.target)) ||
@@ -9095,14 +9107,14 @@
       {
         name: "dragstart",
 
-        handler(e) {
+        handler: function (e) {
           e.preventDefault();
         },
       },
     ],
 
     methods: {
-      start() {
+      start: function () {
         this.drag = this.pos;
 
         if (this._transitioner) {
@@ -9133,10 +9145,10 @@
         css(this.list, "userSelect", "none");
       },
 
-      move(e) {
-        const this$1 = this;
+      move: function (e) {
+        var this$1 = this;
 
-        const distance = this.pos - this.drag;
+        var distance = this.pos - this.drag;
 
         if (
           distance === 0 ||
@@ -9154,13 +9166,13 @@
         this.dragging = true;
         this.dir = distance < 0 ? 1 : -1;
 
-        const ref = this;
-        const { slides } = ref;
-        const ref$1 = this;
-        let { prevIndex } = ref$1;
-        let dis = Math.abs(distance);
-        let nextIndex = this.getIndex(prevIndex + this.dir, prevIndex);
-        let width =
+        var ref = this;
+        var slides = ref.slides;
+        var ref$1 = this;
+        var prevIndex = ref$1.prevIndex;
+        var dis = Math.abs(distance);
+        var nextIndex = this.getIndex(prevIndex + this.dir, prevIndex);
+        var width =
           this._getDistance(prevIndex, nextIndex) ||
           slides[prevIndex].offsetWidth;
 
@@ -9177,12 +9189,12 @@
 
         this.percent = dis / width;
 
-        const prev = slides[prevIndex];
-        const next = slides[nextIndex];
-        const changed = this.index !== nextIndex;
-        const edge = prevIndex === nextIndex;
+        var prev = slides[prevIndex];
+        var next = slides[nextIndex];
+        var changed = this.index !== nextIndex;
+        var edge = prevIndex === nextIndex;
 
-        let itemShown;
+        var itemShown;
 
         [this.index, this.prevIndex]
           .filter(function (i) {
@@ -9224,7 +9236,7 @@
         }
       },
 
-      end() {
+      end: function () {
         off(document, pointerMove, this.move, { passive: false });
         off(
           document,
@@ -9242,7 +9254,7 @@
             this._show(false, this.index, true);
             this._transitioner = null;
           } else {
-            const dirChange =
+            var dirChange =
               (isRtl ? this.dir * (isRtl ? 1 : -1) : this.dir) < 0 ===
               this.prevPos > this.pos;
             this.index = dirChange ? this.index : this.prevIndex;
@@ -9271,32 +9283,32 @@
     return !el.children.length && el.childNodes.length;
   }
 
-  const SliderNav = {
+  var SliderNav = {
     data: {
       selNav: false,
     },
 
     computed: {
-      nav(ref, $el) {
-        const { selNav } = ref;
+      nav: function (ref, $el) {
+        var selNav = ref.selNav;
 
         return $(selNav, $el);
       },
 
-      selNavItem(ref) {
-        const { attrItem } = ref;
+      selNavItem: function (ref) {
+        var attrItem = ref.attrItem;
 
         return "[" + attrItem + "],[data-" + attrItem + "]";
       },
 
-      navItems(_, $el) {
+      navItems: function (_, $el) {
         return $$(this.selNavItem, $el);
       },
     },
 
     update: {
-      write() {
-        const this$1 = this;
+      write: function () {
+        var this$1 = this;
 
         if (this.nav && this.length !== this.nav.children.length) {
           html(
@@ -9325,11 +9337,11 @@
       {
         name: "click",
 
-        delegate() {
+        delegate: function () {
           return this.selNavItem;
         },
 
-        handler(e) {
+        handler: function (e) {
           e.preventDefault();
           this.show(data(e.current, this.attrItem));
         },
@@ -9342,12 +9354,12 @@
     ],
 
     methods: {
-      updateNav() {
-        const this$1 = this;
+      updateNav: function () {
+        var this$1 = this;
 
-        const i = this.getValidIndex();
+        var i = this.getValidIndex();
         this.navItems.forEach(function (el) {
-          const cmd = data(el, this$1.attrItem);
+          var cmd = data(el, this$1.attrItem);
 
           toggleClass(el, this$1.clsActive, toNumber(cmd) === i);
           toggleClass(
@@ -9362,7 +9374,7 @@
     },
   };
 
-  const Slider = {
+  var Slider = {
     mixins: [SliderAutoplay, SliderDrag, SliderNav],
 
     props: {
@@ -9374,7 +9386,7 @@
       selSlides: String,
     },
 
-    data() {
+    data: function () {
       return {
         easing: "ease",
         finite: false,
@@ -9390,74 +9402,74 @@
       };
     },
 
-    connected() {
+    connected: function () {
       this.prevIndex = -1;
       this.index = this.getValidIndex(this.$props.index);
       this.stack = [];
     },
 
-    disconnected() {
+    disconnected: function () {
       removeClass(this.slides, this.clsActive);
     },
 
     computed: {
-      duration(ref, $el) {
-        const { velocity } = ref;
+      duration: function (ref, $el) {
+        var velocity = ref.velocity;
 
         return speedUp($el.offsetWidth / velocity);
       },
 
-      list(ref, $el) {
-        const { selList } = ref;
+      list: function (ref, $el) {
+        var selList = ref.selList;
 
         return $(selList, $el);
       },
 
-      maxIndex() {
+      maxIndex: function () {
         return this.length - 1;
       },
 
-      selSlides(ref) {
-        const { selList } = ref;
-        const { selSlides } = ref;
+      selSlides: function (ref) {
+        var selList = ref.selList;
+        var selSlides = ref.selSlides;
 
         return selList + " " + (selSlides || "> *");
       },
 
       slides: {
-        get() {
+        get: function () {
           return $$(this.selSlides, this.$el);
         },
 
-        watch() {
+        watch: function () {
           this.$reset();
         },
       },
 
-      length() {
+      length: function () {
         return this.slides.length;
       },
     },
 
     events: {
-      itemshown() {
+      itemshown: function () {
         this.$update(this.list);
       },
     },
 
     methods: {
-      show(index, force) {
-        const this$1 = this;
+      show: function (index, force) {
+        var this$1 = this;
         if (force === void 0) force = false;
 
         if (this.dragging || !this.length) {
           return;
         }
 
-        const ref = this;
-        const { stack } = ref;
-        const queueIndex = force ? 0 : stack.length;
-        const reset = function () {
+        var ref = this;
+        var stack = ref.stack;
+        var queueIndex = force ? 0 : stack.length;
+        var reset = function () {
           stack.splice(queueIndex, 1);
 
           if (stack.length) {
@@ -9475,11 +9487,11 @@
           return;
         }
 
-        const prevIndex = this.getIndex(this.index);
-        const prev =
+        var prevIndex = this.getIndex(this.index);
+        var prev =
           hasClass(this.slides, this.clsActive) && this.slides[prevIndex];
-        const nextIndex = this.getIndex(index, this.index);
-        const next = this.slides[nextIndex];
+        var nextIndex = this.getIndex(index, this.index);
+        var next = this.slides[nextIndex];
 
         if (prev === next) {
           reset();
@@ -9499,7 +9511,7 @@
           return;
         }
 
-        const promise = this._show(prev, next, force).then(function () {
+        var promise = this._show(prev, next, force).then(function () {
           prev && trigger(prev, "itemhidden", [this$1]);
           trigger(next, "itemshown", [this$1]);
 
@@ -9522,7 +9534,7 @@
         return promise;
       },
 
-      getIndex(index, prev) {
+      getIndex: function (index, prev) {
         if (index === void 0) index = this.index;
         if (prev === void 0) prev = this.index;
 
@@ -9533,14 +9545,14 @@
         );
       },
 
-      getValidIndex(index, prevIndex) {
+      getValidIndex: function (index, prevIndex) {
         if (index === void 0) index = this.index;
         if (prevIndex === void 0) prevIndex = this.prevIndex;
 
         return this.getIndex(index, prevIndex);
       },
 
-      _show(prev, next, force) {
+      _show: function (prev, next, force) {
         this._transitioner = this._getTransitioner(
           prev,
           next,
@@ -9562,8 +9574,8 @@
           return Promise.resolve();
         }
 
-        const ref = this.stack;
-        const { length } = ref;
+        var ref = this.stack;
+        var length = ref.length;
         return this._transitioner[length > 1 ? "forward" : "show"](
           length > 1
             ? Math.min(this.duration, 75 + 75 / (length - 1))
@@ -9572,15 +9584,15 @@
         );
       },
 
-      _getDistance(prev, next) {
+      _getDistance: function (prev, next) {
         return this._getTransitioner(prev, prev !== next && next).getDistance();
       },
 
-      _translate(percent, prev, next) {
+      _translate: function (percent, prev, next) {
         if (prev === void 0) prev = this.prevIndex;
         if (next === void 0) next = this.index;
 
-        const transitioner = this._getTransitioner(
+        var transitioner = this._getTransitioner(
           prev !== next ? prev : false,
           next
         );
@@ -9588,7 +9600,7 @@
         return transitioner;
       },
 
-      _getTransitioner(prev, next, dir, options) {
+      _getTransitioner: function (prev, next, dir, options) {
         if (prev === void 0) prev = this.prevIndex;
         if (next === void 0) next = this.index;
         if (dir === void 0) dir = this.dir || 1;
@@ -9618,7 +9630,7 @@
     return 0.5 * x + 300; // parabola through (400,500; 600,600; 1800,1200)
   }
 
-  const Slideshow = {
+  var Slideshow = {
     mixins: [Slider],
 
     props: {
@@ -9628,53 +9640,53 @@
     data: {
       animation: "slide",
       clsActivated: "mod-transition-active",
-      Animations,
-      Transitioner,
+      Animations: Animations,
+      Transitioner: Transitioner,
     },
 
     computed: {
-      animation(ref) {
-        const { animation } = ref;
-        const { Animations } = ref;
+      animation: function (ref) {
+        var animation = ref.animation;
+        var Animations = ref.Animations;
 
         return assign(Animations[animation] || Animations.slide, {
           name: animation,
         });
       },
 
-      transitionOptions() {
+      transitionOptions: function () {
         return { animation: this.animation };
       },
     },
 
     events: {
-      "itemshow itemhide itemshown itemhidden"(ref) {
-        const { target } = ref;
+      "itemshow itemhide itemshown itemhidden": function (ref) {
+        var target = ref.target;
 
         this.$update(target);
       },
 
-      beforeitemshow(ref) {
-        const { target } = ref;
+      beforeitemshow: function (ref) {
+        var target = ref.target;
 
         addClass(target, this.clsActive);
       },
 
-      itemshown(ref) {
-        const { target } = ref;
+      itemshown: function (ref) {
+        var target = ref.target;
 
         addClass(target, this.clsActivated);
       },
 
-      itemhidden(ref) {
-        const { target } = ref;
+      itemhidden: function (ref) {
+        var target = ref.target;
 
         removeClass(target, this.clsActive, this.clsActivated);
       },
     },
   };
 
-  const LightboxPanel = {
+  var LightboxPanel = {
     mixins: [Container, Modal, Togglable, Slideshow],
 
     functional: true,
@@ -9686,7 +9698,7 @@
       template: String,
     },
 
-    data() {
+    data: function () {
       return {
         preload: 1,
         videoAutoplay: false,
@@ -9706,9 +9718,9 @@
       };
     },
 
-    created() {
-      const $el = $(this.template);
-      const list = $(this.selList, $el);
+    created: function () {
+      var $el = $(this.template);
+      var list = $(this.selList, $el);
       this.items.forEach(function () {
         return append(list, "<li>");
       });
@@ -9717,8 +9729,8 @@
     },
 
     computed: {
-      caption(ref, $el) {
-        const { selCaption } = ref;
+      caption: function (ref, $el) {
+        var selCaption = ref.selCaption;
 
         return $(selCaption, $el);
       },
@@ -9736,11 +9748,11 @@
 
         self: true,
 
-        delegate() {
+        delegate: function () {
           return this.selSlides;
         },
 
-        handler(e) {
+        handler: function (e) {
           if (e.defaultPrevented) {
             return;
           }
@@ -9754,7 +9766,7 @@
 
         self: true,
 
-        handler() {
+        handler: function () {
           this.showControls();
         },
       },
@@ -9764,7 +9776,7 @@
 
         self: true,
 
-        handler() {
+        handler: function () {
           this.hideControls();
 
           removeClass(this.slides, this.clsActive);
@@ -9777,7 +9789,7 @@
 
         self: true,
 
-        handler() {
+        handler: function () {
           this.$destroy(true);
         },
       },
@@ -9785,11 +9797,11 @@
       {
         name: "keyup",
 
-        el() {
+        el: function () {
           return document;
         },
 
-        handler(e) {
+        handler: function (e) {
           if (!this.isToggled(this.$el) || !this.draggable) {
             return;
           }
@@ -9808,7 +9820,7 @@
       {
         name: "beforeitemshow",
 
-        handler(e) {
+        handler: function (e) {
           if (this.isToggled()) {
             return;
           }
@@ -9828,10 +9840,10 @@
       {
         name: "itemshow",
 
-        handler() {
+        handler: function () {
           html(this.caption, this.getItem().caption || "");
 
-          for (let j = -this.preload; j <= this.preload; j++) {
+          for (var j = -this.preload; j <= this.preload; j++) {
             this.loadItem(this.index + j);
           }
         },
@@ -9840,7 +9852,7 @@
       {
         name: "itemshown",
 
-        handler() {
+        handler: function () {
           this.draggable = this.$props.draggable;
         },
       },
@@ -9848,15 +9860,15 @@
       {
         name: "itemload",
 
-        handler(_, item) {
-          const this$1 = this;
+        handler: function (_, item) {
+          var this$1 = this;
 
-          const src = item.source;
-          const { type } = item;
-          let { alt } = item;
+          var src = item.source;
+          var type = item.type;
+          var alt = item.alt;
           if (alt === void 0) alt = "";
-          const { poster } = item;
-          let { attrs } = item;
+          var poster = item.poster;
+          var attrs = item.attrs;
           if (attrs === void 0) attrs = {};
 
           this.setItem(item, "<span mod-spinner></span>");
@@ -9865,8 +9877,8 @@
             return;
           }
 
-          let matches;
-          const iframeAttrs = {
+          var matches;
+          var iframeAttrs = {
             frameborder: "0",
             allow: "autoplay",
             allowfullscreen: "",
@@ -9882,12 +9894,18 @@
           ) {
             getImage(src, attrs.srcset, attrs.size).then(
               function (ref) {
-                const { width } = ref;
-                const { height } = ref;
+                var width = ref.width;
+                var height = ref.height;
 
                 return this$1.setItem(
                   item,
-                  createEl("img", assign({ src, width, height, alt }, attrs))
+                  createEl(
+                    "img",
+                    assign(
+                      { src: src, width: width, height: height, alt: alt },
+                      attrs
+                    )
+                  )
                 );
               },
               function () {
@@ -9897,12 +9915,12 @@
 
             // Video
           } else if (type === "video" || src.match(/\.(mp4|webm|ogv)($|\?)/i)) {
-            const video = createEl(
+            var video = createEl(
               "video",
               assign(
                 {
-                  src,
-                  poster,
+                  src: src,
+                  poster: poster,
                   controls: "",
                   playsinline: "",
                   "mod-video": "" + this.videoAutoplay,
@@ -9930,7 +9948,7 @@
                 "iframe",
                 assign(
                   {
-                    src,
+                    src: src,
                     frameborder: "0",
                     allowfullscreen: "",
                     class: "mod-lightbox-iframe",
@@ -9980,9 +9998,9 @@
               }
             ).then(
               function (ref) {
-                const ref_response = ref.response;
-                const { height } = ref_response;
-                const { width } = ref_response;
+                var ref_response = ref.response;
+                var height = ref_response.height;
+                var width = ref_response.width;
 
                 return this$1.setItem(
                   item,
@@ -9994,8 +10012,8 @@
                           "https://player.vimeo.com/video/" +
                           matches[1] +
                           (matches[2] ? "?" + matches[2] : ""),
-                        width,
-                        height,
+                        width: width,
+                        height: height,
                       },
                       iframeAttrs,
                       attrs
@@ -10013,57 +10031,57 @@
     ],
 
     methods: {
-      loadItem(index) {
+      loadItem: function (index) {
         if (index === void 0) index = this.index;
 
-        const item = this.getItem(index);
+        var item = this.getItem(index);
 
         if (!this.getSlide(item).childElementCount) {
           trigger(this.$el, "itemload", [item]);
         }
       },
 
-      getItem(index) {
+      getItem: function (index) {
         if (index === void 0) index = this.index;
 
         return this.items[getIndex(index, this.slides)];
       },
 
-      setItem(item, content) {
+      setItem: function (item, content) {
         trigger(this.$el, "itemloaded", [
           this,
           html(this.getSlide(item), content),
         ]);
       },
 
-      getSlide(item) {
+      getSlide: function (item) {
         return this.slides[this.items.indexOf(item)];
       },
 
-      setError(item) {
+      setError: function (item) {
         this.setItem(item, '<span mod-icon="icon: bolt; ratio: 2"></span>');
       },
 
-      showControls() {
+      showControls: function () {
         clearTimeout(this.controlsTimer);
         this.controlsTimer = setTimeout(this.hideControls, this.delayControls);
 
         addClass(this.$el, "mod-active", "mod-transition-active");
       },
 
-      hideControls() {
+      hideControls: function () {
         removeClass(this.$el, "mod-active", "mod-transition-active");
       },
     },
   };
 
   function createEl(tag, attrs) {
-    const el = fragment("<" + tag + ">");
+    var el = fragment("<" + tag + ">");
     attr(el, attrs);
     return el;
   }
 
-  const lightbox = {
+  var lightbox = {
     install: install$2,
 
     props: { toggle: String },
@@ -10072,19 +10090,19 @@
 
     computed: {
       toggles: {
-        get(ref, $el) {
-          const { toggle } = ref;
+        get: function (ref, $el) {
+          var toggle = ref.toggle;
 
           return $$(toggle, $el);
         },
 
-        watch() {
+        watch: function () {
           this.hide();
         },
       },
     },
 
-    disconnected() {
+    disconnected: function () {
       this.hide();
     },
 
@@ -10092,11 +10110,11 @@
       {
         name: "click",
 
-        delegate() {
+        delegate: function () {
           return this.toggle + ":not(.mod-disabled)";
         },
 
-        handler(e) {
+        handler: function (e) {
           e.preventDefault();
           this.show(e.current);
         },
@@ -10104,16 +10122,16 @@
     ],
 
     methods: {
-      show(index) {
-        const this$1 = this;
+      show: function (index) {
+        var this$1 = this;
 
-        const items = uniqueBy(this.toggles.map(toItem), "source");
+        var items = uniqueBy(this.toggles.map(toItem), "source");
 
         if (isElement(index)) {
-          const ref = toItem(index);
-          const { source } = ref;
+          var ref = toItem(index);
+          var source = ref.source;
           index = findIndex(items, function (ref) {
-            const src = ref.source;
+            var src = ref.source;
 
             return source === src;
           });
@@ -10121,7 +10139,10 @@
 
         this.panel =
           this.panel ||
-          this.$create("lightboxPanel", assign({}, this.$props, { items }));
+          this.$create(
+            "lightboxPanel",
+            assign({}, this.$props, { items: items })
+          );
 
         on(this.panel.$el, "hidden", function () {
           return (this$1.panel = false);
@@ -10130,7 +10151,7 @@
         return this.panel.show(index);
       },
 
-      hide() {
+      hide: function () {
         return this.panel && this.panel.hide();
       },
     },
@@ -10145,7 +10166,7 @@
   }
 
   function toItem(el) {
-    const item = {};
+    var item = {};
 
     ["href", "caption", "type", "poster", "alt", "attrs"].forEach(function (
       attr
@@ -10158,7 +10179,7 @@
     return item;
   }
 
-  const props = [
+  var props = [
     "x",
     "y",
     "bgx",
@@ -10179,7 +10200,7 @@
     "stroke",
   ];
 
-  const Parallax = {
+  var Parallax = {
     mixins: [Media],
 
     props: props.reduce(function (props, prop) {
@@ -10193,19 +10214,19 @@
     }, {}),
 
     computed: {
-      props(properties, $el) {
-        const this$1 = this;
+      props: function (properties, $el) {
+        var this$1 = this;
 
         return props.reduce(function (props, prop) {
           if (isUndefined(properties[prop])) {
             return props;
           }
 
-          const isColor = prop.match(/color/i);
-          const isCssProp = isColor || prop === "opacity";
+          var isColor = prop.match(/color/i);
+          var isCssProp = isColor || prop === "opacity";
 
-          let pos, bgPos, diff;
-          let steps = properties[prop].slice();
+          var pos, bgPos, diff;
+          var steps = properties[prop].slice();
 
           if (isCssProp) {
             css($el, prop, "");
@@ -10217,17 +10238,17 @@
             );
           }
 
-          const unit = getUnit(steps);
+          var unit = getUnit(steps);
 
           if (isColor) {
-            const ref = $el.style;
-            const { color } = ref;
+            var ref = $el.style;
+            var color = ref.color;
             steps = steps.map(function (step) {
               return parseColor($el, step);
             });
             $el.style.color = color;
           } else if (startsWith(prop, "bg")) {
-            const attr = prop === "bgy" ? "height" : "width";
+            var attr = prop === "bgy" ? "height" : "width";
             steps = steps.map(function (step) {
               return toPx(step, attr, this$1.$el);
             });
@@ -10238,9 +10259,9 @@
             ]; // IE 11 can't read background-position-[x|y]
 
             if (this$1.covers) {
-              const min = Math.min.apply(Math, steps);
-              const max = Math.max.apply(Math, steps);
-              const down = steps.indexOf(min) < steps.indexOf(max);
+              var min = Math.min.apply(Math, steps);
+              var max = Math.max.apply(Math, steps);
+              var down = steps.indexOf(min) < steps.indexOf(max);
 
               diff = max - min;
 
@@ -10264,7 +10285,7 @@
               return props;
             }
 
-            const length = getMaxPathLength(this$1.$el);
+            var length = getMaxPathLength(this$1.$el);
             css($el, "strokeDasharray", length);
 
             if (unit === "%") {
@@ -10278,45 +10299,51 @@
             prop = "strokeDashoffset";
           }
 
-          props[prop] = { steps, unit, pos, bgPos, diff };
+          props[prop] = {
+            steps: steps,
+            unit: unit,
+            pos: pos,
+            bgPos: bgPos,
+            diff: diff,
+          };
 
           return props;
         }, {});
       },
 
-      bgProps() {
-        const this$1 = this;
+      bgProps: function () {
+        var this$1 = this;
 
         return ["bgx", "bgy"].filter(function (bg) {
           return bg in this$1.props;
         });
       },
 
-      covers(_, $el) {
+      covers: function (_, $el) {
         return covers($el);
       },
     },
 
-    disconnected() {
+    disconnected: function () {
       delete this._image;
     },
 
     update: {
-      read(data) {
-        const this$1 = this;
+      read: function (data) {
+        var this$1 = this;
 
         if (!this.matchMedia) {
           return;
         }
 
         if (!data.image && this.covers && this.bgProps.length) {
-          const src = css(this.$el, "backgroundImage").replace(
+          var src = css(this.$el, "backgroundImage").replace(
             /^none|url\(["']?(.+?)["']?\)$/,
             "$1"
           );
 
           if (src) {
-            const img = new Image();
+            var img = new Image();
             img.src = src;
             data.image = img;
 
@@ -10328,35 +10355,35 @@
           }
         }
 
-        const { image } = data;
+        var image = data.image;
 
         if (!image || !image.naturalWidth) {
           return;
         }
 
-        const dimEl = {
+        var dimEl = {
           width: this.$el.offsetWidth,
           height: this.$el.offsetHeight,
         };
-        const dimImage = {
+        var dimImage = {
           width: image.naturalWidth,
           height: image.naturalHeight,
         };
 
-        let dim = Dimensions.cover(dimImage, dimEl);
+        var dim = Dimensions.cover(dimImage, dimEl);
 
         this.bgProps.forEach(function (prop) {
-          const ref = this$1.props[prop];
-          const { diff } = ref;
-          const { bgPos } = ref;
-          const { steps } = ref;
-          const attr = prop === "bgy" ? "height" : "width";
-          const span = dim[attr] - dimEl[attr];
+          var ref = this$1.props[prop];
+          var diff = ref.diff;
+          var bgPos = ref.bgPos;
+          var steps = ref.steps;
+          var attr = prop === "bgy" ? "height" : "width";
+          var span = dim[attr] - dimEl[attr];
 
           if (span < diff) {
             dimEl[attr] = dim[attr] + diff - span;
           } else if (span > diff) {
-            const posPercentage = dimEl[attr] / toPx(bgPos, attr, this$1.$el);
+            var posPercentage = dimEl[attr] / toPx(bgPos, attr, this$1.$el);
 
             if (posPercentage) {
               this$1.props[prop].steps = steps.map(function (step) {
@@ -10371,8 +10398,8 @@
         data.dim = dim;
       },
 
-      write(ref) {
-        const { dim } = ref;
+      write: function (ref) {
+        var dim = ref.dim;
 
         if (!this.matchMedia) {
           css(this.$el, { backgroundSize: "", backgroundRepeat: "" });
@@ -10390,24 +10417,24 @@
     },
 
     methods: {
-      reset() {
-        const this$1 = this;
+      reset: function () {
+        var this$1 = this;
 
         each(this.getCss(0), function (_, prop) {
           return css(this$1.$el, prop, "");
         });
       },
 
-      getCss(percent) {
-        const ref = this;
-        const { props } = ref;
+      getCss: function (percent) {
+        var ref = this;
+        var props = ref.props;
         return Object.keys(props).reduce(
           function (css, prop) {
-            const ref = props[prop];
-            const { steps } = ref;
-            let { unit } = ref;
-            const { pos } = ref;
-            const value = getValue(steps, percent);
+            var ref = props[prop];
+            var steps = ref.steps;
+            var unit = ref.unit;
+            var pos = ref.pos;
+            var value = getValue(steps, percent);
 
             switch (prop) {
               // transforms
@@ -10442,10 +10469,10 @@
               case "color":
               case "backgroundColor":
               case "borderColor": {
-                const ref$1 = getStep(steps, percent);
-                const start = ref$1[0];
-                const end = ref$1[1];
-                const p = ref$1[2];
+                var ref$1 = getStep(steps, percent);
+                var start = ref$1[0];
+                var end = ref$1[1];
+                var p = ref$1[2];
 
                 css[prop] =
                   "rgba(" +
@@ -10500,9 +10527,9 @@
   }
 
   function getStep(steps, percent) {
-    const count = steps.length - 1;
-    const index = Math.min(Math.floor(count * percent), count - 1);
-    const step = steps.slice(index, index + 2);
+    var count = steps.length - 1;
+    var index = Math.min(Math.floor(count * percent), count - 1);
+    var step = steps.slice(index, index + 2);
 
     step.push(percent === 1 ? 1 : (percent % (1 / count)) * count);
 
@@ -10512,10 +10539,10 @@
   function getValue(steps, percent, digits) {
     if (digits === void 0) digits = 2;
 
-    const ref = getStep(steps, percent);
-    const start = ref[0];
-    const end = ref[1];
-    const p = ref[2];
+    var ref = getStep(steps, percent);
+    var start = ref[0];
+    var end = ref[1];
+    var p = ref[2];
     return (isNumber(start)
       ? start + Math.abs(start - end) * p * (start < end ? 1 : -1)
       : +end
@@ -10529,15 +10556,15 @@
   }
 
   function covers(el) {
-    const ref = el.style;
-    const { backgroundSize } = ref;
-    const covers =
+    var ref = el.style;
+    var backgroundSize = ref.backgroundSize;
+    var covers =
       css(css(el, "backgroundSize", ""), "backgroundSize") === "cover";
     el.style.backgroundSize = backgroundSize;
     return covers;
   }
 
-  const parallax = {
+  var parallax = {
     mixins: [Parallax],
 
     props: {
@@ -10553,16 +10580,16 @@
     },
 
     computed: {
-      target(ref, $el) {
-        const { target } = ref;
+      target: function (ref, $el) {
+        var target = ref.target;
 
         return getOffsetElement((target && query(target, $el)) || $el);
       },
     },
 
     update: {
-      read(ref, types) {
-        let { percent } = ref;
+      read: function (ref, types) {
+        var percent = ref.percent;
 
         if (!types.has("scroll")) {
           percent = false;
@@ -10572,20 +10599,20 @@
           return;
         }
 
-        const prev = percent;
+        var prev = percent;
         percent = ease(
           scrolledOver(this.target) / (this.viewport || 1),
           this.easing
         );
 
         return {
-          percent,
+          percent: percent,
           style: prev !== percent ? this.getCss(percent) : false,
         };
       },
 
-      write(ref) {
-        const { style } = ref;
+      write: function (ref) {
+        var style = ref.style;
 
         if (!this.matchMedia) {
           this.reset();
@@ -10612,14 +10639,14 @@
       : document.body;
   }
 
-  const SliderReactive = {
+  var SliderReactive = {
     update: {
-      write() {
+      write: function () {
         if (this.stack.length || this.dragging) {
           return;
         }
 
-        const index = this.getValidIndex(this.index);
+        var index = this.getValidIndex(this.index);
 
         if (!~this.prevIndex || this.index !== index) {
           this.show(index);
@@ -10631,26 +10658,26 @@
   };
 
   function Transitioner$1(prev, next, dir, ref) {
-    const { center } = ref;
-    const { easing } = ref;
-    const { list } = ref;
+    var center = ref.center;
+    var easing = ref.easing;
+    var list = ref.list;
 
-    const deferred = new Deferred();
+    var deferred = new Deferred();
 
-    const from = prev
+    var from = prev
       ? getLeft(prev, list, center)
       : getLeft(next, list, center) + dimensions(next).width * dir;
-    const to = next
+    var to = next
       ? getLeft(next, list, center)
       : from + dimensions(prev).width * dir * (isRtl ? -1 : 1);
 
     return {
-      dir,
+      dir: dir,
 
-      show(duration, percent, linear) {
+      show: function (duration, percent, linear) {
         if (percent === void 0) percent = 0;
 
-        const timing = linear ? "linear" : easing;
+        var timing = linear ? "linear" : easing;
         duration -= Math.round(duration * clamp(percent, -1, 1));
 
         this.translate(percent);
@@ -10658,17 +10685,17 @@
         prev && this.updateTranslates();
         percent = prev ? percent : clamp(percent, 0, 1);
         triggerUpdate$1(this.getItemIn(), "itemin", {
-          percent,
-          duration,
-          timing,
-          dir,
+          percent: percent,
+          duration: duration,
+          timing: timing,
+          dir: dir,
         });
         prev &&
           triggerUpdate$1(this.getItemIn(true), "itemout", {
             percent: 1 - percent,
-            duration,
-            timing,
-            dir,
+            duration: duration,
+            timing: timing,
+            dir: dir,
           });
 
         Transition.start(
@@ -10681,23 +10708,23 @@
         return deferred.promise;
       },
 
-      cancel() {
+      cancel: function () {
         Transition.cancel(list);
       },
 
-      reset() {
+      reset: function () {
         css(list, "transform", "");
       },
 
-      forward(duration, percent) {
+      forward: function (duration, percent) {
         if (percent === void 0) percent = this.percent();
 
         Transition.cancel(list);
         return this.show(duration, percent, true);
       },
 
-      translate(percent) {
-        const distance = this.getDistance() * dir * (isRtl ? -1 : 1);
+      translate: function (percent) {
+        var distance = this.getDistance() * dir * (isRtl ? -1 : 1);
 
         css(
           list,
@@ -10717,33 +10744,33 @@
         if (prev) {
           percent = clamp(percent, -1, 1);
           triggerUpdate$1(this.getItemIn(), "itemtranslatein", {
-            percent,
-            dir,
+            percent: percent,
+            dir: dir,
           });
           triggerUpdate$1(this.getItemIn(true), "itemtranslateout", {
             percent: 1 - percent,
-            dir,
+            dir: dir,
           });
         }
       },
 
-      percent() {
+      percent: function () {
         return Math.abs(
           (css(list, "transform").split(",")[4] * (isRtl ? -1 : 1) + from) /
             (to - from)
         );
       },
 
-      getDistance() {
+      getDistance: function () {
         return Math.abs(to - from);
       },
 
-      getItemIn(out) {
+      getItemIn: function (out) {
         if (out === void 0) out = false;
 
-        const actives = sortBy(this.getActives(), "offsetLeft");
-        const all = sortBy(children(list), "offsetLeft");
-        const i = index(
+        var actives = sortBy(this.getActives(), "offsetLeft");
+        var all = sortBy(children(list), "offsetLeft");
+        var i = index(
           all,
           actives[dir * (out ? -1 : 1) > 0 ? actives.length - 1 : 0]
         );
@@ -10751,10 +10778,10 @@
         return ~i && all[i + (prev && !out ? dir : 0)];
       },
 
-      getActives() {
+      getActives: function () {
         return [prev || next].concat(
           children(list).filter(function (slide) {
-            const slideLeft = getElLeft(slide, list);
+            var slideLeft = getElLeft(slide, list);
             return (
               slideLeft > from &&
               slideLeft + dimensions(slide).width <=
@@ -10764,11 +10791,11 @@
         );
       },
 
-      updateTranslates() {
-        const actives = this.getActives();
+      updateTranslates: function () {
+        var actives = this.getActives();
 
         children(list).forEach(function (slide) {
-          const isActive = includes(actives, slide);
+          var isActive = includes(actives, slide);
 
           triggerUpdate$1(slide, "itemtranslate" + (isActive ? "in" : "out"), {
             percent: isActive ? 1 : 0,
@@ -10780,7 +10807,7 @@
   }
 
   function getLeft(el, list, center) {
-    const left = getElLeft(el, list);
+    var left = getElLeft(el, list);
 
     return center ? left - centerEl(el, list) : Math.min(left, getMax(list));
   }
@@ -10813,7 +10840,7 @@
     trigger(el, createEvent(type, false, false, data));
   }
 
-  const slider = {
+  var slider = {
     mixins: [Class, Slider, SliderReactive],
 
     props: {
@@ -10832,12 +10859,12 @@
     },
 
     computed: {
-      avgWidth() {
+      avgWidth: function () {
         return getWidth(this.list) / this.length;
       },
 
-      finite(ref) {
-        const { finite } = ref;
+      finite: function (ref) {
+        var finite = ref.finite;
 
         return (
           finite ||
@@ -10846,7 +10873,7 @@
         );
       },
 
-      maxIndex() {
+      maxIndex: function () {
         if (!this.finite || (this.center && !this.sets)) {
           return this.length - 1;
         }
@@ -10855,9 +10882,9 @@
           return last(this.sets);
         }
 
-        let lft = 0;
-        const max = getMax(this.list);
-        const index = findIndex(this.slides, function (el) {
+        var lft = 0;
+        var max = getMax(this.list);
+        var index = findIndex(this.slides, function (el) {
           if (lft >= max) {
             return true;
           }
@@ -10868,27 +10895,27 @@
         return ~index ? index : this.length - 1;
       },
 
-      sets(ref) {
-        const this$1 = this;
-        let { sets } = ref;
+      sets: function (ref) {
+        var this$1 = this;
+        var sets = ref.sets;
 
         if (!sets) {
           return;
         }
 
-        const width = dimensions(this.list).width / (this.center ? 2 : 1);
+        var width = dimensions(this.list).width / (this.center ? 2 : 1);
 
-        let left = 0;
-        let leftCenter = width;
-        let slideLeft = 0;
+        var left = 0;
+        var leftCenter = width;
+        var slideLeft = 0;
 
         sets = sortBy(this.slides, "offsetLeft").reduce(function (
           sets,
           slide,
           i
         ) {
-          const slideWidth = dimensions(slide).width;
-          const slideRight = slideLeft + slideWidth;
+          var slideWidth = dimensions(slide).width;
+          var slideRight = slideLeft + slideWidth;
 
           if (slideRight > left) {
             if (!this$1.center && i > this$1.maxIndex) {
@@ -10896,7 +10923,7 @@
             }
 
             if (!includes(sets, i)) {
-              const cmp = this$1.slides[i + 1];
+              var cmp = this$1.slides[i + 1];
               if (
                 this$1.center &&
                 cmp &&
@@ -10920,7 +10947,7 @@
         return !isEmpty(sets) && sets;
       },
 
-      transitionOptions() {
+      transitionOptions: function () {
         return {
           center: this.center,
           list: this.list,
@@ -10928,7 +10955,7 @@
       },
     },
 
-    connected() {
+    connected: function () {
       toggleClass(
         this.$el,
         this.clsContainer,
@@ -10937,11 +10964,11 @@
     },
 
     update: {
-      write() {
-        const this$1 = this;
+      write: function () {
+        var this$1 = this;
 
         this.navItems.forEach(function (el) {
-          const index = toNumber(data(el, this$1.attrItem));
+          var index = toNumber(data(el, this$1.attrItem));
           if (index !== false) {
             el.hidden =
               !this$1.maxIndex ||
@@ -10955,7 +10982,7 @@
           this._translate(1);
         }
 
-        const actives = this._getTransitioner(this.index).getActives();
+        var actives = this._getTransitioner(this.index).getActives();
         this.slides.forEach(function (slide) {
           return toggleClass(slide, this$1.clsActive, includes(actives, slide));
         });
@@ -10978,7 +11005,7 @@
     },
 
     events: {
-      beforeitemshow(e) {
+      beforeitemshow: function (e) {
         if (
           !this.dragging &&
           this.sets &&
@@ -10988,7 +11015,7 @@
           this.index = this.getValidIndex();
         }
 
-        const diff = Math.abs(
+        var diff = Math.abs(
           this.index -
             this.prevIndex +
             ((this.dir > 0 && this.index < this.prevIndex) ||
@@ -10998,7 +11025,7 @@
         );
 
         if (!this.dragging && diff > 1) {
-          for (let i = 0; i < diff; i++) {
+          for (var i = 0; i < diff; i++) {
             this.stack.splice(1, 0, this.dir > 0 ? "next" : "previous");
           }
 
@@ -11006,7 +11033,7 @@
           return;
         }
 
-        const index =
+        var index =
           this.dir < 0 || !this.slides[this.prevIndex]
             ? this.index
             : this.prevIndex;
@@ -11017,22 +11044,22 @@
         this.reorder();
       },
 
-      itemshow() {
+      itemshow: function () {
         ~this.prevIndex &&
           addClass(this._getTransitioner().getItemIn(), this.clsActive);
       },
     },
 
     methods: {
-      reorder() {
-        const this$1 = this;
+      reorder: function () {
+        var this$1 = this;
 
         if (this.finite) {
           css(this.slides, "order", "");
           return;
         }
 
-        const index =
+        var index =
           this.dir > 0 && this.slides[this.prevIndex]
             ? this.prevIndex
             : this.index;
@@ -11053,21 +11080,21 @@
           return;
         }
 
-        const next = this.slides[index];
-        let width =
+        var next = this.slides[index];
+        var width =
           dimensions(this.list).width / 2 - dimensions(next).width / 2;
-        let j = 0;
+        var j = 0;
 
         while (width > 0) {
-          const slideIndex = this.getIndex(--j + index, index);
-          const slide = this.slides[slideIndex];
+          var slideIndex = this.getIndex(--j + index, index);
+          var slide = this.slides[slideIndex];
 
           css(slide, "order", slideIndex > index ? -2 : -1);
           width -= dimensions(slide).width;
         }
       },
 
-      getValidIndex(index, prevIndex) {
+      getValidIndex: function (index, prevIndex) {
         if (index === void 0) index = this.index;
         if (prevIndex === void 0) prevIndex = this.prevIndex;
 
@@ -11077,7 +11104,7 @@
           return index;
         }
 
-        let prev;
+        var prev;
 
         do {
           if (includes(this.sets, index)) {
@@ -11104,7 +11131,7 @@
     );
   }
 
-  const sliderParallax = {
+  var sliderParallax = {
     mixins: [Parallax],
 
     data: {
@@ -11112,8 +11139,8 @@
     },
 
     computed: {
-      item(ref, $el) {
-        const { selItem } = ref;
+      item: function (ref, $el) {
+        var selItem = ref.selItem;
 
         return query(selItem, $el);
       },
@@ -11125,24 +11152,24 @@
 
         self: true,
 
-        el() {
+        el: function () {
           return this.item;
         },
 
-        handler(ref) {
-          const this$1 = this;
-          const { type } = ref;
-          const ref_detail = ref.detail;
-          const { percent } = ref_detail;
-          const { duration } = ref_detail;
-          const { timing } = ref_detail;
-          const { dir } = ref_detail;
+        handler: function (ref) {
+          var this$1 = this;
+          var type = ref.type;
+          var ref_detail = ref.detail;
+          var percent = ref_detail.percent;
+          var duration = ref_detail.duration;
+          var timing = ref_detail.timing;
+          var dir = ref_detail.dir;
 
           fastdom.read(function () {
-            const propsFrom = this$1.getCss(
+            var propsFrom = this$1.getCss(
               getCurrentPercent(type, dir, percent)
             );
-            const propsTo = this$1.getCss(isIn(type) ? 0.5 : dir > 0 ? 1 : 0);
+            var propsTo = this$1.getCss(isIn(type) ? 0.5 : dir > 0 ? 1 : 0);
             fastdom.write(function () {
               css(this$1.$el, propsFrom);
               Transition.start(this$1.$el, propsTo, duration, timing).catch(
@@ -11158,11 +11185,11 @@
 
         self: true,
 
-        el() {
+        el: function () {
           return this.item;
         },
 
-        handler() {
+        handler: function () {
           Transition.cancel(this.$el);
         },
       },
@@ -11172,19 +11199,19 @@
 
         self: true,
 
-        el() {
+        el: function () {
           return this.item;
         },
 
-        handler(ref) {
-          const this$1 = this;
-          const { type } = ref;
-          const ref_detail = ref.detail;
-          const { percent } = ref_detail;
-          const { dir } = ref_detail;
+        handler: function (ref) {
+          var this$1 = this;
+          var type = ref.type;
+          var ref_detail = ref.detail;
+          var percent = ref_detail.percent;
+          var dir = ref_detail.dir;
 
           fastdom.read(function () {
-            const props = this$1.getCss(getCurrentPercent(type, dir, percent));
+            var props = this$1.getCss(getCurrentPercent(type, dir, percent));
             fastdom.write(function () {
               return css(this$1.$el, props);
             });
@@ -11210,34 +11237,34 @@
       : percent;
   }
 
-  const Animations$2 = assign({}, Animations, {
+  var Animations$2 = assign({}, Animations, {
     fade: {
-      show() {
+      show: function () {
         return [{ opacity: 0, zIndex: 0 }, { zIndex: -1 }];
       },
 
-      percent(current) {
+      percent: function (current) {
         return 1 - css(current, "opacity");
       },
 
-      translate(percent) {
+      translate: function (percent) {
         return [{ opacity: 1 - percent, zIndex: 0 }, { zIndex: -1 }];
       },
     },
 
     scale: {
-      show() {
+      show: function () {
         return [
           { opacity: 0, transform: scale3d(1 + 0.5), zIndex: 0 },
           { zIndex: -1 },
         ];
       },
 
-      percent(current) {
+      percent: function (current) {
         return 1 - css(current, "opacity");
       },
 
-      translate(percent) {
+      translate: function (percent) {
         return [
           {
             opacity: 1 - percent,
@@ -11250,7 +11277,7 @@
     },
 
     pull: {
-      show(dir) {
+      show: function (dir) {
         return dir < 0
           ? [
               { transform: translate(30), zIndex: -1 },
@@ -11262,11 +11289,11 @@
             ];
       },
 
-      percent(current, next, dir) {
+      percent: function (current, next, dir) {
         return dir < 0 ? 1 - translated(next) : translated(current);
       },
 
-      translate(percent, dir) {
+      translate: function (percent, dir) {
         return dir < 0
           ? [
               { transform: translate(30 * percent), zIndex: -1 },
@@ -11280,7 +11307,7 @@
     },
 
     push: {
-      show(dir) {
+      show: function (dir) {
         return dir < 0
           ? [
               { transform: translate(100), zIndex: 0 },
@@ -11292,11 +11319,11 @@
             ];
       },
 
-      percent(current, next, dir) {
+      percent: function (current, next, dir) {
         return dir > 0 ? 1 - translated(next) : translated(current);
       },
 
-      translate(percent, dir) {
+      translate: function (percent, dir) {
         return dir < 0
           ? [
               { transform: translate(percent * 100), zIndex: 0 },
@@ -11310,7 +11337,7 @@
     },
   });
 
-  const slideshow = {
+  var slideshow = {
     mixins: [Class, Slideshow, SliderReactive],
 
     props: {
@@ -11330,10 +11357,10 @@
     },
 
     update: {
-      read() {
-        const ref = this.ratio.split(":").map(Number);
-        const width = ref[0];
-        let height = ref[1];
+      read: function () {
+        var ref = this.ratio.split(":").map(Number);
+        var width = ref[0];
+        var height = ref[1];
 
         height = (height * this.list.offsetWidth) / width || 0;
 
@@ -11350,8 +11377,8 @@
         };
       },
 
-      write(ref) {
-        const { height } = ref;
+      write: function (ref) {
+        var height = ref.height;
 
         height > 0 && css(this.list, "minHeight", height);
       },
@@ -11360,7 +11387,7 @@
     },
   };
 
-  const sortable = {
+  var sortable = {
     mixins: [Class, Animate],
 
     props: {
@@ -11392,11 +11419,11 @@
       pos: {},
     },
 
-    created() {
-      const this$1 = this;
+    created: function () {
+      var this$1 = this;
 
       ["init", "start", "move", "end"].forEach(function (key) {
-        const fn = this$1[key];
+        var fn = this$1[key];
         this$1[key] = function (e) {
           assign(this$1.pos, getEventPos(e));
           fn(e);
@@ -11411,20 +11438,20 @@
     },
 
     computed: {
-      target() {
+      target: function () {
         return (this.$el.tBodies || [this.$el])[0];
       },
 
-      items() {
+      items: function () {
         return children(this.target);
       },
 
       isEmpty: {
-        get() {
+        get: function () {
           return isEmpty(this.items);
         },
 
-        watch(empty) {
+        watch: function (empty) {
           toggleClass(this.target, this.clsEmpty, empty);
         },
 
@@ -11432,13 +11459,13 @@
       },
 
       handles: {
-        get(ref, el) {
-          const { handle } = ref;
+        get: function (ref, el) {
+          var handle = ref.handle;
 
           return handle ? $$(handle, el) : this.items;
         },
 
-        watch(handles, prev) {
+        watch: function (handles, prev) {
           css(prev, { touchAction: "", userSelect: "" });
           css(handles, {
             touchAction: hasTouch ? "none" : "",
@@ -11451,45 +11478,45 @@
     },
 
     update: {
-      write(data) {
+      write: function (data) {
         if (!this.drag || !parent(this.placeholder)) {
           return;
         }
 
-        const ref = this;
-        const ref_pos = ref.pos;
-        const { x } = ref_pos;
-        const { y } = ref_pos;
-        const ref_origin = ref.origin;
-        const { offsetTop } = ref_origin;
-        const { offsetLeft } = ref_origin;
-        const { placeholder } = ref;
+        var ref = this;
+        var ref_pos = ref.pos;
+        var x = ref_pos.x;
+        var y = ref_pos.y;
+        var ref_origin = ref.origin;
+        var offsetTop = ref_origin.offsetTop;
+        var offsetLeft = ref_origin.offsetLeft;
+        var placeholder = ref.placeholder;
 
         css(this.drag, {
           top: y - offsetTop,
           left: x - offsetLeft,
         });
 
-        const sortable = this.getSortable(document.elementFromPoint(x, y));
+        var sortable = this.getSortable(document.elementFromPoint(x, y));
 
         if (!sortable) {
           return;
         }
 
-        const { items } = sortable;
+        var items = sortable.items;
 
         if (items.some(Transition.inProgress)) {
           return;
         }
 
-        const target = findTarget(items, { x, y });
+        var target = findTarget(items, { x: x, y: y });
 
         if (items.length && (!target || target === placeholder)) {
           return;
         }
 
-        const previous = this.getSortable(placeholder);
-        const insertTarget = findInsertTarget(
+        var previous = this.getSortable(placeholder);
+        var insertTarget = findInsertTarget(
           sortable.target,
           target,
           placeholder,
@@ -11522,14 +11549,14 @@
     },
 
     methods: {
-      init(e) {
-        const { target } = e;
-        const { button } = e;
-        const { defaultPrevented } = e;
-        const ref = this.items.filter(function (el) {
+      init: function (e) {
+        var target = e.target;
+        var button = e.button;
+        var defaultPrevented = e.defaultPrevented;
+        var ref = this.items.filter(function (el) {
           return within(target, el);
         });
-        const placeholder = ref[0];
+        var placeholder = ref[0];
 
         if (
           !placeholder ||
@@ -11546,7 +11573,10 @@
 
         this.touched = new Set([this]);
         this.placeholder = placeholder;
-        this.origin = assign({ target, index: index(placeholder) }, this.pos);
+        this.origin = assign(
+          { target: target, index: index(placeholder) },
+          this.pos
+        );
 
         on(document, pointerMove, this.move);
         on(document, pointerUp, this.end);
@@ -11556,11 +11586,11 @@
         }
       },
 
-      start(e) {
+      start: function (e) {
         this.drag = appendDrag(this.$container, this.placeholder);
-        const ref = this.placeholder.getBoundingClientRect();
-        const { left } = ref;
-        const { top } = ref;
+        var ref = this.placeholder.getBoundingClientRect();
+        var left = ref.left;
+        var top = ref.top;
         assign(this.origin, {
           offsetLeft: this.pos.x - left,
           offsetTop: this.pos.y - top,
@@ -11578,7 +11608,7 @@
         this.move(e);
       },
 
-      move(e) {
+      move: function (e) {
         if (this.drag) {
           this.$emit("move");
         } else if (
@@ -11589,8 +11619,8 @@
         }
       },
 
-      end() {
-        const this$1 = this;
+      end: function () {
+        var this$1 = this;
 
         off(document, pointerMove, this.move);
         off(document, pointerUp, this.end);
@@ -11602,7 +11632,7 @@
 
         untrackScroll();
 
-        const sortable = this.getSortable(this.placeholder);
+        var sortable = this.getSortable(this.placeholder);
 
         if (this === sortable) {
           if (this.origin.index !== index(this.placeholder)) {
@@ -11619,8 +11649,8 @@
         this.drag = null;
 
         this.touched.forEach(function (ref) {
-          const { clsPlaceholder } = ref;
-          const { clsItem } = ref;
+          var clsPlaceholder = ref.clsPlaceholder;
+          var clsItem = ref.clsItem;
 
           return this$1.touched.forEach(function (sortable) {
             return removeClass(sortable.items, clsPlaceholder, clsItem);
@@ -11630,12 +11660,12 @@
         removeClass(document.documentElement, this.clsDragState);
       },
 
-      insert(element, target) {
-        const this$1 = this;
+      insert: function (element, target) {
+        var this$1 = this;
 
         addClass(this.items, this.clsItem);
 
-        const insert = function () {
+        var insert = function () {
           return target
             ? before(target, element)
             : append(this$1.target, element);
@@ -11648,7 +11678,7 @@
         }
       },
 
-      remove(element) {
+      remove: function (element) {
         if (!within(element, this.target)) {
           return;
         }
@@ -11662,9 +11692,9 @@
         }
       },
 
-      getSortable(element) {
+      getSortable: function (element) {
         do {
-          const sortable = this.$getComponent(element, "sortable");
+          var sortable = this.$getComponent(element, "sortable");
 
           if (
             sortable &&
@@ -11678,27 +11708,27 @@
     },
   };
 
-  let trackTimer;
+  var trackTimer;
   function trackScroll(pos) {
-    let last = Date.now();
+    var last = Date.now();
     trackTimer = setInterval(function () {
-      const { x } = pos;
-      let { y } = pos;
+      var x = pos.x;
+      var y = pos.y;
       y += window.pageYOffset;
 
-      const dist = (Date.now() - last) * 0.3;
+      var dist = (Date.now() - last) * 0.3;
       last = Date.now();
 
       scrollParents(document.elementFromPoint(x, pos.y))
         .reverse()
         .some(function (scrollEl) {
-          let scroll = scrollEl.scrollTop;
-          const { scrollHeight } = scrollEl;
+          var scroll = scrollEl.scrollTop;
+          var scrollHeight = scrollEl.scrollHeight;
 
-          const ref = offset(getViewport(scrollEl));
-          const { top } = ref;
-          const { bottom } = ref;
-          const { height } = ref;
+          var ref = offset(getViewport(scrollEl));
+          var top = ref.top;
+          var bottom = ref.bottom;
+          var height = ref.height;
 
           if (top < y && top + 35 > y) {
             scroll -= dist;
@@ -11721,7 +11751,7 @@
   }
 
   function appendDrag(container, element) {
-    const clone = append(
+    var clone = append(
       container,
       element.outerHTML.replace(/(^<)(?:li|tr)|(?:li|tr)(\/>$)/g, "$1div$2")
     );
@@ -11762,7 +11792,7 @@
       return;
     }
 
-    const rect = target.getBoundingClientRect();
+    var rect = target.getBoundingClientRect();
     if (!sameList) {
       if (!isHorizontal(list, placeholder)) {
         return y < rect.top + rect.height / 2
@@ -11773,18 +11803,18 @@
       return target;
     }
 
-    const placeholderRect = placeholder.getBoundingClientRect();
-    const sameRow = linesIntersect(
+    var placeholderRect = placeholder.getBoundingClientRect();
+    var sameRow = linesIntersect(
       [rect.top, rect.bottom],
       [placeholderRect.top, placeholderRect.bottom]
     );
 
-    const pointerPos = sameRow ? x : y;
-    const lengthProp = sameRow ? "width" : "height";
-    const startProp = sameRow ? "left" : "top";
-    const endProp = sameRow ? "right" : "bottom";
+    var pointerPos = sameRow ? x : y;
+    var lengthProp = sameRow ? "width" : "height";
+    var startProp = sameRow ? "left" : "top";
+    var endProp = sameRow ? "right" : "bottom";
 
-    const diff =
+    var diff =
       placeholderRect[lengthProp] < rect[lengthProp]
         ? rect[lengthProp] - placeholderRect[lengthProp]
         : 0;
@@ -11805,17 +11835,17 @@
   }
 
   function isHorizontal(list, placeholder) {
-    const single = children(list).length === 1;
+    var single = children(list).length === 1;
 
     if (single) {
       append(list, placeholder);
     }
 
-    const items = children(list);
-    const isHorizontal = items.some(function (el, i) {
-      const rectA = el.getBoundingClientRect();
+    var items = children(list);
+    var isHorizontal = items.some(function (el, i) {
+      var rectA = el.getBoundingClientRect();
       return items.slice(i + 1).some(function (el) {
-        const rectB = el.getBoundingClientRect();
+        var rectB = el.getBoundingClientRect();
         return !linesIntersect(
           [rectA.left, rectA.right],
           [rectB.left, rectB.right]
@@ -11834,9 +11864,9 @@
     return lineA[1] > lineB[0] && lineB[1] > lineA[0];
   }
 
-  let obj;
+  var obj;
 
-  const tooltip = {
+  var tooltip = {
     mixins: [Container, Togglable, Position],
 
     args: "title",
@@ -11856,21 +11886,21 @@
       clsPos: "mod-tooltip",
     },
 
-    beforeConnect() {
+    beforeConnect: function () {
       this._hasTitle = hasAttr(this.$el, "title");
       attr(this.$el, "title", "");
       this.updateAria(false);
       makeFocusable(this.$el);
     },
 
-    disconnected() {
+    disconnected: function () {
       this.hide();
       attr(this.$el, "title", this._hasTitle ? this.title : null);
     },
 
     methods: {
-      show() {
-        const this$1 = this;
+      show: function () {
+        var this$1 = this;
 
         if (this.isToggled(this.tooltip) || !this.title) {
           return;
@@ -11896,8 +11926,8 @@
         this.showTimer = setTimeout(this._show, this.delay);
       },
 
-      hide() {
-        const this$1 = this;
+      hide: function () {
+        var this$1 = this;
 
         if (matches(this.$el, "input:focus")) {
           return;
@@ -11915,8 +11945,8 @@
         });
       },
 
-      _show() {
-        const this$1 = this;
+      _show: function () {
+        var this$1 = this;
 
         this.tooltip = append(
           this.container,
@@ -11947,7 +11977,7 @@
         this.toggleElement(this.tooltip, true);
       },
 
-      updateAria(toggled) {
+      updateAria: function (toggled) {
         attr(this.$el, "aria-expanded", toggled);
       },
     },
@@ -11980,7 +12010,7 @@
     return isInput(el) || matches(el, "a,button") || hasAttr(el, "tabindex");
   }
 
-  const upload = {
+  var upload = {
     props: {
       allow: String,
       clsDragover: String,
@@ -12027,7 +12057,7 @@
     },
 
     events: {
-      change(e) {
+      change: function (e) {
         if (!matches(e.target, 'input[type="file"]')) {
           return;
         }
@@ -12041,10 +12071,10 @@
         e.target.value = "";
       },
 
-      drop(e) {
+      drop: function (e) {
         stop(e);
 
-        const transfer = e.dataTransfer;
+        var transfer = e.dataTransfer;
 
         if (!transfer || !transfer.files) {
           return;
@@ -12055,24 +12085,24 @@
         this.upload(transfer.files);
       },
 
-      dragenter(e) {
+      dragenter: function (e) {
         stop(e);
       },
 
-      dragover(e) {
+      dragover: function (e) {
         stop(e);
         addClass(this.$el, this.clsDragover);
       },
 
-      dragleave(e) {
+      dragleave: function (e) {
         stop(e);
         removeClass(this.$el, this.clsDragover);
       },
     },
 
     methods: {
-      upload(files) {
-        const this$1 = this;
+      upload: function (files) {
+        var this$1 = this;
 
         if (!files.length) {
           return;
@@ -12080,7 +12110,7 @@
 
         trigger(this.$el, "upload", [files]);
 
-        for (let i = 0; i < files.length; i++) {
+        for (var i = 0; i < files.length; i++) {
           if (this.maxSize && this.maxSize * 1000 < files[i].size) {
             this.fail(this.msgInvalidSize.replace("%s", this.maxSize));
             return;
@@ -12103,24 +12133,24 @@
 
         this.beforeAll(this, files);
 
-        const chunks = chunk(files, this.concurrent);
+        var chunks = chunk(files, this.concurrent);
         var upload = function (files) {
-          const data = new FormData();
+          var data = new FormData();
 
           files.forEach(function (file) {
             return data.append(this$1.name, file);
           });
 
-          for (const key in this$1.params) {
+          for (var key in this$1.params) {
             data.append(key, this$1.params[key]);
           }
 
           ajax(this$1.url, {
-            data,
+            data: data,
             method: this$1.method,
             responseType: this$1.type,
-            beforeSend(env) {
-              const { xhr } = env;
+            beforeSend: function (env) {
+              var xhr = env.xhr;
               xhr.upload && on(xhr.upload, "progress", this$1.progress);
               ["loadStart", "load", "loadEnd", "abort"].forEach(function (
                 type
@@ -12167,10 +12197,10 @@
   }
 
   function chunk(files, size) {
-    const chunks = [];
-    for (let i = 0; i < files.length; i += size) {
-      const chunk = [];
-      for (let j = 0; j < size; j++) {
+    var chunks = [];
+    for (var i = 0; i < files.length; i += size) {
+      var chunk = [];
+      for (var j = 0; j < size; j++) {
         chunk.push(files[i + j]);
       }
       chunks.push(chunk);
@@ -12183,12 +12213,12 @@
     e.stopPropagation();
   }
 
-  const components$1 = /* #__PURE__*/ Object.freeze({
+  var components$1 = /*#__PURE__*/ Object.freeze({
     __proto__: null,
     Countdown: countdown,
     Filter: filter$1,
     Lightbox: lightbox,
-    LightboxPanel,
+    LightboxPanel: LightboxPanel,
     Parallax: parallax,
     Slider: slider,
     SliderParallax: sliderParallax,
