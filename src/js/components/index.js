@@ -2,7 +2,7 @@ export { default as Countdown } from "./countdown";
 export { default as Filter } from "./filter";
 export { default as Lightbox } from "./lightbox";
 export { default as LightboxPanel } from "./lightbox-panel";
-// export {default as Notification} from './notification';
+export {default as Notification} from './notification';
 export { default as Parallax } from "./parallax";
 export { default as Slider } from "./slider";
 export { default as SliderParallax } from "./slider-parallax";
