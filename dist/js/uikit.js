@@ -1,9 +1,9 @@
-/*! UIkit 3.6.18 | https://www.getuikit.com | (c) 2014 - 2021 YOOtheme | MIT License */
+/*! modUIkit 3.6.18 | https://www.getuikit.com | (c) 2014 - 2021 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define('uikit', factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.UIkit = factory());
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.modUIkit = factory());
 }(this, (function () { 'use strict';
 
     var objPrototype = Object.prototype;
@@ -1418,11 +1418,11 @@
     }
 
     var parseCssVar = memoize(function (name) {
-        /* usage in css: .uk-name:before { content:"xyz" } */
+        /* usage in css: .mod-name:before { content:"xyz" } */
 
         var element = append(document.documentElement, document.createElement('div'));
 
-        addClass(element, ("uk-" + name));
+        addClass(element, ("mod-" + name));
 
         name = getStyle(element, 'content', ':before').replace(/^["'](.*)["']$/, '$1');
 
@@ -1433,7 +1433,7 @@
 
     function getCssVar(name) {
         return !isIE
-            ? getStyles(document.documentElement).getPropertyValue(("--uk-" + name))
+            ? getStyles(document.documentElement).getPropertyValue(("--mod-" + name))
             : parseCssVar(name);
     }
 
@@ -1483,7 +1483,7 @@
                     var type = ref.type;
 
                     clearTimeout(timer);
-                    removeClass(element, 'uk-transition');
+                    removeClass(element, 'mod-transition');
                     css(element, {
                         transitionProperty: '',
                         transitionDuration: '',
@@ -1492,7 +1492,7 @@
                     type === 'transitioncanceled' ? reject() : resolve(element);
                 }, {self: true});
 
-                addClass(element, 'uk-transition');
+                addClass(element, 'mod-transition');
                 css(element, assign({
                     transitionProperty: Object.keys(props).map(propName).join(','),
                     transitionDuration: (duration + "ms"),
@@ -1518,12 +1518,12 @@
         },
 
         inProgress: function(element) {
-            return hasClass(element, 'uk-transition');
+            return hasClass(element, 'mod-transition');
         }
 
     };
 
-    var animationPrefix = 'uk-animation-';
+    var animationPrefix = 'mod-animation-';
 
     function animate(element, animation, duration, origin, out) {
         if ( duration === void 0 ) duration = 200;
@@ -1551,7 +1551,7 @@
                 addClass(element, animation, animationPrefix + (out ? 'leave' : 'enter'));
 
                 if (startsWith(animation, animationPrefix)) {
-                    origin && addClass(element, ("uk-transform-origin-" + origin));
+                    origin && addClass(element, ("mod-transform-origin-" + origin));
                     out && addClass(element, (animationPrefix + "reverse"));
                 }
 
@@ -2658,11 +2658,11 @@
         getViewportClientHeight: getViewportClientHeight
     });
 
-    function globalAPI (UIkit) {
+    function globalAPI (modUIkit) {
 
-        var DATA = UIkit.data;
+        var DATA = modUIkit.data;
 
-        UIkit.use = function (plugin) {
+        modUIkit.use = function (plugin) {
 
             if (plugin.installed) {
                 return;
@@ -2674,17 +2674,17 @@
             return this;
         };
 
-        UIkit.mixin = function (mixin, component) {
-            component = (isString(component) ? UIkit.component(component) : component) || this;
+        modUIkit.mixin = function (mixin, component) {
+            component = (isString(component) ? modUIkit.component(component) : component) || this;
             component.options = mergeOptions(component.options, mixin);
         };
 
-        UIkit.extend = function (options) {
+        modUIkit.extend = function (options) {
 
             options = options || {};
 
             var Super = this;
-            var Sub = function UIkitComponent(options) {
+            var Sub = function modUIkitComponent(options) {
                 this._init(options);
             };
 
@@ -2698,7 +2698,7 @@
             return Sub;
         };
 
-        UIkit.update = function (element, e) {
+        modUIkit.update = function (element, e) {
 
             element = element ? toNode(element) : document.body;
 
@@ -2708,7 +2708,7 @@
         };
 
         var container;
-        Object.defineProperty(UIkit, 'container', {
+        Object.defineProperty(modUIkit, 'container', {
 
             get: function() {
                 return container || document.body;
@@ -2735,9 +2735,9 @@
         }
     }
 
-    function hooksAPI (UIkit) {
+    function hooksAPI (modUIkit) {
 
-        UIkit.prototype._callHook = function (hook) {
+        modUIkit.prototype._callHook = function (hook) {
             var this$1 = this;
 
 
@@ -2748,7 +2748,7 @@
             }
         };
 
-        UIkit.prototype._callConnected = function () {
+        modUIkit.prototype._callConnected = function () {
 
             if (this._connected) {
                 return;
@@ -2769,7 +2769,7 @@
             this._callUpdate();
         };
 
-        UIkit.prototype._callDisconnected = function () {
+        modUIkit.prototype._callDisconnected = function () {
 
             if (!this._connected) {
                 return;
@@ -2785,7 +2785,7 @@
 
         };
 
-        UIkit.prototype._callUpdate = function (e) {
+        modUIkit.prototype._callUpdate = function (e) {
             var this$1 = this;
             if ( e === void 0 ) e = 'update';
 
@@ -2813,7 +2813,7 @@
             this._updates.add(e.type || e);
         };
 
-        UIkit.prototype._callWatches = function () {
+        modUIkit.prototype._callWatches = function () {
             var this$1 = this;
 
 
@@ -2890,11 +2890,11 @@
         }
     }
 
-    function stateAPI (UIkit) {
+    function stateAPI (modUIkit) {
 
         var uid = 0;
 
-        UIkit.prototype._init = function (options) {
+        modUIkit.prototype._init = function (options) {
 
             options = options || {};
             options.data = normalizeData(options, this.constructor.options);
@@ -2914,7 +2914,7 @@
             }
         };
 
-        UIkit.prototype._initData = function () {
+        modUIkit.prototype._initData = function () {
 
             var ref = this.$options;
             var data = ref.data; if ( data === void 0 ) data = {};
@@ -2924,7 +2924,7 @@
             }
         };
 
-        UIkit.prototype._initMethods = function () {
+        modUIkit.prototype._initMethods = function () {
 
             var ref = this.$options;
             var methods = ref.methods;
@@ -2936,7 +2936,7 @@
             }
         };
 
-        UIkit.prototype._initComputeds = function () {
+        modUIkit.prototype._initComputeds = function () {
 
             var ref = this.$options;
             var computed = ref.computed;
@@ -2950,7 +2950,7 @@
             }
         };
 
-        UIkit.prototype._initProps = function (props) {
+        modUIkit.prototype._initProps = function (props) {
 
             var key;
 
@@ -2970,7 +2970,7 @@
             }
         };
 
-        UIkit.prototype._initEvents = function () {
+        modUIkit.prototype._initEvents = function () {
             var this$1 = this;
 
 
@@ -2995,19 +2995,19 @@
             }
         };
 
-        UIkit.prototype._unbindEvents = function () {
+        modUIkit.prototype._unbindEvents = function () {
             this._events.forEach(function (unbind) { return unbind(); });
             delete this._events;
         };
 
-        UIkit.prototype._initObservers = function () {
+        modUIkit.prototype._initObservers = function () {
             this._observers = [
                 initChildListObserver(this),
                 initPropsObserver(this)
             ];
         };
 
-        UIkit.prototype._disconnectObservers = function () {
+        modUIkit.prototype._disconnectObservers = function () {
             this._observers.forEach(function (observer) { return observer && observer.disconnect(); }
             );
         };
@@ -3238,15 +3238,15 @@
         }
     }
 
-    function instanceAPI (UIkit) {
+    function instanceAPI (modUIkit) {
 
-        var DATA = UIkit.data;
+        var DATA = modUIkit.data;
 
-        UIkit.prototype.$create = function (component, element, data) {
-            return UIkit[component](element, data);
+        modUIkit.prototype.$create = function (component, element, data) {
+            return modUIkit[component](element, data);
         };
 
-        UIkit.prototype.$mount = function (el) {
+        modUIkit.prototype.$mount = function (el) {
 
             var ref = this.$options;
             var name = ref.name;
@@ -3268,12 +3268,12 @@
             }
         };
 
-        UIkit.prototype.$reset = function () {
+        modUIkit.prototype.$reset = function () {
             this._callDisconnected();
             this._callConnected();
         };
 
-        UIkit.prototype.$destroy = function (removeEl) {
+        modUIkit.prototype.$destroy = function (removeEl) {
             if ( removeEl === void 0 ) removeEl = false;
 
 
@@ -3302,22 +3302,22 @@
             }
         };
 
-        UIkit.prototype.$emit = function (e) {
+        modUIkit.prototype.$emit = function (e) {
             this._callUpdate(e);
         };
 
-        UIkit.prototype.$update = function (element, e) {
+        modUIkit.prototype.$update = function (element, e) {
             if ( element === void 0 ) element = this.$el;
 
-            UIkit.update(element, e);
+            modUIkit.update(element, e);
         };
 
-        UIkit.prototype.$getComponent = UIkit.getComponent;
+        modUIkit.prototype.$getComponent = modUIkit.getComponent;
 
-        var componentName = memoize(function (name) { return UIkit.prefix + hyphenate(name); });
-        Object.defineProperties(UIkit.prototype, {
+        var componentName = memoize(function (name) { return modUIkit.prefix + hyphenate(name); });
+        Object.defineProperties(modUIkit.prototype, {
 
-            $container: Object.getOwnPropertyDescriptor(UIkit, 'container'),
+            $container: Object.getOwnPropertyDescriptor(modUIkit, 'container'),
 
             $name: {
 
@@ -3331,13 +3331,13 @@
 
     }
 
-    function componentAPI (UIkit) {
+    function componentAPI (modUIkit) {
 
-        var DATA = UIkit.data;
+        var DATA = modUIkit.data;
 
         var components = {};
 
-        UIkit.component = function (name, options) {
+        modUIkit.component = function (name, options) {
 
             var id = hyphenate(name);
 
@@ -3346,19 +3346,19 @@
             if (!options) {
 
                 if (isPlainObject(components[name])) {
-                    components[name] = UIkit.extend(components[name]);
+                    components[name] = modUIkit.extend(components[name]);
                 }
 
                 return components[name];
 
             }
 
-            UIkit[name] = function (element, data) {
+            modUIkit[name] = function (element, data) {
                 var i = arguments.length, argsArray = Array(i);
                 while ( i-- ) argsArray[i] = arguments[i];
 
 
-                var component = UIkit.component(name);
+                var component = modUIkit.component(name);
 
                 return component.options.functional
                     ? new component({data: isPlainObject(element) ? element : [].concat( argsArray )})
@@ -3366,7 +3366,7 @@
 
                 function init(element) {
 
-                    var instance = UIkit.getComponent(element, name);
+                    var instance = modUIkit.getComponent(element, name);
 
                     if (instance) {
                         if (!data) {
@@ -3387,20 +3387,20 @@
             opt.name = name;
 
             if (opt.install) {
-                opt.install(UIkit, opt, name);
+                opt.install(modUIkit, opt, name);
             }
 
-            if (UIkit._initialized && !opt.functional) {
-                fastdom.read(function () { return UIkit[name](("[uk-" + id + "],[data-uk-" + id + "]")); });
+            if (modUIkit._initialized && !opt.functional) {
+                fastdom.read(function () { return modUIkit[name](("[mod-" + id + "],[data-mod-" + id + "]")); });
             }
 
             return components[name] = isPlainObject(options) ? opt : options;
         };
 
-        UIkit.getComponents = function (element) { return element && element[DATA] || {}; };
-        UIkit.getComponent = function (element, name) { return UIkit.getComponents(element)[name]; };
+        modUIkit.getComponents = function (element) { return element && element[DATA] || {}; };
+        modUIkit.getComponent = function (element, name) { return modUIkit.getComponents(element)[name]; };
 
-        UIkit.connect = function (node) {
+        modUIkit.connect = function (node) {
 
             if (node[DATA]) {
                 for (var name in node[DATA]) {
@@ -3413,14 +3413,14 @@
                 var name$1 = getComponentName(node.attributes[i].name);
 
                 if (name$1 && name$1 in components) {
-                    UIkit[name$1](node);
+                    modUIkit[name$1](node);
                 }
 
             }
 
         };
 
-        UIkit.disconnect = function (node) {
+        modUIkit.disconnect = function (node) {
             for (var name in node[DATA]) {
                 node[DATA][name]._callDisconnected();
             }
@@ -3429,28 +3429,28 @@
     }
 
     var getComponentName = memoize(function (attribute) {
-        return startsWith(attribute, 'uk-') || startsWith(attribute, 'data-uk-')
-            ? camelize(attribute.replace('data-uk-', '').replace('uk-', ''))
+        return startsWith(attribute, 'mod-') || startsWith(attribute, 'data-mod-')
+            ? camelize(attribute.replace('data-mod-', '').replace('mod-', ''))
             : false;
     });
 
-    var UIkit = function (options) {
+    var modUIkit = function (options) {
         this._init(options);
     };
 
-    UIkit.util = util;
-    UIkit.data = '__uikit__';
-    UIkit.prefix = 'uk-';
-    UIkit.options = {};
-    UIkit.version = '3.6.18';
+    modUIkit.util = util;
+    modUIkit.data = '__uikit__';
+    modUIkit.prefix = 'mod-';
+    modUIkit.options = {};
+    modUIkit.version = '3.6.18';
 
-    globalAPI(UIkit);
-    hooksAPI(UIkit);
-    stateAPI(UIkit);
-    componentAPI(UIkit);
-    instanceAPI(UIkit);
+    globalAPI(modUIkit);
+    hooksAPI(modUIkit);
+    stateAPI(modUIkit);
+    componentAPI(modUIkit);
+    instanceAPI(modUIkit);
 
-    function Core (UIkit) {
+    function Core (modUIkit) {
 
         if (!inBrowser) {
             return;
@@ -3464,7 +3464,7 @@
             }
             pendingResize = true;
             fastdom.write(function () { return pendingResize = false; });
-            UIkit.update(null, 'resize');
+            modUIkit.update(null, 'resize');
         };
 
         on(window, 'load resize', handleResize);
@@ -3484,7 +3484,7 @@
             pending = true;
             fastdom.write(function () { return pending = false; });
 
-            UIkit.update(null, e.type);
+            modUIkit.update(null, e.type);
 
         }, {passive: true, capture: true});
 
@@ -3492,7 +3492,7 @@
         on(document, 'animationstart', function (ref) {
             var target = ref.target;
 
-            if ((css(target, 'animationName') || '').match(/^uk-.*(left|right)/)) {
+            if ((css(target, 'animationName') || '').match(/^mod-.*(left|right)/)) {
 
                 started++;
                 css(document.documentElement, 'overflowX', 'hidden');
@@ -3545,10 +3545,10 @@
                 : 'Down';
     }
 
-    function boot (UIkit) {
+    function boot (modUIkit) {
 
-        var connect = UIkit.connect;
-        var disconnect = UIkit.disconnect;
+        var connect = modUIkit.connect;
+        var disconnect = modUIkit.disconnect;
 
         if (!inBrowser || !window.MutationObserver) {
             return;
@@ -3572,7 +3572,7 @@
                 subtree: true
             });
 
-            UIkit._initialized = true;
+            modUIkit._initialized = true;
         });
 
         function applyChildListMutation(ref) {
@@ -3595,16 +3595,16 @@
 
             var name = getComponentName(attributeName);
 
-            if (!name || !(name in UIkit)) {
+            if (!name || !(name in modUIkit)) {
                 return;
             }
 
             if (hasAttr(target, attributeName)) {
-                UIkit[name](target);
+                modUIkit[name](target);
                 return;
             }
 
-            var component = UIkit.getComponent(target, name);
+            var component = modUIkit.getComponent(target, name);
 
             if (component) {
                 component.$destroy();
@@ -3638,8 +3638,8 @@
             duration: 200,
             origin: false,
             transition: 'linear',
-            clsEnter: 'uk-togglabe-enter',
-            clsLeave: 'uk-togglabe-leave',
+            clsEnter: 'mod-togglabe-enter',
+            clsLeave: 'mod-togglabe-leave',
 
             initProps: {
                 overflow: '',
@@ -3837,9 +3837,9 @@
             animation: [true],
             collapsible: true,
             multiple: false,
-            clsOpen: 'uk-open',
-            toggle: '> .uk-accordion-title',
-            content: '> .uk-accordion-content',
+            clsOpen: 'mod-open',
+            toggle: '> .mod-accordion-title',
+            content: '> .mod-accordion-content',
             transition: 'ease',
             offset: 0
         },
@@ -3973,7 +3973,7 @@
 
         data: {
             animation: [true],
-            selClose: '.uk-alert-close',
+            selClose: '.mod-alert-close',
             duration: 150,
             hideProps: assign({opacity: 0}, Togglable.data.hideProps)
         },
@@ -4238,8 +4238,8 @@
             delayShow: 0,
             delayHide: 800,
             clsDrop: false,
-            animation: ['uk-animation-fade'],
-            cls: 'uk-open'
+            animation: ['mod-animation-fade'],
+            cls: 'mod-open'
         },
 
         computed: {
@@ -4253,7 +4253,7 @@
             clsDrop: function(ref) {
                 var clsDrop = ref.clsDrop;
 
-                return clsDrop || ("uk-" + (this.$options.name));
+                return clsDrop || ("mod-" + (this.$options.name));
             },
 
             clsPos: function() {
@@ -4731,8 +4731,8 @@
         },
 
         data: {
-            margin: 'uk-margin-small-top',
-            firstColumn: 'uk-first-column'
+            margin: 'mod-margin-small-top',
+            firstColumn: 'mod-first-column'
         },
 
         update: {
@@ -4874,14 +4874,14 @@
         },
 
         data: {
-            margin: 'uk-grid-margin',
-            clsStack: 'uk-grid-stack',
+            margin: 'mod-grid-margin',
+            clsStack: 'mod-grid-stack',
             masonry: false,
             parallax: 0
         },
 
         connected: function() {
-            this.masonry && addClass(this.$el, 'uk-flex-top uk-flex-wrap-top');
+            this.masonry && addClass(this.$el, 'mod-flex-top mod-flex-wrap-top');
         },
 
         update: [
@@ -5296,7 +5296,7 @@
         },
 
         beforeConnect: function() {
-            this.class += ' uk-svg';
+            this.class += ' mod-svg';
         },
 
         connected: function() {
@@ -5468,7 +5468,7 @@
         var length = getMaxPathLength(el);
 
         if (length) {
-            el.style.setProperty('--uk-animation-stroke', length);
+            el.style.setProperty('--mod-animation-stroke', length);
         }
 
     }
@@ -5582,7 +5582,7 @@
         isIcon: true,
 
         beforeConnect: function() {
-            addClass(this.$el, 'uk-icon');
+            addClass(this.$el, 'mod-icon');
         },
 
         methods: {
@@ -5623,7 +5623,7 @@
         extends: IconComponent,
 
         beforeConnect: function() {
-            addClass(this.$el, 'uk-slidenav');
+            addClass(this.$el, 'mod-slidenav');
         },
 
         computed: {
@@ -5631,7 +5631,7 @@
             icon: function(ref, $el) {
                 var icon = ref.icon;
 
-                return hasClass($el, 'uk-slidenav-large')
+                return hasClass($el, 'mod-slidenav-large')
                     ? (icon + "-large")
                     : icon;
             }
@@ -5649,9 +5649,9 @@
             icon: function(ref, $el) {
                 var icon = ref.icon;
 
-                return hasClass($el, 'uk-search-icon') && parents($el, '.uk-search-large').length
+                return hasClass($el, 'mod-search-icon') && parents($el, '.mod-search-large').length
                     ? 'search-large'
-                    : parents($el, '.uk-search-navbar').length
+                    : parents($el, '.mod-search-navbar').length
                         ? 'search-navbar'
                         : icon;
             }
@@ -5667,7 +5667,7 @@
         computed: {
 
             icon: function() {
-                return ("close-" + (hasClass(this.$el, 'uk-close-large') ? 'large' : 'icon'));
+                return ("close-" + (hasClass(this.$el, 'mod-close-large') ? 'large' : 'icon'));
             }
 
         }
@@ -5687,8 +5687,8 @@
     };
 
     var parsed = {};
-    function install(UIkit) {
-        UIkit.icon.add = function (name, svg) {
+    function install(modUIkit) {
+        modUIkit.icon.add = function (name, svg) {
             var obj;
 
 
@@ -5698,8 +5698,8 @@
                 delete parsed[name];
             });
 
-            if (UIkit._initialized) {
-                apply(document.body, function (el) { return each(UIkit.getComponents(el), function (cmp) {
+            if (modUIkit._initialized) {
+                apply(document.body, function (el) { return each(modUIkit.getComponents(el), function (cmp) {
                         cmp.$options.isIcon && cmp.icon in added && cmp.$reset();
                     }); }
                 );
@@ -6042,8 +6042,8 @@
 
         data: {
             fill: '',
-            clsWrapper: 'uk-leader-fill',
-            clsHide: 'uk-leader-hide',
+            clsWrapper: 'mod-leader-fill',
+            clsHide: 'mod-leader-hide',
             attrFill: 'data-fill'
         },
 
@@ -6140,7 +6140,7 @@
         },
 
         data: {
-            cls: 'uk-open',
+            cls: 'mod-open',
             escClose: true,
             bgClose: true,
             overlay: true,
@@ -6375,9 +6375,9 @@
         mixins: [Modal],
 
         data: {
-            clsPage: 'uk-modal-page',
-            selPanel: '.uk-modal-dialog',
-            selClose: '.uk-modal-close, .uk-modal-close-default, .uk-modal-close-outside, .uk-modal-close-full'
+            clsPage: 'mod-modal-page',
+            selPanel: '.mod-modal-dialog',
+            selClose: '.mod-modal-close, .mod-modal-close-default, .mod-modal-close-outside, .mod-modal-close-full'
         },
 
         events: [
@@ -6389,8 +6389,8 @@
 
                 handler: function() {
 
-                    if (hasClass(this.panel, 'uk-margin-auto-vertical')) {
-                        addClass(this.$el, 'uk-flex');
+                    if (hasClass(this.panel, 'mod-margin-auto-vertical')) {
+                        addClass(this.$el, 'mod-flex');
                     } else {
                         css(this.$el, 'display', 'block');
                     }
@@ -6407,7 +6407,7 @@
                 handler: function() {
 
                     css(this.$el, 'display', '');
-                    removeClass(this.$el, 'uk-flex');
+                    removeClass(this.$el, 'mod-flex');
 
                 }
             }
@@ -6423,7 +6423,7 @@
         modal.dialog = function (content, options) {
 
             var dialog = modal(
-                ("<div class=\"uk-modal\"> <div class=\"uk-modal-dialog\">" + content + "</div> </div>"),
+                ("<div class=\"mod-modal\"> <div class=\"mod-modal-dialog\">" + content + "</div> </div>"),
                 options
             );
 
@@ -6441,7 +6441,7 @@
                 function (ref) {
                     var labels = ref.labels;
 
-                    return ("<div class=\"uk-modal-body\">" + (isString(message) ? message : html(message)) + "</div> <div class=\"uk-modal-footer uk-text-right\"> <button class=\"uk-button uk-button-primary uk-modal-close\" autofocus>" + (labels.ok) + "</button> </div>");
+                    return ("<div class=\"mod-modal-body\">" + (isString(message) ? message : html(message)) + "</div> <div class=\"mod-modal-footer mod-text-right\"> <button class=\"mod-button mod-button-primary mod-modal-close\" autofocus>" + (labels.ok) + "</button> </div>");
             },
                 options,
                 function (deferred) { return deferred.resolve(); }
@@ -6453,7 +6453,7 @@
                 function (ref) {
                     var labels = ref.labels;
 
-                    return ("<form> <div class=\"uk-modal-body\">" + (isString(message) ? message : html(message)) + "</div> <div class=\"uk-modal-footer uk-text-right\"> <button class=\"uk-button uk-button-default uk-modal-close\" type=\"button\">" + (labels.cancel) + "</button> <button class=\"uk-button uk-button-primary\" autofocus>" + (labels.ok) + "</button> </div> </form>");
+                    return ("<form> <div class=\"mod-modal-body\">" + (isString(message) ? message : html(message)) + "</div> <div class=\"mod-modal-footer mod-text-right\"> <button class=\"mod-button mod-button-default mod-modal-close\" type=\"button\">" + (labels.cancel) + "</button> <button class=\"mod-button mod-button-primary\" autofocus>" + (labels.ok) + "</button> </div> </form>");
             },
                 options,
                 function (deferred) { return deferred.reject(); }
@@ -6465,7 +6465,7 @@
                 function (ref) {
                     var labels = ref.labels;
 
-                    return ("<form class=\"uk-form-stacked\"> <div class=\"uk-modal-body\"> <label>" + (isString(message) ? message : html(message)) + "</label> <input class=\"uk-input\" value=\"" + (value || '') + "\" autofocus> </div> <div class=\"uk-modal-footer uk-text-right\"> <button class=\"uk-button uk-button-default uk-modal-close\" type=\"button\">" + (labels.cancel) + "</button> <button class=\"uk-button uk-button-primary\">" + (labels.ok) + "</button> </div> </form>");
+                    return ("<form class=\"mod-form-stacked\"> <div class=\"mod-modal-body\"> <label>" + (isString(message) ? message : html(message)) + "</label> <input class=\"mod-input\" value=\"" + (value || '') + "\" autofocus> </div> <div class=\"mod-modal-footer mod-text-right\"> <button class=\"mod-button mod-button-default mod-modal-close\" type=\"button\">" + (labels.cancel) + "</button> <button class=\"mod-button mod-button-primary\">" + (labels.ok) + "</button> </div> </form>");
             },
                 options,
                 function (deferred) { return deferred.resolve(null); },
@@ -6508,7 +6508,7 @@
         extends: Accordion,
 
         data: {
-            targets: '> .uk-parent',
+            targets: '> .mod-parent',
             toggle: '> a',
             content: '> ul'
         }
@@ -6536,9 +6536,9 @@
         },
 
         data: {
-            dropdown: '.uk-navbar-nav > li',
+            dropdown: '.mod-navbar-nav > li',
             align: !isRtl ? 'left' : 'right',
-            clsDrop: 'uk-navbar-dropdown',
+            clsDrop: 'mod-navbar-dropdown',
             mode: undefined,
             offset: undefined,
             delayShow: undefined,
@@ -6551,7 +6551,7 @@
             dropbarAnchor: false,
             duration: 200,
             forceHeight: true,
-            selMinHeight: '.uk-navbar-nav > li > a, .uk-navbar-item, .uk-navbar-toggle'
+            selMinHeight: '.mod-navbar-nav > li > a, .mod-navbar-item, .mod-navbar-toggle'
         },
 
         computed: {
@@ -6585,14 +6585,14 @@
                         return null;
                     }
 
-                    dropbar = this._dropbar || query(dropbar, this.$el) || $('+ .uk-navbar-dropbar', this.$el);
+                    dropbar = this._dropbar || query(dropbar, this.$el) || $('+ .mod-navbar-dropbar', this.$el);
 
                     return dropbar ? dropbar : (this._dropbar = $('<div></div>'));
 
                 },
 
                 watch: function(dropbar) {
-                    addClass(dropbar, 'uk-navbar-dropbar');
+                    addClass(dropbar, 'mod-navbar-dropbar');
                 },
 
                 immediate: true
@@ -6699,7 +6699,7 @@
                     }
 
                     if (this.dropbarMode === 'slide') {
-                        addClass(this.dropbar, 'uk-navbar-dropbar-slide');
+                        addClass(this.dropbar, 'mod-navbar-dropbar-slide');
                     }
 
                     this.clsDrop && addClass($el, ((this.clsDrop) + "-dropbar"));
@@ -6811,15 +6811,15 @@
             mode: 'slide',
             flip: false,
             overlay: false,
-            clsPage: 'uk-offcanvas-page',
-            clsContainer: 'uk-offcanvas-container',
-            selPanel: '.uk-offcanvas-bar',
-            clsFlip: 'uk-offcanvas-flip',
-            clsContainerAnimation: 'uk-offcanvas-container-animation',
-            clsSidebarAnimation: 'uk-offcanvas-bar-animation',
-            clsMode: 'uk-offcanvas',
-            clsOverlay: 'uk-offcanvas-overlay',
-            selClose: '.uk-offcanvas-close',
+            clsPage: 'mod-offcanvas-page',
+            clsContainer: 'mod-offcanvas-container',
+            selPanel: '.mod-offcanvas-bar',
+            clsFlip: 'mod-offcanvas-flip',
+            clsContainerAnimation: 'mod-offcanvas-container-animation',
+            clsSidebarAnimation: 'mod-offcanvas-bar-animation',
+            clsMode: 'mod-offcanvas',
+            clsOverlay: 'mod-offcanvas-overlay',
+            selClose: '.mod-offcanvas-close',
             container: false
         },
 
@@ -7072,8 +7072,8 @@
         },
 
         data: {
-            selContainer: '.uk-modal',
-            selContent: '.uk-modal-dialog'
+            selContainer: '.mod-modal',
+            selContent: '.mod-modal-dialog'
         },
 
         computed: {
@@ -7131,7 +7131,7 @@
         props: ['width', 'height'],
 
         connected: function() {
-            addClass(this.$el, 'uk-responsive-width');
+            addClass(this.$el, 'mod-responsive-width');
         },
 
         update: {
@@ -7221,7 +7221,7 @@
             offsetLeft: 0,
             repeat: false,
             delay: 0,
-            inViewClass: 'uk-scrollspy-inview'
+            inViewClass: 'mod-scrollspy-inview'
         }); },
 
         computed: {
@@ -7271,7 +7271,7 @@
                     this.elements.forEach(function (el) {
 
                         if (!el[stateKey$1]) {
-                            el[stateKey$1] = {cls: data(el, 'uk-scrollspy-class') || this$1.cls};
+                            el[stateKey$1] = {cls: data(el, 'mod-scrollspy-class') || this$1.cls};
                         }
 
                         el[stateKey$1].show = isInView(el, this$1.offsetTop, this$1.offsetLeft);
@@ -7351,7 +7351,7 @@
         },
 
         data: {
-            cls: 'uk-active',
+            cls: 'mod-active',
             closest: false,
             scroll: false,
             overflow: true,
@@ -7474,10 +7474,10 @@
             bottom: false,
             offset: 0,
             animation: '',
-            clsActive: 'uk-active',
+            clsActive: 'mod-active',
             clsInactive: '',
-            clsFixed: 'uk-sticky-fixed',
-            clsBelow: 'uk-sticky-below',
+            clsFixed: 'mod-sticky-fixed',
+            clsBelow: 'mod-sticky-below',
             selTarget: '',
             widthElement: false,
             showOnUp: false,
@@ -7525,7 +7525,7 @@
         },
 
         connected: function() {
-            this.placeholder = $('+ .uk-sticky-placeholder', this.$el) || $('<div class="uk-sticky-placeholder"></div>');
+            this.placeholder = $('+ .mod-sticky-placeholder', this.$el) || $('<div class="mod-sticky-placeholder"></div>');
             this.isFixed = false;
             this.isActive = false;
         },
@@ -7815,12 +7815,12 @@
         },
 
         data: {
-            connect: '~.uk-switcher',
+            connect: '~.mod-switcher',
             toggle: '> * > :first-child',
             active: 0,
             swiping: true,
-            cls: 'uk-active',
-            attrItem: 'uk-switcher-item'
+            cls: 'mod-active',
+            attrItem: 'mod-switcher-item'
         },
 
         computed: {
@@ -7857,7 +7857,7 @@
                 get: function(ref, $el) {
                     var toggle = ref.toggle;
 
-                    return $$(toggle, $el).filter(function (el) { return !matches(el, '.uk-disabled *, .uk-disabled, [disabled]'); });
+                    return $$(toggle, $el).filter(function (el) { return !matches(el, '.mod-disabled *, .mod-disabled, [disabled]'); });
                 },
 
                 watch: function(toggles) {
@@ -7984,15 +7984,15 @@
 
         data: {
             media: 960,
-            attrItem: 'uk-tab-item'
+            attrItem: 'mod-tab-item'
         },
 
         connected: function() {
 
-            var cls = hasClass(this.$el, 'uk-tab-left')
-                ? 'uk-tab-left'
-                : hasClass(this.$el, 'uk-tab-right')
-                    ? 'uk-tab-right'
+            var cls = hasClass(this.$el, 'mod-tab-left')
+                ? 'mod-tab-left'
+                : hasClass(this.$el, 'mod-tab-right')
+                    ? 'mod-tab-right'
                     : false;
 
             if (cls) {
@@ -8221,13 +8221,13 @@
     });
 
     // register components
-    each(components, function (component, name) { return UIkit.component(name, component); }
+    each(components, function (component, name) { return modUIkit.component(name, component); }
     );
 
     // core functionality
-    UIkit.use(Core);
+    modUIkit.use(Core);
 
-    boot(UIkit);
+    boot(modUIkit);
 
     var countdown = {
 
@@ -8240,7 +8240,7 @@
 
         data: {
             date: '',
-            clsWrapper: '.uk-countdown-%unit%'
+            clsWrapper: '.mod-countdown-%unit%'
         },
 
         computed: {
@@ -8397,8 +8397,8 @@
         };
     }
 
-    var clsLeave = 'uk-transition-leave';
-    var clsEnter = 'uk-transition-enter';
+    var clsLeave = 'mod-transition-leave';
+    var clsEnter = 'mod-transition-enter';
 
     function fade(action, target, duration, stagger) {
         if ( stagger === void 0 ) stagger = 0;
@@ -8429,7 +8429,7 @@
 
             css(children(target), {opacity: 0});
 
-            // Ensure UIkit updates have propagated
+            // Ensure modUIkit updates have propagated
             return new Promise(function (resolve) { return requestAnimationFrame(function () {
 
                     var nodes = children(target);
@@ -8674,8 +8674,8 @@
         data: {
             target: null,
             selActive: false,
-            attrItem: 'uk-filter-control',
-            cls: 'uk-active',
+            attrItem: 'mod-filter-control',
+            cls: 'mod-active',
             duration: 250
         },
 
@@ -9451,7 +9451,7 @@
                     var cmd = data(el, this$1.attrItem);
 
                     toggleClass(el, this$1.clsActive, toNumber(cmd) === i);
-                    toggleClass(el, 'uk-invisible', this$1.finite && (cmd === 'previous' && i === 0 || cmd === 'next' && i >= this$1.maxIndex));
+                    toggleClass(el, 'mod-invisible', this$1.finite && (cmd === 'previous' && i === 0 || cmd === 'next' && i >= this$1.maxIndex));
                 });
 
             }
@@ -9481,7 +9481,7 @@
             prevIndex: -1,
             stack: [],
             percent: 0,
-            clsActive: 'uk-active',
+            clsActive: 'mod-active',
             clsActivated: false,
             Transitioner: false,
             transitionOptions: {}
@@ -9724,7 +9724,7 @@
 
         data: {
             animation: 'slide',
-            clsActivated: 'uk-transition-active',
+            clsActivated: 'mod-transition-active',
             Animations: Animations,
             Transitioner: Transitioner
         },
@@ -9792,16 +9792,16 @@
             videoAutoplay: false,
             delayControls: 3000,
             items: [],
-            cls: 'uk-open',
-            clsPage: 'uk-lightbox-page',
-            selList: '.uk-lightbox-items',
-            attrItem: 'uk-lightbox-item',
-            selClose: '.uk-close-large',
-            selCaption: '.uk-lightbox-caption',
+            cls: 'mod-open',
+            clsPage: 'mod-lightbox-page',
+            selList: '.mod-lightbox-items',
+            attrItem: 'mod-lightbox-item',
+            selClose: '.mod-close-large',
+            selCaption: '.mod-lightbox-caption',
             pauseOnHover: false,
             velocity: 2,
             Animations: Animations$1,
-            template: "<div class=\"uk-lightbox uk-overflow-hidden\"> <ul class=\"uk-lightbox-items\"></ul> <div class=\"uk-lightbox-toolbar uk-position-top uk-text-right uk-transition-slide-top uk-transition-opaque\"> <button class=\"uk-lightbox-toolbar-icon uk-close-large\" type=\"button\" uk-close></button> </div> <a class=\"uk-lightbox-button uk-position-center-left uk-position-medium uk-transition-fade\" href uk-slidenav-previous uk-lightbox-item=\"previous\"></a> <a class=\"uk-lightbox-button uk-position-center-right uk-position-medium uk-transition-fade\" href uk-slidenav-next uk-lightbox-item=\"next\"></a> <div class=\"uk-lightbox-toolbar uk-lightbox-caption uk-position-bottom uk-text-center uk-transition-slide-bottom uk-transition-opaque\"></div> </div>"
+            template: "<div class=\"mod-lightbox mod-overflow-hidden\"> <ul class=\"mod-lightbox-items\"></ul> <div class=\"mod-lightbox-toolbar mod-position-top mod-text-right mod-transition-slide-top mod-transition-opaque\"> <button class=\"mod-lightbox-toolbar-icon mod-close-large\" type=\"button\" mod-close></button> </div> <a class=\"mod-lightbox-button mod-position-center-left mod-position-medium mod-transition-fade\" href mod-slidenav-previous mod-lightbox-item=\"previous\"></a> <a class=\"mod-lightbox-button mod-position-center-right mod-position-medium mod-transition-fade\" href mod-slidenav-next mod-lightbox-item=\"next\"></a> <div class=\"mod-lightbox-toolbar mod-lightbox-caption mod-position-bottom mod-text-center mod-transition-slide-bottom mod-transition-opaque\"></div> </div>"
         }); },
 
         created: function() {
@@ -9984,7 +9984,7 @@
                     var poster = item.poster;
                     var attrs = item.attrs; if ( attrs === void 0 ) attrs = {};
 
-                    this.setItem(item, '<span uk-spinner></span>');
+                    this.setItem(item, '<span mod-spinner></span>');
 
                     if (!src) {
                         return;
@@ -9996,8 +9996,8 @@
                         allow: 'autoplay',
                         allowfullscreen: '',
                         style: 'max-width: 100%; box-sizing: border-box;',
-                        'uk-responsive': '',
-                        'uk-video': ("" + (this.videoAutoplay))
+                        'mod-responsive': '',
+                        'mod-video': ("" + (this.videoAutoplay))
                     };
 
                     // Image
@@ -10021,7 +10021,7 @@
                             poster: poster,
                             controls: '',
                             playsinline: '',
-                            'uk-video': ("" + (this.videoAutoplay))
+                            'mod-video': ("" + (this.videoAutoplay))
                         }, attrs));
 
                         on(video, 'loadedmetadata', function () {
@@ -10037,7 +10037,7 @@
                             src: src,
                             frameborder: '0',
                             allowfullscreen: '',
-                            class: 'uk-lightbox-iframe'
+                            class: 'mod-lightbox-iframe'
                         }, attrs)));
 
                     // YouTube
@@ -10106,7 +10106,7 @@
             },
 
             setError: function(item) {
-                this.setItem(item, '<span uk-icon="icon: bolt; ratio: 2"></span>');
+                this.setItem(item, '<span mod-icon="icon: bolt; ratio: 2"></span>');
             },
 
             showControls: function() {
@@ -10114,12 +10114,12 @@
                 clearTimeout(this.controlsTimer);
                 this.controlsTimer = setTimeout(this.hideControls, this.delayControls);
 
-                addClass(this.$el, 'uk-active', 'uk-transition-active');
+                addClass(this.$el, 'mod-active', 'mod-transition-active');
 
             },
 
             hideControls: function() {
-                removeClass(this.$el, 'uk-active', 'uk-transition-active');
+                removeClass(this.$el, 'mod-active', 'mod-transition-active');
             }
 
         }
@@ -10169,7 +10169,7 @@
                 name: 'click',
 
                 delegate: function() {
-                    return ((this.toggle) + ":not(.uk-disabled)");
+                    return ((this.toggle) + ":not(.mod-disabled)");
                 },
 
                 handler: function(e) {
@@ -10217,15 +10217,15 @@
 
     };
 
-    function install$2(UIkit, Lightbox) {
+    function install$2(modUIkit, Lightbox) {
 
-        if (!UIkit.lightboxPanel) {
-            UIkit.component('lightboxPanel', LightboxPanel);
+        if (!modUIkit.lightboxPanel) {
+            modUIkit.component('lightboxPanel', LightboxPanel);
         }
 
         assign(
             Lightbox.props,
-            UIkit.component('lightboxPanel').options.props
+            modUIkit.component('lightboxPanel').options.props
         );
 
     }
@@ -10259,9 +10259,9 @@
             timeout: 5000,
             group: null,
             pos: 'top-center',
-            clsContainer: 'uk-notification',
-            clsClose: 'uk-notification-close',
-            clsMsg: 'uk-notification-message'
+            clsContainer: 'mod-notification',
+            clsClose: 'mod-notification-close',
+            clsMsg: 'mod-notification-message'
         },
 
         install: install$3,
@@ -10288,7 +10288,7 @@
                 || append(this.container, ("<div class=\"" + (this.clsContainer) + " " + (this.clsContainer) + "-" + (this.pos) + "\" style=\"display: block\"></div>"));
 
             this.$mount(append(container,
-                ("<div class=\"" + (this.clsMsg) + (this.status ? (" " + (this.clsMsg) + "-" + (this.status)) : '') + "\"> <a href class=\"" + (this.clsClose) + "\" data-uk-close></a> <div>" + (this.message) + "</div> </div>")
+                ("<div class=\"" + (this.clsMsg) + (this.status ? (" " + (this.clsMsg) + "-" + (this.status)) : '') + "\"> <a href class=\"" + (this.clsClose) + "\" data-mod-close></a> <div>" + (this.message) + "</div> </div>")
             ));
 
         },
@@ -10363,10 +10363,10 @@
 
     };
 
-    function install$3(UIkit) {
-        UIkit.notification.closeAll = function (group, immediate) {
+    function install$3(modUIkit) {
+        modUIkit.notification.closeAll = function (group, immediate) {
             apply(document.body, function (el) {
-                var notification = UIkit.getComponent(el, 'notification');
+                var notification = modUIkit.getComponent(el, 'notification');
                 if (notification && (!group || group === notification.group)) {
                     notification.close(immediate);
                 }
@@ -10994,10 +10994,10 @@
         data: {
             center: false,
             sets: false,
-            attrItem: 'uk-slider-item',
-            selList: '.uk-slider-items',
-            selNav: '.uk-slider-nav',
-            clsContainer: 'uk-slider-container',
+            attrItem: 'mod-slider-item',
+            selList: '.mod-slider-items',
+            selNav: '.mod-slider-nav',
+            clsContainer: 'mod-slider-container',
             Transitioner: Transitioner$1
         },
 
@@ -11481,9 +11481,9 @@
             ratio: '16:9',
             minHeight: false,
             maxHeight: false,
-            selList: '.uk-slideshow-items',
-            attrItem: 'uk-slideshow-item',
-            selNav: '.uk-slideshow-nav',
+            selList: '.mod-slideshow-items',
+            attrItem: 'mod-slideshow-item',
+            selNav: '.mod-slideshow-nav',
             Animations: Animations$2
         },
 
@@ -11541,13 +11541,13 @@
         data: {
             group: false,
             threshold: 5,
-            clsItem: 'uk-sortable-item',
-            clsPlaceholder: 'uk-sortable-placeholder',
-            clsDrag: 'uk-sortable-drag',
-            clsDragState: 'uk-drag',
-            clsBase: 'uk-sortable',
-            clsNoDrag: 'uk-sortable-nodrag',
-            clsEmpty: 'uk-sortable-empty',
+            clsItem: 'mod-sortable-item',
+            clsPlaceholder: 'mod-sortable-placeholder',
+            clsDrag: 'mod-sortable-drag',
+            clsDragState: 'mod-drag',
+            clsBase: 'mod-sortable',
+            clsNoDrag: 'mod-sortable-nodrag',
+            clsEmpty: 'mod-sortable-empty',
             clsCustom: '',
             handle: false,
             pos: {}
@@ -11994,10 +11994,10 @@
             pos: 'top',
             title: '',
             delay: 0,
-            animation: ['uk-animation-scale-up'],
+            animation: ['mod-animation-scale-up'],
             duration: 100,
-            cls: 'uk-active',
-            clsPos: 'uk-tooltip'
+            cls: 'mod-active',
+            clsPos: 'mod-tooltip'
         },
 
         beforeConnect: function() {
@@ -12132,7 +12132,7 @@
 
         data: {
             allow: false,
-            clsDragover: 'uk-dragover',
+            clsDragover: 'mod-dragover',
             concurrent: 1,
             maxSize: 0,
             method: 'POST',
@@ -12330,9 +12330,9 @@
         Upload: upload
     });
 
-    each(components$1, function (component, name) { return UIkit.component(name, component); }
+    each(components$1, function (component, name) { return modUIkit.component(name, component); }
     );
 
-    return UIkit;
+    return modUIkit;
 
 })));
